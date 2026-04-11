@@ -1,0 +1,27 @@
+---
+description: Skills and conventions for testing
+paths:
+  - "**/*.test.*"
+  - "**/*.spec.*"
+  - "**/tests/**/*"
+  - "vitest.config.*"
+---
+
+# Testing — Skills & Conventions
+
+## Core skills
+
+**[SKILL_TEST_FRAMEWORK]** — test runner, mocking, coverage.
+**[SKILL_TEST_PATTERNS]** — AAA pattern, factories, DI, unit vs integration.
+
+## Conditional skills (activate by trigger)
+
+[TESTING_SKILLS_LIST]
+
+## Conventions
+
+[TEST_CONVENTIONS]
+
+## After modifying, update
+
+Update testing area doc if new test patterns or conventions are established.

@@ -1,0 +1,6 @@
+# Claude Code
+CLAUDE.local.md
+.claude/settings.local.json
+.session-changes.json
+.claude/skip-doc-authorized
+.mcp.json

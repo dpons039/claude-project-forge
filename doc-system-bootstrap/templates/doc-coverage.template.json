@@ -1,0 +1,79 @@
+{
+  "_instructions": "ADAPT THIS FILE TO YOUR PROJECT. Replace placeholders with actual paths. Remove sections that don't apply.",
+
+  "exempt": [
+    "docs/_template/",
+    "docs/_archive/",
+    "docs/changes/",
+    "docs/",
+    "*.md",
+    ".claude/",
+    ".githooks/",
+    "__PLACEHOLDER_CI_DIR__",
+    "package*.json",
+    ".gitignore",
+    ".env*",
+    "*.lock",
+    "node_modules/",
+    "dist/",
+    "build/",
+    "coverage/",
+    "__PLACEHOLDER_OTHER_EXEMPT__"
+  ],
+
+  "planning_triggers": [
+    "__PLACEHOLDER_SOURCE_DIR_1__",
+    "__PLACEHOLDER_SOURCE_DIR_2__",
+    "docs/changes/",
+    "__PLACEHOLDER_CI_DIR__",
+    "scripts/"
+  ],
+
+  "changelog_rotation": {
+    "max_lines": 500,
+    "archive_path": "docs/_archive/changelog/",
+    "archive_format": "YYYY-QN.md",
+    "frequency": "quarterly"
+  },
+
+  "blocking_triggers": [
+    {
+      "_comment": "Database migrations ALWAYS require schema doc update",
+      "pattern": "__PLACEHOLDER_MIGRATIONS_DIR__",
+      "docs": ["docs/db.md"]
+    },
+    {
+      "_comment": "Infrastructure changes ALWAYS require doc update",
+      "pattern": "__PLACEHOLDER_DEPLOY_DIR__",
+      "docs": ["docs/infrastructure.md"]
+    },
+    {
+      "pattern": "docker-compose",
+      "docs": ["docs/infrastructure.md"]
+    },
+    {
+      "pattern": "Dockerfile",
+      "docs": ["docs/infrastructure.md"]
+    },
+    {
+      "pattern": "__PLACEHOLDER_CI_WORKFLOWS__",
+      "docs": ["docs/infrastructure.md"]
+    },
+    {
+      "pattern": "docs/changes/",
+      "docs": ["docs/planning.md", "docs/changelog.md"]
+    }
+  ],
+
+  "warning_triggers": [
+    {
+      "_comment": "Source areas: warn but don't block. Agent decides if change is architectural.",
+      "pattern": "__PLACEHOLDER_SOURCE_DIR_1__",
+      "docs": ["docs/__PLACEHOLDER_AREA_1__.md"]
+    },
+    {
+      "pattern": "__PLACEHOLDER_SOURCE_DIR_2__",
+      "docs": ["docs/__PLACEHOLDER_AREA_2__.md"]
+    }
+  ]
+}

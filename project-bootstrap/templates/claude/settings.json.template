@@ -1,0 +1,26 @@
+{
+  "_instructions": "ADAPT: Replace placeholder commands with your project's test/lint/build commands.",
+  "permissions": {
+    "allow": [
+      "Bash(npm run test*)",
+      "Bash(npx tsc --noEmit*)",
+      "Bash(npx vitest run*)",
+      "Bash(git log --oneline*)",
+      "Bash(git diff*)",
+      "Bash(git status)",
+      "Bash(grep -n *)",
+      "Bash(head *)",
+      "Bash(tail *)",
+      "Bash(wc -l *)"
+    ],
+    "deny": [
+      "Read(./.env)",
+      "Read(./.env.*)",
+      "Read(./package-lock.json)",
+      "Read(./node_modules/**)",
+      "Read(./.git/**)",
+      "Bash(npm install)",
+      "Bash(npm ci)"
+    ]
+  }
+}

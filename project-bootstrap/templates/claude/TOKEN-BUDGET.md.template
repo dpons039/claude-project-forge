@@ -1,0 +1,27 @@
+# Token Budget — Eager Context
+
+Claude Code loads these files on EVERY conversation turn. Keep them lean.
+
+## Budget limits
+
+| Component | Limit | Current |
+|---|---|---|
+| CLAUDE.md | 1,600 tok | — |
+| Rules (path-scoped) | ~350 tok each | — |
+| Agents | ~350 tok each | — |
+| Skills metadata (descriptions) | ~100 tok each | — |
+| **Total eager** | **~6,100 tok** | **—** |
+
+## Per-component limits
+
+- Each path-scoped rule: max 350 tokens
+- Each agent: max 350 tokens
+- Each skill description: max 100 tokens (~50 words)
+- CLAUDE.md: if exceeds 1,600 tokens → move to path-scoped rules
+
+## Maintenance rules
+
+- Before adding to CLAUDE.md: can it go in a path-scoped rule instead?
+- Before adding a rule: does it really apply to ALL contexts in that path?
+- Before adding a skill: will it be used at least 1x/month?
+- Verify budget: `python .claude/count-context-tokens.py` (if available)

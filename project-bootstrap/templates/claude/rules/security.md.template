@@ -1,0 +1,30 @@
+---
+description: Cross-cutting security rules for auth, secrets, and input handling
+paths:
+  - "[AUTH_PATHS]"
+  - ".env*"
+  - "**/*secret*"
+  - "**/*auth*"
+  - "**/*token*"
+---
+
+# Security — Cross-cutting Rules
+
+## Frontend security
+
+**[SKILL_SECURITY_FRONTEND]** — invoke when touching build config, env vars, sourcemaps, client auth.
+
+## Backend auth
+
+Read security area doc completely before touching auth, session, or access control code.
+
+## Secrets
+
+- Never hardcode secrets — use environment variables
+- Secrets table in security area doc or `.claude/rules/secrets.md`
+- Backend secrets → never exposed to frontend
+- New secret → update security doc + infrastructure doc
+
+## After modifying, update
+
+Security changes always update security area doc.

@@ -1,0 +1,20 @@
+---
+description: Windows + Git Bash environment — paths by tool and known issues
+---
+
+> **Note:** This rule is Windows + Git Bash specific. Remove if using macOS/Linux.
+
+# Environment — Git Bash (MINGW64)
+
+Shell: Git Bash (MINGW64). Working dir: [PROJECT_PATH]
+
+## Paths by tool
+
+| Tool | Format |
+|------|--------|
+| Write/Read/Edit | [PROJECT_PATH]\path\file.ext (absolute Windows) |
+| Bash | relative or [PROJECT_PATH_FORWARD]/ (forward slash) |
+| Glob/Grep | relative from repo root |
+| Hooks/scripts | $CLAUDE_PROJECT_DIR/.claude/... |
+
+On tool failure: report to user, don't continue.

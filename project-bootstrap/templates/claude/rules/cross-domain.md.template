@@ -1,0 +1,29 @@
+---
+description: Guide for combining skills when tasks touch frontend + backend simultaneously
+---
+
+# Cross-domain — Skill Combination
+
+This rule complements backend.md and frontend.md. Applies when the task crosses domains —
+not triggered by file but by task context.
+
+## New feature (endpoint + component + store + tests)
+
+Core: [SKILL_BACKEND] + [SKILL_FRONTEND]
+Conditional: [SKILL_STATE] (if touches store), `typescript-advanced-types` (if complex types)
+Testing: `vitest` + `javascript-testing-patterns` + [SKILL_BACKEND] (HTTP tests)
+
+## Auth flow (tokens + middleware + login)
+
+Core: [SKILL_BACKEND] + [SKILL_FRONTEND]
+Consult: `docs/security.md` completely before modifying
+
+## Theming (if applicable)
+
+`color-palette` generates shades + CSS tokens that [SKILL_COMPONENT_LIB] consumes as
+anatomy and token reference. When creating a new theme, activate both: first `color-palette`
+to generate, then [SKILL_COMPONENT_LIB] to integrate into the component system.
+
+## `session-close`
+
+Exclusive: only explicit verbal trigger from the user. Not combined with work flows.

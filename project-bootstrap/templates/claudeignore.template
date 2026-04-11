@@ -1,0 +1,17 @@
+# Claude Code — files excluded from context
+# These files are not read by Claude unless explicitly requested
+
+node_modules/
+.git/
+.githooks/
+templates/
+docs/_archive/
+
+# Build outputs
+# dist/
+# build/
+# coverage/
+# .next/
+
+# Database migrations (uncomment if applicable)
+# [MIGRATIONS_DIR]

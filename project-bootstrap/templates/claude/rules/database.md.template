@@ -1,0 +1,28 @@
+---
+description: Skills and conventions for database work and migrations
+paths:
+  - "[MIGRATIONS_DIR]/**/*"
+  - "[DB_CONFIG_PATH]"
+---
+
+# Database — Skills & Conventions
+
+## Core skill
+
+**[SKILL_DB]** — schema design, complex queries, indexes, performance.
+
+## Conventions
+
+Follow conventions in CLAUDE.md § "Conventions (non-negotiable)" and area docs.
+
+## Migration workflow
+
+1. Create migration file in `[MIGRATIONS_DIR]`
+2. Update DB area docs (`docs/db.md`, `docs/db/[table].md`)
+3. Update `docs/planning.md` if applicable
+4. Register in `docs/changelog.md`
+5. Pre-commit: invoke `migration-checker` agent ALWAYS before committing .sql files
+
+## After modifying, update
+
+Update DB area doc in the same act.

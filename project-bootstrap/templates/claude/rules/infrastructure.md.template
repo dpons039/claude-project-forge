@@ -1,0 +1,21 @@
+---
+description: Rules for Docker, containers, networking, and deploy
+paths:
+  - "deployments/**/*"
+  - "docker-compose*.yml"
+  - "Dockerfile*"
+  - ".env*"
+---
+
+# Infrastructure — Conventions
+
+## Before writing
+
+Read `docs/infrastructure.md` before touching infrastructure files.
+
+## After modifying, update
+
+- Port/URL change → `docs/infrastructure.md` § Network
+- New secret → `docs/infrastructure.md` § Secrets + security rule
+- New/modified container → `docs/infrastructure.md` § Container stack
+- Network change → verify references in other docs

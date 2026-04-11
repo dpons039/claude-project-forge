@@ -1,0 +1,105 @@
+# [PROJECT_NAME]
+
+[PROJECT_DESCRIPTION]
+
+## Stack
+
+[STACK]
+
+## Conventions (non-negotiable)
+
+- Language: [CODE_LANG] code, [UI_LANG] interface — always respond in [RESPONSE_LANG]
+- Branch: `[DEV_BRANCH]` — never `[PROTECTED_BRANCH]`
+[CONVENTIONS]
+- "Pending definition" in docs → flag it, don't invent
+- Questions requiring web research → `docs/research-needed.md`, don't guess
+- Multi-step: plan commit points and `/compact` BEFORE starting. Commit after each logical group, compact after each commit (especially with large files like JSONs)
+- Tool or action failure (Edit failed, Read error, Bash error, script crash, etc.): report to user what failed and why before retrying or continuing
+- Before planning, implementing, or debugging: consult relevant skills for the work area — don't improvise if a skill is available
+- Pre-commit with complex changes (multi-area, e.g.: migration + router, frontend + backend): invoke `doc-updater` subagent to verify cross-area docs
+[UI_CONTROLS_CONVENTION]
+
+## Documentation
+
+- SSOT: `docs/` — read before working, update after architectural changes
+- Index: `docs/README.md` — read the area doc BEFORE touching code
+- System: `docs/doc-system.md` — principles and rules
+- Decisions: inline with `> **Decision:**` — index in `docs/decisions.md`
+- Agent: `doc-updater` — invoke before multi-area commits
+[MIGRATIONS_RESTRICTION]
+
+When creating new file in `docs/`: update `docs/README.md`.
+When modifying [TRACKED_DIRS]:
+update `docs/planning.md` in the same commit.
+
+**SKIP_DOC_CHECK:** Claude NEVER creates `.claude/skip-doc-authorized` without
+explicit authorization from the owner.
+
+## Model
+
+Delegate to subagents when the task allows, specifying model in the Agent tool:
+
+- Explore (model="haiku"): find files, understand code, read without editing
+- Plan: design before implementing on complex tasks
+- general-purpose (model="sonnet"): scoped implementation, 2-3 files
+
+**Dedicated agents** (`.claude/agents/`):
+
+- `doc-updater` (sonnet, green): verify and update docs pre-commit
+- `git-ops` (haiku, yellow): get git status/diff/log — read-only
+- `migration-checker` (haiku, orange): validate SQL conventions pre-commit
+[UI_REVIEWER_AGENT]
+
+When delegating: include relevant context restrictions in the subagent prompt.
+.claudeignore does NOT block direct Read — restrictions must be explicit in the prompt.
+Minimum include: "Use `docs/` as source of truth. DO NOT read files excluded in `.claudeignore`."
+
+## Environment
+
+[OS] + [IDE] · bash always (no CMD/PowerShell)
+Repo: [REPO_URL] · [RUNTIME] · [PACKAGE_MANAGER] · Git
+Known paths and errors: `.claude/rules/[ENV_RULE_FILE]`
+
+## Session start
+
+1. `[model: X]` in the first response
+2. Read `docs/planning.md` — know what's in progress and pending
+3. Ask the user what we'll work on (don't assume)
+
+## Workflow — autonomy rules
+
+- **Git:** delegate `git-ops` for status/diff/log. Main context proposes message and executes `git add` + `git commit`. Never delegate the commit to the subagent.
+- **Docs:** delegate `doc-updater` to update docs (multi-area only). Docs updated BEFORE committing, but updating doesn't mean committing.
+- **Commits:** NEVER create a commit automatically. Wait for the user to explicitly say "commit".
+- **Area change:** ask before moving to another work area.
+- **High-impact changes:** ask before modifying core files (CLAUDE.md, .gitignore, doc-coverage.json) outside the task scope.
+
+## Change Workflow (SDD)
+
+- **Significant changes** (new feature, refactor >3 files, new migration,
+  architecture change): create proposal in `docs/changes/{YYYY-MM-DD}-{slug}/proposal.md`
+  copying the template BEFORE implementing
+- On completing standalone task from `planning.md`: delete the line + summary to changelog
+  **in the same commit**. If group task: ~~strikethrough~~ but don't delete.
+- `planning.md`: only `[ ]` pending — NEVER `[x]`. Completed group tasks get
+  ~~struck through~~ (progress). Entire group struck → delete block.
+- `changelog.md`: new entries ≤5 bullets + pointers to area docs
+- Cycle: proposal → approval → implementation → area docs → changelog → archive
+- See detail: `docs/changes/README.md`
+
+## Engineering principles
+
+- **Modular decomposition:** split tasks into atomic, testable, committable steps — propose modules, not monoliths
+- **Security first:** no change introduces hardcoded secrets, SQL/XSS/command injection, or bypasses; review attack surfaces before proposing
+- **Deterministic outputs:** prefer idempotent scripts, explicit configs and pinned versions — document any non-deterministic behavior
+- **Operational hygiene:** avoid fragile hacks and undocumented configs; before updating deps or infra, identify breaking changes and rollback plan
+- **Minimum cognitive load:** concise, actionable responses; code with minimum sufficient complexity — don't abstract before needing to
+- **Stack-awareness:** adapt the solution to the real environment (Docker, cloud, IDE, OS) before introducing new technology
+- **Guided validation:** suggest tests, validations and automated checks for pipelines, scripts and data
+- **Explainability without verbosity:** justify technical decisions with real trade-offs, in one line
+- **Dependency governance:** pin versions, avoid unnecessary dependencies, justify each library
+- **Fail-safe by default:** when ambiguous, ask for clarification or assume the most conservative option
+
+## End of session
+
+Invoke `/session-close` — runs the full checklist (git status, docs, planning, changelog, memory, summary).

@@ -1,0 +1,32 @@
+---
+description: Skills and conventions for frontend development
+paths:
+  - "src/**/*.{ts,tsx,js,jsx}"
+  - "vite.config.*"
+  - "index.html"
+  - "public/**/*"
+---
+
+# Frontend — Skills & Conventions
+
+## Before writing
+
+Read relevant area docs before modifying frontend code.
+
+## Core skill
+
+**[SKILL_FRONTEND]** — always active for frontend work.
+
+## Conditional skills (activate by trigger)
+
+[FRONTEND_SKILLS_LIST]
+
+## Agents
+
+- **ui-reviewer** — invoke when creating new pages or modifying existing UI
+  - Modes: `review` (report only) or `fix` (report + corrections)
+- **doc-updater** — invoke if changes are multi-area
+
+## After modifying, update
+
+Update frontend area doc in the same act if the change is architectural.

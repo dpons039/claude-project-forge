@@ -1,0 +1,72 @@
+{
+  "_instructions": "ADAPT: Replace [PLACEHOLDER] values with your project's actual paths. Remove sections that don't apply.",
+
+  "exempt": [
+    "docs/_template/",
+    "docs/_archive/",
+    "docs/changes/",
+    "docs/",
+    "*.md",
+    ".claude/",
+    ".githooks/",
+    "package*.json",
+    ".gitignore",
+    ".env*",
+    "*.lock",
+    "node_modules/",
+    "dist/",
+    "build/",
+    "coverage/"
+  ],
+
+  "planning_triggers": [
+    "[TRACKED_DIR_1]",
+    "[TRACKED_DIR_2]",
+    "docs/changes/",
+    "scripts/"
+  ],
+
+  "changelog_rotation": {
+    "max_lines": 500,
+    "archive_path": "docs/_archive/changelog/",
+    "archive_format": "YYYY-QN.md",
+    "frequency": "quarterly"
+  },
+
+  "blocking_triggers": [
+    {
+      "_comment": "Database migrations ALWAYS require schema doc update",
+      "pattern": "[MIGRATIONS_DIR]",
+      "docs": ["docs/db.md"]
+    },
+    {
+      "_comment": "Infrastructure changes ALWAYS require doc update",
+      "pattern": "[DEPLOY_DIR]",
+      "docs": ["docs/infrastructure.md"]
+    },
+    {
+      "pattern": "docker-compose",
+      "docs": ["docs/infrastructure.md"]
+    },
+    {
+      "pattern": "Dockerfile",
+      "docs": ["docs/infrastructure.md"]
+    },
+    {
+      "pattern": "docs/changes/",
+      "docs": ["docs/planning.md", "docs/changelog.md"]
+    }
+  ],
+
+  "warning_triggers": [
+    {
+      "_comment": "Source areas: warn but don't block. Agent decides if change is architectural.",
+      "pattern": "[SOURCE_DIR_1]",
+      "docs": ["docs/[AREA_1].md"]
+    },
+    {
+      "pattern": "[SOURCE_DIR_2]",
+      "docs": ["docs/[AREA_2].md"]
+    }
+  ]
+}

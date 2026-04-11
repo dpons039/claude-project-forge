@@ -1,0 +1,31 @@
+---
+description: Skills and conventions for backend development
+paths:
+  - "[BACKEND_SRC]/**/*.{ts,js}"
+---
+
+# Backend — Skills & Conventions
+
+## Before writing
+
+Read relevant area docs before modifying backend code.
+
+## Core skill
+
+**[SKILL_BACKEND]** — always active for backend work (middleware, routing, error handling).
+
+## Conditional skills (activate by trigger)
+
+[BACKEND_SKILLS_LIST]
+
+## Agents
+
+- **doc-updater** — invoke if changes are multi-area
+
+## Restrictions
+
+See logging, SQL, encryption conventions in security area doc (if exists).
+
+## After modifying, update
+
+Update backend area doc in the same act if the change is architectural.
