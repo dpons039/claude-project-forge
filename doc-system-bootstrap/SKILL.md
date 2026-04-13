@@ -85,6 +85,14 @@ touch docs/db/.gitkeep \
       docs/_archive/changelog/.gitkeep
 ```
 
+Ensure `.gitignore` excludes the ephemeral brainstorm server state
+written by superpowers. Append `.superpowers/` to the project's root
+`.gitignore` if not already present (create the file if missing):
+
+```bash
+grep -qxF '.superpowers/' .gitignore 2>/dev/null || echo '.superpowers/' >> .gitignore
+```
+
 Create these files (adapt to the project — only create area docs for areas that exist):
 - `docs/README.md` — Project map, adapt from `templates/docs-structure.md` § README skeleton
 - `docs/doc-system.md` — Copy from `templates/doc-system.md`
@@ -176,7 +184,26 @@ existing hooks. Add `.claude/settings.local.json` to `.gitignore` if it contains
 
 ### Step 7 — Update CLAUDE.md
 
-Add documentation and SDD workflow references to CLAUDE.md. Adapt language to match the project's:
+This skill is the **owner of the SDD section in CLAUDE.md**. Both the
+documentation block and the change workflow block are authored here;
+`project-bootstrap` only leaves a short stub.
+
+**Stub detection.** Before writing, look for a stub left by
+`project-bootstrap`. It looks like this:
+
+```markdown
+## Change Workflow
+
+For significant changes (new feature, refactor >3 files, schema
+change, architecture change): if `docs/changes/README.md` exists,
+follow its workflow. Otherwise commit directly with clear messages.
+```
+
+If the stub is present → **replace it** with the full block below.
+If not → insert the full block after the § Documentation section (or
+at a sensible location near the top of CLAUDE.md).
+
+Adapt language to match the project's. Use this content:
 
 ```markdown
 ## Documentation
@@ -197,13 +224,27 @@ explicit authorization from the owner.
 - **Significant changes** (new feature, refactor >3 files, new migration,
   architecture change): create proposal in `docs/changes/{YYYY-MM-DD}-{slug}/proposal.md`
   copying the template BEFORE implementing
+- **Standard cycle** (clear scope, ≤5 files): `writing-plans` → proposal with inline plan → implement → close
+- **Complex cycle** (multi-area, architecture, ambiguous scope): `brainstorming` → spec → `writing-plans` → `plan.md` → implement → close
+- **Mandatory superpowers per phase** — see `docs/changes/README.md` for the full mapping
+- **Domain skills and agents:** in each phase, consult skills indicated by active rules (`.claude/rules/`)
 - On completing standalone task from `planning.md`: delete the line + summary to changelog
   **in the same commit**. If group task: ~~strikethrough~~ but don't delete.
 - `planning.md`: only `[ ]` pending — NEVER `[x]`. Completed group tasks get
   ~~struck through~~ (progress). Entire group struck → delete block.
 - `changelog.md`: new entries ≤5 bullets + pointers to area docs
-- Cycle: proposal → approval → implementation → area docs → changelog → archive
 - See detail: `docs/changes/README.md`
+
+## Superpowers — output routing
+
+Superpowers skills default to `docs/superpowers/{plans,specs}/` but this
+project overrides that via the Instruction Priority (CLAUDE.md wins):
+
+- `writing-plans` → `docs/changes/{YYYY-MM-DD}-{slug}/plan.md`
+- `brainstorming` (final spec) → `docs/changes/{YYYY-MM-DD}-{slug}/proposal.md`
+- Never write to `docs/superpowers/plans/` or `docs/superpowers/specs/`
+- Create the `{slug}` folder if missing before writing
+- Ephemeral brainstorm server state: `.superpowers/brainstorm/` (gitignored)
 ```
 
 ### Step 8 — Summary

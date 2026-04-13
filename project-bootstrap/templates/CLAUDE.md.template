@@ -74,18 +74,16 @@ Known paths and errors: `.claude/rules/[ENV_RULE_FILE]`
 - **Area change:** ask before moving to another work area.
 - **High-impact changes:** ask before modifying core files (CLAUDE.md, .gitignore, doc-coverage.json) outside the task scope.
 
-## Change Workflow (SDD)
+## Change Workflow
 
-- **Significant changes** (new feature, refactor >3 files, new migration,
-  architecture change): create proposal in `docs/changes/{YYYY-MM-DD}-{slug}/proposal.md`
-  copying the template BEFORE implementing
-- On completing standalone task from `planning.md`: delete the line + summary to changelog
-  **in the same commit**. If group task: ~~strikethrough~~ but don't delete.
-- `planning.md`: only `[ ]` pending — NEVER `[x]`. Completed group tasks get
-  ~~struck through~~ (progress). Entire group struck → delete block.
-- `changelog.md`: new entries ≤5 bullets + pointers to area docs
-- Cycle: proposal → approval → implementation → area docs → changelog → archive
-- See detail: `docs/changes/README.md`
+For significant changes (new feature, refactor >3 files, schema
+change, architecture change): if `docs/changes/README.md` exists,
+follow its workflow. Otherwise commit directly with clear messages.
+
+<!-- This is a stub. If doc-system-bootstrap is installed, it will
+     replace this block with the full SDD workflow (levels, mandatory
+     superpowers per phase, output routing). -->
+
 
 ## Engineering principles
 

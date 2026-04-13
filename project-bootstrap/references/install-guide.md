@@ -102,8 +102,16 @@ Copy `templates/claude/skills/session-close/SKILL.md` → `.claude/skills/sessio
 
 ### 2.10 — Skills installation
 - If Superpowers not installed → show installation instructions, pause
-- Install approved skills: `npx skills add <owner/repo@skill-name> -g -y` for each
-- If `doc-system-bootstrap` approved → invoke it to set up docs
+- For each approved skill: ask user **local (default) or global (`-g`)**.
+  Install local by default: `npx skills add <owner/repo@skill-name> -y`.
+  Global only with explicit confirmation: add `-g`.
+- Skills that live in this user's own forge repo
+  (`https://github.com/dpons039/claude-project-forge`) are installed via:
+  `npx skills add https://github.com/dpons039/claude-project-forge --skill <skill-name> -y`.
+- If `doc-system-bootstrap` approved → install **local** from the forge
+  repo and invoke it to set up docs (one-time skill, uninstall after).
+- If `session-close` approved → install **local** from the forge repo
+  (depends on the project being up to date).
 - If `teach-impeccable` approved and has frontend → invoke after installation
 
 ## Phase 3: Confirmation

@@ -57,10 +57,23 @@ No more questions. Generate everything in order:
 9. `.claude/skills/session-close/` — copy from `templates/claude/skills/session-close/`
 10. `.claudeignore`, `.prettierrc`, `.gitignore` entries, `.githooks/pre-commit`
 11. `git config core.hooksPath .githooks`
-12. Ask: install `doc-system-bootstrap`? → if yes, invoke it
-13. Ask: install `session-close` skill? → if yes, install via `npx skills add`
+12. Ask: install `doc-system-bootstrap`? → if yes, invoke it.
+    Install **local to the project** (one-time skill, can be
+    uninstalled after running). If the user says yes, `doc-system-bootstrap`
+    will replace the stub § Change Workflow in CLAUDE.md with the full
+    SDD block (Standard/Complex levels + mandatory superpowers per phase
+    + Superpowers output routing).
+13. Ask: install `session-close` skill? → if yes, install **local to the
+    project** via
+    `npx skills add https://github.com/dpons039/claude-project-forge --skill session-close -y`
+    (session-close depends on the project being up to date; keeping it
+    local matches its scope).
 14. Install Superpowers if not present (provide instructions)
-15. Install approved additional skills via `npx skills add <owner/repo@skill-name> -g -y`
+15. Install approved additional skills. **Default: local to the project**
+    (`npx skills add <owner/repo@skill-name> -y`). Before running each
+    install, ask the user explicitly whether they want it local
+    (default) or global (`-g`, user-level). Global only with explicit
+    confirmation.
 16. If has frontend + `teach-impeccable` approved → invoke it
 
 ### Phase 3: Confirmation

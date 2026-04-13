@@ -5,8 +5,11 @@ declared stack. User approves which to install.
 
 ## Installation command
 
+Default is **local to the project** (no `-g`). Ask the user before
+each install whether they want local (default) or global.
+
 ```bash
-npx skills add <owner/repo@skill-name> -g -y
+npx skills add <owner/repo@skill-name> -y
 ```
 
 For git URLs (private repos):
@@ -23,8 +26,8 @@ npx skills add <GIT_URL> --skill <skill-name>
 | superpowers | obra/superpowers | Base system: plans, debugging, TDD, worktrees |
 | clean-code | sickn33/antigravity-awesome-skills | Code quality and readability |
 | systematic-debugging | obra/superpowers | Root cause analysis before proposing fixes |
-| session-close | [user's skill repo] | End-of-session checklist |
-| doc-system-bootstrap | [user's skill repo] | Documentation system + SDD workflow |
+| session-close | https://github.com/dpons039/claude-project-forge (skill: `session-close`) | End-of-session checklist |
+| doc-system-bootstrap | https://github.com/dpons039/claude-project-forge (skill: `doc-system-bootstrap`) | Documentation system + SDD workflow |
 
 ## SECURITY (always suggest, user decides)
 
@@ -116,5 +119,13 @@ npx skills add <GIT_URL> --skill <skill-name>
 
 - All skill sources have been resolved
 - `[user's skill repo]` refers to the repo where project-bootstrap itself lives
-- The `-g` flag installs globally (user-level)
+- Default install is **local to the project** (no `-g`). Ask the user
+  before each install whether they want it local (default) or global
+  (`-g`, user-level). Install global only with explicit confirmation.
 - `-y` skips confirmation prompts
+- `[user's skill repo]` in this catalog resolves to
+  `https://github.com/dpons039/claude-project-forge`. Install its skills
+  via:
+  ```
+  npx skills add https://github.com/dpons039/claude-project-forge --skill <skill-name> -y
+  ```

@@ -4,3 +4,4 @@ CLAUDE.local.md
 .session-changes.json
 .claude/skip-doc-authorized
 .mcp.json
+.superpowers/
