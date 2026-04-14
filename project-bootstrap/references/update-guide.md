@@ -10,7 +10,7 @@ These files are generic infrastructure, not project-specific:
 
 | Category | Files |
 |----------|-------|
-| Rules (fixed) | `system-health.md`, `debugging.md`, `code-search.md`, `env-windows.md` |
+| Rules (fixed) | `system-health.md`, `debugging.md`, `code-search.md`, `code-quality.md`, `env-windows.md` |
 | Agents | `doc-updater.md`, `git-ops.md`, `migration-checker.md`, `ui-reviewer.md` |
 | Hooks | `secret-scanner.py`, `doc-track.py`, `doc-check.py` |
 | Skills | `session-close/SKILL.md` |
@@ -67,7 +67,7 @@ Scan all dotfiles and dotfolders at the project root (files/folders starting wit
 
 | Category | Paths |
 |----------|-------|
-| Rules (fixed) | `.claude/rules/system-health.md`, `debugging.md`, `code-search.md`, `env-windows.md` |
+| Rules (fixed) | `.claude/rules/system-health.md`, `debugging.md`, `code-search.md`, `code-quality.md`, `env-windows.md` |
 | Agents | `.claude/agents/` (all) |
 | Hooks | `.claude/hooks/` (all .py files) |
 | Skills | `.claude/skills/session-close/` |
@@ -115,6 +115,7 @@ Never propagate these — they contain project-specific data:
 | `.claude/rules/system-health.md` | `templates/claude/rules/system-health.md` |
 | `.claude/rules/debugging.md` | `templates/claude/rules/debugging.md` |
 | `.claude/rules/code-search.md` | `templates/claude/rules/code-search.md` |
+| `.claude/rules/code-quality.md` | `templates/claude/rules/code-quality.md` |
 | `.claude/agents/doc-updater.md` | `templates/claude/agents/doc-updater.md` |
 | `.claude/agents/git-ops.md` | `templates/claude/agents/git-ops.md` |
 | `.claude/agents/migration-checker.md` | `templates/claude/agents/migration-checker.md` |

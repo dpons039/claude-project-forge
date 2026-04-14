@@ -8,7 +8,8 @@ paths:
 
 ## Before writing
 
-Read relevant area docs before modifying backend code.
+1. Read relevant area docs before modifying backend code.
+2. Apply the cross-cutting code-quality skills → see `.claude/rules/code-quality.md` (`clean-code`, `test-driven-development`, `verification-before-completion`).
 
 ## Core skill
 

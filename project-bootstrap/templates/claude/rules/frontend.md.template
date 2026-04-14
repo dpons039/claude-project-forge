@@ -11,7 +11,8 @@ paths:
 
 ## Before writing
 
-Read relevant area docs before modifying frontend code.
+1. Read relevant area docs before modifying frontend code.
+2. Apply the cross-cutting code-quality skills → see `.claude/rules/code-quality.md` (`clean-code`, `test-driven-development` for new behavior, `verification-before-completion` before closing).
 
 ## Core skill
 

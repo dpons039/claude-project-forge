@@ -7,6 +7,11 @@ paths:
 
 # Database — Skills & Conventions
 
+## Before writing
+
+- Read `docs/db.md` (index + migration counter) and the `docs/db/*.md` of the touched area.
+- Apply the cross-cutting code-quality skills → see `.claude/rules/code-quality.md` (`writing-plans` for complex migrations, `verification-before-completion` before applying).
+
 ## Core skill
 
 **[SKILL_DB]** — schema design, complex queries, indexes, performance.

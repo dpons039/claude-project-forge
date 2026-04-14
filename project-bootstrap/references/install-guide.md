@@ -77,6 +77,7 @@ Copy fixed rules from `templates/claude/rules/`:
 - `system-health.md` → always
 - `code-search.md` → always
 - `debugging.md` → always
+- `code-quality.md` → always (cross-cutting skills: clean-code, TDD, verification, code review, planning)
 - `env-windows.md` → only if Windows (replace `[PROJECT_PATH]` placeholders)
 
 Generate stack rules from templates (only those that apply):
