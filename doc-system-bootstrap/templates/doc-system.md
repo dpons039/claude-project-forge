@@ -55,21 +55,43 @@ lines: the claim, without the argument**. The inline block states the decision
 and its trade-off; measurements and full derivations go to a linked file or
 the proposal, not the block.
 
-**Never rewrite the text of a decision.** The only edit ever allowed on an
-existing decision is adding its `Superseded by` line.
+**Never rewrite the text of a decision.** The only edits ever allowed on an
+existing decision are its `Superseded by` / `Refined by` lines.
 
-When a decision changes, all four steps — a decision that only points forward
-leaves the old block reading as if it were still in force:
+Two ways a decision can be affected by a later one. Pick by asking whether the
+old claim still holds:
 
-1. Write the new one in the area doc with a new ID and a `Supersedes D-n` line.
-2. Add to the old block: `**Superseded by D-m (YYYY-MM-DD)** — doc.md § section`.
-3. Move the old block to `docs/_archive/decisions.md`, text intact.
-4. In `decisions.md`, mark the old row `superseded by D-m` and add the new row as `active`.
+| | **Superseded** — the old claim is now false | **Refined** — the old claim still holds, narrowed or extended |
+|---|---|---|
+| Old block | `**Superseded by D-m (date)** — doc.md § section` | `**Refined by D-m (date)** — doc.md § section` |
+| New block | `Supersedes D-n` | `Refines D-n` |
+| Old block moves | yes → `docs/_archive/decisions.md` | **no** — stays in the area doc, still in force |
+| Index status | `superseded by D-m` | `active (refined by D-m)` |
+
+Both directions always, in the same edit. A decision that only points forward
+leaves the old block reading as if nothing had happened.
+
+**Only these two relations exist.** Prose reaches for many verbs — reversed,
+amended, corrected, revised, extends — and each new label is one more thing to
+choose wrong. Map them:
+
+| Prose says | Use | Because |
+|---|---|---|
+| reverses, undoes, replaces | `Superseded` | the old claim is now false |
+| corrects, amends, revises, extends | `Refined` | one figure moves, the claim stands |
+| renames a file/section the old one created | `Refined` | nothing it asserted changed |
+
+The nuance ("corrects the 128 kB figure to 118") belongs in the new decision's
+own text, where it reads naturally — not in a third label.
 
 ```markdown
-# Area doc — only decisions in force
+# Area doc — decisions in force
 > **Decision:** (2026-09-02, D14) Docker in development too.
 > Supersedes D7 (see `_archive/decisions.md`).
+
+> **Decision:** (2026-05-10, D26) No FKs between SDE tables — allows atomic swap.
+>
+> **Refined by D63 (2026-09-02)** — `backend.md` § SDE loader.
 
 # _archive/decisions.md — original reasoning, kept whole
 > **Decision:** (2026-08-01, D7) Docker is production-only. Dev runs native
@@ -77,6 +99,9 @@ leaves the old block reading as if it were still in force:
 >
 > **Superseded by D14 (2026-09-02)** — `infrastructure.md` § Docker.
 ```
+
+Never archive a refined decision: D26 above is still the rule, D63 only carves
+out an exception to it. Archiving it would delete a claim that is still in force.
 
 ### Cross-file dependencies → `## If you touch...`
 "If you change X, also update Y." Each area doc has this section at the end.
@@ -101,6 +126,7 @@ When a task is completed:
 - New cross-file dependency → add to `## If you touch...`
 - New architecture decision → inline with `> **Decision:** (date, D-n)`
 - Decision that replaces an existing one → new inline block + `Superseded by` on the old + archive it
+- Decision that refines an existing one → new inline block + `Refined by` on the old + old stays put
 
 ### NO update area doc if:
 - Value change (config, size, color, text)
@@ -115,7 +141,8 @@ When a task is completed:
 | Event | Action |
 |-------|--------|
 | New architecture decision | Inline `> **Decision:** (date, D-n)` + entry in decisions.md |
-| Decision replaced | New inline `D-m` + `Superseded by` line on the old + move old to `_archive/decisions.md` + mark both rows in the index |
+| Decision replaced (old claim now false) | New inline `D-m` + `Superseded by` line on the old + move old to `_archive/decisions.md` + mark both rows in the index |
+| Decision refined (old claim still holds) | New inline `D-m` + `Refined by` line on the old + old **stays** in the area doc + index row `active (refined by D-m)` |
 | New DB table | Create `db/[table].md` + update index |
 | Architectural change in an area | Rewrite section in area doc |
 | New convention | Add to `## Conventions` of area doc |

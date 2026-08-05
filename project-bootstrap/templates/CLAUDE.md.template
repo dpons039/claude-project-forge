@@ -27,8 +27,9 @@
 - Index: `docs/README.md` — read the area doc BEFORE touching code
 - System: `docs/doc-system.md` — principles and rules
 - Decisions: inline with `> **Decision:** (date, D-n)` — index in `docs/decisions.md`.
-  Never rewrite one: if it changes, new decision + `Superseded by` on the old +
-  move the old to `docs/_archive/decisions.md`
+  Never rewrite one: if it changes, new decision + `Superseded by` on the old
+  (old claim false → move it to `docs/_archive/decisions.md`) or `Refined by`
+  (old claim still holds → it stays put)
 - Agent: `doc-updater` — invoke before multi-area commits
 [MIGRATIONS_RESTRICTION]
 

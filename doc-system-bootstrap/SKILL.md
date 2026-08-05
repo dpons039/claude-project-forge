@@ -216,8 +216,9 @@ Adapt language to match the project's. Use this content:
 - Index: `docs/README.md` — read the area doc BEFORE touching code
 - System: `docs/doc-system.md` — principles and rules
 - Decisions: inline with `> **Decision:** (date, D-n)` — index in `docs/decisions.md`.
-  Never rewrite one: if it changes, new decision + `Superseded by` on the old +
-  move the old to `docs/_archive/decisions.md`
+  Never rewrite one: if it changes, new decision + `Superseded by` on the old
+  (old claim false → move it to `docs/_archive/decisions.md`) or `Refined by`
+  (old claim still holds → it stays put)
 - Agent: `doc-updater` — invoke before multi-area commits
 
 When creating new file in `docs/`: update `docs/README.md`.
@@ -302,7 +303,8 @@ Read `templates/doc-system.md` for the full principles document. Key rules:
 - **No code duplication**: if Claude can read it from source → don't document it.
 - **Rewrite, don't append**: docs describe current state, not history.
 - **Decisions inline**: `> **Decision:** (date, D-n)` marker, indexed in decisions.md.
-  Never rewritten — replaced ones get a `Superseded by` line and move to `_archive/decisions.md`.
+  Never rewritten — superseded ones get a `Superseded by` line and move to
+  `_archive/decisions.md`; refined ones get a `Refined by` line and stay put.
 - **Conventions in area docs**: `## Conventions`, 1-in-1-out rule.
 - **Cross-file deps**: `## If you touch...` in each area doc.
 - **Split threshold**: >350 lines + independent subtopics → subdirectory.

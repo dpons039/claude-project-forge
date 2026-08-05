@@ -8,13 +8,17 @@ without the argument.
 IDs are assigned as the next free number in the `#` column and are never reused,
 not even those of superseded decisions.
 
-When a decision changes, never rewrite it — all four steps:
+When a decision changes, never rewrite it. Ask whether the old claim still holds:
 
-1. New decision inline in the area doc, with a new ID and a `Supersedes D-n` line.
-2. Add `**Superseded by D-m (YYYY-MM-DD)** — doc.md § section` to the old block.
-3. Move the old block to `_archive/decisions.md`, text intact.
-4. Here: mark the old row `superseded by D-m`, point its Doc at `_archive/decisions.md`,
-   and add the new row as `active`.
+**Superseded** (old claim now false) — new decision inline with `Supersedes D-n`;
+`**Superseded by D-m (date)** — doc.md § section` added to the old block; old block
+moved to `_archive/decisions.md`; here, old row → `superseded by D-m` with its Doc
+pointing at `_archive/decisions.md`, new row → `active`.
+
+**Refined** (old claim still holds, narrowed or extended) — new decision inline with
+`Refines D-n`; `**Refined by D-m (date)** — doc.md § section` added to the old block;
+the old block **stays in its area doc**; here, old row → `active (refined by D-m)`.
+Never archive a refined decision — it is still in force.
 
 | # | Decision | Doc | Section | Status |
 |---|----------|-----|---------|--------|

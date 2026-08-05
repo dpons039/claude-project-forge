@@ -26,6 +26,7 @@ From the main agent: diff/file list + summary of session actions
 - New cross-file dependency discovered → add to § If you touch...
 - New architectural decision (trade-off, choice between alternatives) → inline with `> **Decision:** (date, D-n)` marker
 - Decision that replaces an existing one → new marker + `Superseded by` on the old + archive it
+- Decision that refines an existing one → new marker + `Refined by` on the old + old stays put
 
 ### NO update area doc if:
 - Value change (rate limit, size, color, text)
@@ -74,12 +75,21 @@ any existing one is already enforced by the system (lint, type, test) and remove
    - Convention: update § Conventions (apply 1-in-1-out)
    - Dependency: add to § If you touch...
    - New decision: add inline with `> **Decision:** (YYYY-MM-DD, D-n)` + update `decisions.md`
-   - Decision that replaces another: **never rewrite the old text** — all four steps:
+   - Decision affected by a later one: **never rewrite the old text.** Ask whether
+     the old claim still holds, then apply both directions in the same edit:
+
+     **Superseded** (old claim now false):
      1. New block inline with a new ID + `Supersedes D-n` line
      2. Add `**Superseded by D-m (YYYY-MM-DD)** — doc.md § section` to the old block
      3. Move the old block to `docs/_archive/decisions.md`, text intact
      4. In `decisions.md`: old row → `superseded by D-m` and Doc → `_archive/decisions.md`;
         new row → `active`
+
+     **Refined** (old claim still holds, narrowed or extended):
+     1. New block inline with a new ID + `Refines D-n` line
+     2. Add `**Refined by D-m (YYYY-MM-DD)** — doc.md § section` to the old block
+     3. The old block **stays in its area doc** — never archive a decision still in force
+     4. In `decisions.md`: old row → `active (refined by D-m)`; new row → `active`
 3. **DO NOT add** detail derivable from code (params, props, values)
 
 #### docs/db/*.md:
@@ -100,8 +110,12 @@ Update status. Only `[ ]` pending, delete completed.
 If inline decision was added → add entry to the index with pointer, assigning the
 next free ID in the `#` column (never reuse an ID, not even an archived one) and
 `Status: active`.
-If a decision was replaced → mark the old row `superseded by D-m` and repoint its
-Doc to `_archive/decisions.md`.
+If a decision was superseded → mark the old row `superseded by D-m` and repoint its
+Doc to `_archive/decisions.md`. If merely refined → old row `active (refined by D-m)`,
+Doc unchanged.
+
+**This agent owns the archiving process.** `session-close` verifies the result and
+delegates here when a step is missing; the four steps are written down only in this file.
 
 ### Step 4 — Changelog rotation
 If `changelog.md` exceeds 500 lines:
@@ -139,5 +153,6 @@ DO NOT read files excluded in `.claudeignore`.
 ### ⚠️ Manual attention
 - New decision added → verify entry in decisions.md
 - Decision D-n superseded by D-m → verify: Superseded line added, old block archived, index updated
+- Decision D-n refined by D-m → verify: Refined line added, old block still in place, index row updated
 - SIZE: `docs/X.md` has N lines (>350) — consider compression or split
 ```
