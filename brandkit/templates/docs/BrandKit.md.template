@@ -1,0 +1,116 @@
+# BrandKit
+
+The page you open when a screen needs an element and the question is "how does
+this go". Every decision rendered, with the code beside it.
+
+**[DEV_URL_PATH]** <!-- e.g. "npm run dev, then localhost:5173/brandkit.html". Write "TBD until init-page runs" if the page does not exist yet. -->
+
+## What it is for
+
+Three things, in this order:
+
+1. **Copy-paste.** Each block shows the rendered thing next to the code that
+   produces it, with a button that copies it. If the code is not right there,
+   the question comes back next time.
+2. **Verification.** Contrast ratios are computed from what the browser
+   actually rendered, not transcribed from `design.md`. If a token changes and
+   nobody re-measures, the page says so.
+3. **A single place to look.** The reasoning lives in `design.md` and
+   `voice.md`; this shows the result. Where the two disagree, the docs win —
+   see § Keeping it honest.
+
+## Why it cannot reach production
+
+The page is a **separate build entry, never declared in the build inputs** —
+it is simply never built, which the build output confirms with no conditional
+and no faith in tree-shaking. For the same reason its assets cannot live in a
+folder the build copies wholesale (e.g. `public/`).
+
+The app never imports from the page's directory: one such import would pull
+its code into the production bundle without the build-output check seeing it.
+
+## The tabs
+
+| Tab | What it answers |
+|---|---|
+| **Foundations** | The mark, the typefaces, the type scale, spacing, radii — plus iconography and motion |
+| **Colour** | The neutrals per theme, the accents/identities, ratios measured live |
+| **Components** | [BLOCK_COUNT] blocks: [BLOCK_LIST] |
+| **[DOMAIN_TAB_NAME]** | [DOMAIN_TAB_CONTENT] |
+| **Layouts** | The shell and the screens, from the original mockups at real widths |
+| **Voice** | Errors, empty states, destructive confirmation |
+| **Accessibility** | The criteria, focus, target size, colour vision |
+
+Controls sit above them and change everything at once ([CONTROLS_LIST]).
+They are not tabs — the point is finding out whether a decision survives every
+combination, not just the default.
+
+A canonical block may be skipped only with a note here: "skipped: <reason>".
+
+## How to add a block
+
+```tsx
+<Section
+  title="What it is"
+  note="Why it is that way — one or two sentences, not a paragraph."
+>
+  <Frame>{/* the specimen */}</Frame>
+  <CodeBlock code={`/* the exact code to paste */`} />
+</Section>
+```
+
+`wide` puts the note above rather than beside, for specimens that need the
+whole line.
+
+Four rules every block follows:
+
+- **Official classes**, not raw tokens. What gets copied has to be what the
+  app will write. Raw tokens appear only where the token *is* the content.
+- **Chrome in the docs language, examples in [UI_LANG] — and literal.**
+  Examples do not go through the i18n catalog: this page is a mockup, and
+  coupling it to the catalog breaks the design system whenever a key renames.
+  Per-block exceptions where the wiring itself is the point.
+  **The licence is wording, not substance** — a specimen may phrase
+  differently, it may not state a different rule.
+- **Copy verbatim from the settled source.** Rewording a settled string makes
+  this page a second, quietly different source.
+- **Never colour alone.** A pass mark is a word, a state is a shape, a swatch
+  carries its name.
+
+## The mockups
+
+Embedded mockups are **copies** of their source, never symlinks and never
+redrawn in JSX — a redrawn copy drifts. Corrections made after copying live as
+inline comments beside the changed line, so a re-copy that drops them shows in
+the diff. Diff before every re-copy.
+
+They keep their own stylesheets and do not follow the page controls: the
+greyscale is how structure was decided.
+
+The width must stay real: `<Wireframe>` scales with a CSS transform rather
+than capping width, because a transform applies after layout — the document
+inside still measures its true width and picks the right breakpoint.
+
+## The specimen has to sit where the defect can show
+
+A block that renders the right code can still be a passing test of nothing.
+A component that shares its background with `Frame` proves nothing about the
+boundary; a one-line specimen is a screenshot of the good case.
+
+- Show the specimen in the state that breaks it, not the tidiest one.
+- Put a control on the background it will actually meet.
+
+## Keeping it honest
+
+The BrandKit shows; it does not decide. When it disagrees with a doc, the doc
+is right and the page is the bug.
+
+| Change | Also update |
+|---|---|
+| A colour, type or spacing token | [design.md](design.md) first — this page reads from the tokens |
+| A contrast ratio, or any token that moves one | The token stylesheet **and** the theme test that pins the ratios |
+| Copy in an example | [voice.md](voice.md), and copy the wording back verbatim |
+| A new block in `Components` | The block count in § The tabs — written out, not derived, so it goes stale silently |
+| A string that also exists in the locale catalog | Copy it **verbatim**, punctuation included |
+| A mockup source | Re-copy into the page's embedded copy — they are copies, not links; diff first |
+| An accent/theme/identity | `PRODUCT.md` § Brand Commitments if it enumerates them; the token table in design.md |

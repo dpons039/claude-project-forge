@@ -32,6 +32,7 @@ Each source is SSOT for its area. DO NOT duplicate its content in the report, on
 | [PROJECT_DESIGN_DOC] | Visual direction, personality, design principles |
 | [PROJECT_VOICE_DOC] | Product voice, writing rules, word list, copy patterns |
 | [PROJECT_BRAND_DOC] | CSS tokens, typography, colors, scale |
+| [PROJECT_BRANDKIT_DOC] | Dev BrandKit page contract: tabs, blocks, how specimens are built (remove row if no BrandKit page) |
 | Locale files | i18n keys used by the component |
 
 DO NOT read files excluded in `.claudeignore`.

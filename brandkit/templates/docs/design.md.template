@@ -1,0 +1,47 @@
+# Design — [PROJECT_NAME]
+
+<!-- Stub created by the brandkit skill (init-docs). Fill each "Pending
+     definition" as decisions land — flag, don't invent. Keep under 350 lines;
+     present state only. -->
+
+## Typography
+
+Pending definition — typefaces (mark / interface / figures), type scale
+tokens, weights.
+
+## Colour
+
+### Neutrals
+
+Pending definition — table: token · light · dark · use.
+
+### Accents / identities
+
+Pending definition — table: name · light · dark · contrast floor met.
+
+> **Decision:** Pending definition — where the accent reaches and where it
+> does not.
+
+## Mark
+
+Pending definition — master file, variants, exclusion zone, sizes.
+
+## Scale, spacing, radii
+
+Pending definition — base unit, spacing steps, radius roots and named tokens,
+density modes if any.
+
+## Shell
+
+Pending definition — app shell structure per breakpoint, committed widths.
+
+## Conventions
+
+- Tokens live in the stylesheet; docs state them, the BrandKit page reads
+  them live. A value written in three places is two bugs waiting.
+
+## If you touch...
+
+- **A token value** → the BrandKit page shows it live; update this table and
+  the theme test that pins contrast ratios.
+- **This file** → `docs/BrandKit.md` § Keeping it honest lists the rest.

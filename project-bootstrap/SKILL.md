@@ -40,7 +40,9 @@ Ask questions sequentially, one at a time. These determine what gets generated:
 8. Uses DB migrations? Which folder?
 9. Code dirs that trigger doc updates (TRACKED_DIRS)
 10. Has Superpowers installed? (if not → provide instructions)
-11. Additional skills — show curated list from `references/skills-catalog.md`
+11. Additional skills — show curated list from `references/skills-catalog.md`.
+    If the project has or wants a dev BrandKit page, offer `brandkit`
+    (DESIGN section) — its install is step 17, after PRODUCT.md exists
 
 ### Phase 2: Generation
 
@@ -75,6 +77,11 @@ No more questions. Generate everything in order:
     (default) or global (`-g`, user-level). Global only with explicit
     confirmation.
 16. If has frontend and no `PRODUCT.md` at the root → install `impeccable` (pbakaus) temporarily, run `/impeccable teach` to generate PRODUCT.md (v4 successor of the old standalone `teach-impeccable`/`.impeccable.md`), then uninstall it (design-skill rule: only `frontend-design` stays installed)
+17. If `brandkit` approved (step 11) → install **local** from the forge repo
+    (`npx skills add https://github.com/dpons039/claude-project-forge --skill brandkit -y`)
+    and invoke its `init-docs` (no frontend dependency; runs after step 16 so
+    PRODUCT.md exists for the § Brand Commitments append). If the frontend
+    already exists, offer `init-page` too.
 
 ### Phase 3: Confirmation
 
@@ -96,7 +103,9 @@ Read `references/update-guide.md` § "Mode 2" for full details.
 - Fixed rules: `system-health.md`, `debugging.md`, `code-search.md`, `env-windows.md`
 - Agents: `doc-updater.md`, `git-ops.md`, `migration-checker.md`, `ui-reviewer.md`
 - Hooks: `secret-scanner.py`, `doc-track.py`, `doc-check.py`
-- Skills: `session-close/SKILL.md`
+- Skills: `session-close/SKILL.md`. The `brandkit` skill is NOT template-copied —
+  it is lock-managed: update it by re-running
+  `npx skills add https://github.com/dpons039/claude-project-forge --skill brandkit -y`
 - Config: `TOKEN-BUDGET.md`
 - Git hooks: `.githooks/pre-commit`
 
@@ -125,6 +134,9 @@ Read `references/update-guide.md` § "Mode 3" for full details.
 All dotfiles and dotfolders at the project root that are system-level:
 - `.claude/rules/` (fixed rules only), `.claude/agents/`, `.claude/hooks/`
 - `.claude/skills/session-close/`, `.claude/TOKEN-BUDGET.md`
+- `.claude/skills/brandkit/` — special destination: propagates to the forge's
+  top-level `brandkit/` folder (the skill's source), NOT to project-bootstrap
+  templates
 - `.claudeignore`, `.githooks/`, `.prettierrc`, `.gitattributes`
 
 ### What is NEVER propagated

@@ -13,7 +13,7 @@ These files are generic infrastructure, not project-specific:
 | Rules (fixed) | `system-health.md`, `debugging.md`, `code-search.md`, `code-quality.md`, `env-windows.md` |
 | Agents | `doc-updater.md`, `git-ops.md`, `migration-checker.md`, `ui-reviewer.md` |
 | Hooks | `secret-scanner.py`, `doc-track.py`, `doc-check.py` |
-| Skills | `session-close/SKILL.md` |
+| Skills | `session-close/SKILL.md`. `brandkit` is NOT template-copied — lock-managed, update via `npx skills add https://github.com/dpons039/claude-project-forge --skill brandkit -y` |
 | Config | `TOKEN-BUDGET.md` |
 | Git hooks | `.githooks/pre-commit` |
 
@@ -70,7 +70,7 @@ Scan all dotfiles and dotfolders at the project root (files/folders starting wit
 | Rules (fixed) | `.claude/rules/system-health.md`, `debugging.md`, `code-search.md`, `code-quality.md`, `env-windows.md` |
 | Agents | `.claude/agents/` (all) |
 | Hooks | `.claude/hooks/` (all .py files) |
-| Skills | `.claude/skills/session-close/` |
+| Skills | `.claude/skills/session-close/`; `.claude/skills/brandkit/` (special destination — see Path mapping) |
 | Config | `.claude/TOKEN-BUDGET.md` |
 | Dotfiles | `.claudeignore`, `.githooks/`, `.gitea/`, `.prettierrc`, `.gitattributes` |
 
@@ -123,6 +123,7 @@ Never propagate these — they contain project-specific data:
 | `.claude/hooks/doc-check.py` | `templates/claude/hooks/doc-check.py` |
 | `.claude/hooks/doc-track.py` | `templates/claude/hooks/doc-track.py` |
 | `.claude/skills/session-close/SKILL.md` | `templates/claude/skills/session-close/SKILL.md` |
+| `.claude/skills/brandkit/` (any file) | the forge's top-level `brandkit/` folder — the skill's own source, NOT project-bootstrap templates |
 | `.claude/TOKEN-BUDGET.md` | `templates/claude/TOKEN-BUDGET.md.template` |
 | `.claudeignore` | `templates/claudeignore.template` |
 | `.prettierrc` | `templates/prettierrc.template` |

@@ -10,14 +10,16 @@ Ask these questions sequentially, one at a time:
 2. **Has frontend / backend / both?**
 3. **Stack per layer** — languages, frameworks, DB, ORM
 4. **OS/environment** — Windows+bash, macOS, Linux
-5. **Code language / UI language / response language**
+5. **Written language / UI language / response language** — "written" covers
+   ALL artifacts: code, docs, comments, commit messages, proposals, plans (not
+   just code; the old 3-part form under-declared this and projects drifted)
 6. **Development branch + protected branch** (e.g.: dev / main)
 7. **Mandatory conventions** — naming, PKs, enums, etc.
 8. **Uses DB migrations? Which folder?** — for `.claudeignore` and database rule
 8b. **Exclude `node_modules/` from Claude's eager context?** — per-project choice; default yes. Sets `[NODE_MODULES_LINE]` in `.claudeignore` (`node_modules/` or a commented line)
 9. **Code dirs that trigger doc updates (TRACKED_DIRS)** — e.g.: `backend/src/`, `frontend/src/`
 10. **Has Superpowers installed?** — if not, provide instructions
-11. **Additional skills** — show curated list from `references/skills-catalog.md`, user approves
+11. **Additional skills** — show curated list from `references/skills-catalog.md`, user approves. If the project has or wants a dev BrandKit page, offer `brandkit` (DESIGN section)
 
 ## Phase 2: Generation
 
@@ -26,7 +28,8 @@ Execute in order, no more questions:
 ### 2.1 — CLAUDE.md
 Read `templates/CLAUDE.md.template`. Replace all `[PLACEHOLDERS]` with collected data:
 - `[PROJECT_NAME]`, `[PROJECT_DESCRIPTION]`, `[STACK]`
-- `[CODE_LANG]`, `[UI_LANG]`, `[RESPONSE_LANG]`
+- `[CODE_LANG]` (the written-artifacts language: code + docs + comments +
+  commits), `[UI_LANG]`, `[RESPONSE_LANG]`
 - `[DEV_BRANCH]`, `[PROTECTED_BRANCH]`
 - `[CONVENTIONS]` — one `- ` line per convention declared
 - `[TRACKED_DIRS]` — comma-separated list
@@ -92,6 +95,13 @@ Generate stack rules from templates (only those that apply):
 
 For each template rule, replace `[SKILL_*]` placeholders with the actual skills the user approved.
 
+In `frontend.md`, replace `[BRANDKIT_LINE]` with the BrandKit reference line
+("4. **BrandKit page** (dev-only): living reference for components/tokens —
+consult it before building UI; maintain it via the `brandkit` skill
+(update/audit)") if `brandkit` was approved; remove the placeholder line
+otherwise. Same in `ui-reviewer.md`: fill `[PROJECT_BRANDKIT_DOC]` with
+`docs/BrandKit.md` or remove the row.
+
 ### 2.8 — Session-close skill
 Copy `templates/claude/skills/session-close/SKILL.md` → `.claude/skills/session-close/SKILL.md`
 
@@ -116,6 +126,10 @@ Copy `templates/claude/skills/session-close/SKILL.md` → `.claude/skills/sessio
 - If `session-close` approved → install **local** from the forge repo
   (depends on the project being up to date).
 - If has frontend and no `PRODUCT.md` → install `impeccable` (pbakaus) temporarily, run `/impeccable teach` → PRODUCT.md, then uninstall (only `frontend-design` stays; see the design-skill rule in skills-catalog.md)
+- If `brandkit` approved → install **local** from the forge repo AFTER the
+  PRODUCT.md step above (its `init-docs` appends § Brand Commitments to an
+  existing PRODUCT.md), then invoke `init-docs` (no frontend dependency).
+  Offer `init-page` if the frontend already exists.
 
 ## Phase 3: Confirmation
 

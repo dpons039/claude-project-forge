@@ -106,6 +106,7 @@ npx skills add <GIT_URL> --skill <skill-name>
 |-------|--------|-------------|
 | ~~teach-impeccable~~ | pbakaus/impeccable | **Legacy** (wrote `.impeccable.md`). Current procedure: install `impeccable` v4, run `/impeccable teach` → writes `PRODUCT.md` at the root, then uninstall the skill |
 | color-palette | jezweb/claude-skills | OKLCH palette generation |
+| brandkit | https://github.com/dpons039/claude-project-forge (skill: `brandkit`) | Dev-only BrandKit page + satellite docs (BrandKit.md/design.md/voice.md/PRODUCT.md § Brand Commitments). FOUR operations: init-docs, init-page, update, audit. **Exempt from the design-skill rule above** — it documents and verifies the design system, it is not a design-authoring persona. Install AFTER PRODUCT.md exists (its init-docs appends a section to it) |
 
 ## UTILITIES
 

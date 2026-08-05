@@ -16,6 +16,7 @@ paths:
 3. **Design brief**: before any design work, read `PRODUCT.md` (root) +
    `docs/design.md` + `docs/voice.md` and pass their constraints as the brief —
    design skills work from the prompt, they do not load these files themselves.
+[BRANDKIT_LINE]
 
 ## Core skill
 

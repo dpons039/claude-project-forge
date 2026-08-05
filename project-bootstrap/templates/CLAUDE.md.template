@@ -8,7 +8,9 @@
 
 ## Conventions (non-negotiable)
 
-- Language: [CODE_LANG] code, [UI_LANG] interface — always respond in [RESPONSE_LANG]
+- Language: everything written is [CODE_LANG] — code, docs, comments, commit
+  messages, proposals, plans. Two exceptions: the app interface ([UI_LANG])
+  and chat replies to the user ([RESPONSE_LANG])
 - Branch: `[DEV_BRANCH]` — never `[PROTECTED_BRANCH]`
 [CONVENTIONS]
 - "Pending definition" in docs → flag it, don't invent
