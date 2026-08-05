@@ -28,6 +28,7 @@ Each source is SSOT for its area. DO NOT duplicate its content in the report, on
 
 | Source | What it provides |
 |--------|-----------|
+| `PRODUCT.md` (root) | Product context: users, positioning, brand commitments, accessibility |
 | [PROJECT_DESIGN_DOC] | Visual direction, personality, design principles |
 | [PROJECT_VOICE_DOC] | Product voice, writing rules, word list, copy patterns |
 | [PROJECT_BRAND_DOC] | CSS tokens, typography, colors, scale |

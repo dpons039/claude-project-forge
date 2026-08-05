@@ -98,6 +98,7 @@ Create these files (adapt to the project — only create area docs for areas tha
 - `docs/doc-system.md` — Copy from `templates/doc-system.md`
 - `docs/decisions.md` — Copy from `templates/decisions.md`
 - `docs/planning.md` — Copy from `templates/planning.md`
+- `docs/roadmap.md` — Copy from `templates/roadmap.md`
 - `docs/changelog.md` — Copy from `templates/changelog.md`
 - `docs/research-needed.md` — Copy from `templates/research-needed.md`
 - `docs/changes/README.md` — Copy from `templates/changes-readme.md`

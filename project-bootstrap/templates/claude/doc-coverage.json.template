@@ -29,8 +29,8 @@
   "changelog_rotation": {
     "max_lines": 500,
     "archive_path": "docs/_archive/changelog/",
-    "archive_format": "YYYY-QN.md",
-    "frequency": "quarterly"
+    "archive_format": "YYYY-MM.md",
+    "policy": "by_size_oldest_first"
   },
 
   "blocking_triggers": [

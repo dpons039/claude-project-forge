@@ -1,7 +1,9 @@
 # Claude Code — files excluded from context
 # These files are not read by Claude unless explicitly requested
 
-node_modules/
+# node_modules/ — per-project choice, asked during install (Phase 1):
+# exclude it unless the project wants Claude reading installed packages
+[NODE_MODULES_LINE]
 .git/
 .githooks/
 templates/

@@ -13,6 +13,9 @@ paths:
 
 1. Read relevant area docs before modifying frontend code.
 2. Apply the cross-cutting code-quality skills → see `.claude/rules/code-quality.md` (`clean-code`, `test-driven-development` for new behavior, `verification-before-completion` before closing).
+3. **Design brief**: before any design work, read `PRODUCT.md` (root) +
+   `docs/design.md` + `docs/voice.md` and pass their constraints as the brief —
+   design skills work from the prompt, they do not load these files themselves.
 
 ## Core skill
 

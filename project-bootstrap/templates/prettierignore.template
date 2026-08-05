@@ -1,0 +1,8 @@
+# Config files Prettier must never reformat — a markdown pass once escaped
+# underscores and inserted blank lines in a project's .claudeignore.
+.claudeignore
+.claude/
+.githooks/
+docs/_archive/
+skills-lock.json
+# [MIGRATIONS_DIR] — uncomment if the project has one

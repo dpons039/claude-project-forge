@@ -14,6 +14,7 @@ Ask these questions sequentially, one at a time:
 6. **Development branch + protected branch** (e.g.: dev / main)
 7. **Mandatory conventions** — naming, PKs, enums, etc.
 8. **Uses DB migrations? Which folder?** — for `.claudeignore` and database rule
+8b. **Exclude `node_modules/` from Claude's eager context?** — per-project choice; default yes. Sets `[NODE_MODULES_LINE]` in `.claudeignore` (`node_modules/` or a commented line)
 9. **Code dirs that trigger doc updates (TRACKED_DIRS)** — e.g.: `backend/src/`, `frontend/src/`
 10. **Has Superpowers installed?** — if not, provide instructions
 11. **Additional skills** — show curated list from `references/skills-catalog.md`, user approves
@@ -97,6 +98,7 @@ Copy `templates/claude/skills/session-close/SKILL.md` → `.claude/skills/sessio
 ### 2.9 — Dotfiles
 - `.claudeignore` from `templates/claudeignore.template` (adapt migrations dir)
 - `.prettierrc` from `templates/prettierrc.template`
+- `.prettierignore` from `templates/prettierignore.template` (uncomment the migrations line if applicable)
 - Append `templates/gitignore-claude.template` entries to `.gitignore` (create if doesn't exist)
 - `.githooks/pre-commit` from `templates/githooks/pre-commit.template` (adapt to stack)
 - `git config core.hooksPath .githooks`
@@ -113,7 +115,7 @@ Copy `templates/claude/skills/session-close/SKILL.md` → `.claude/skills/sessio
   repo and invoke it to set up docs (one-time skill, uninstall after).
 - If `session-close` approved → install **local** from the forge repo
   (depends on the project being up to date).
-- If `teach-impeccable` approved and has frontend → invoke after installation
+- If has frontend and no `PRODUCT.md` → install `impeccable` (pbakaus) temporarily, run `/impeccable teach` → PRODUCT.md, then uninstall (only `frontend-design` stays; see the design-skill rule in skills-catalog.md)
 
 ## Phase 3: Confirmation
 

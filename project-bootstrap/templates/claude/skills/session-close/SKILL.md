@@ -50,7 +50,7 @@ Read `docs/planning.md` and update:
 
 Read `docs/changelog.md` and record each completed change with date and brief description (max 5 bullets + pointers to area docs).
 
-If `changelog.md` exceeds 500 lines → rotate previous quarter entries to `docs/_archive/changelog/YYYY-QN.md`.
+If `changelog.md` exceeds 500 lines → rotate the **oldest entries** to `docs/_archive/changelog/` until it is back under 500 — by size, with no quarter condition (a young project's entries are all current-quarter and a quarter rule never fires). Entries: ≤5 bullets of one line each.
 
 ## Step 5 — Memory
 
@@ -71,6 +71,11 @@ find docs/ -maxdepth 1 -name "*.md" -exec wc -l {} + | sort -rn | head -10
 
 If any area doc exceeds 350 lines → report in summary as ⚠️.
 If any doc exceeds 300 lines → verify it has no REF derivable from code.
+If `planning.md` exceeds 100 lines → **fix it now, not just report**: move
+roadmap/future content to `roadmap.md`, compress entries to 1–2 lines +
+pointer, delete struck narrative. Same for `changelog.md` over 500 (rotate,
+Step 4) and `decisions.md` entries over 2 lines (compress — the reasoning
+lives inline in the area doc).
 
 ## Step 7 — Dotfile change detection
 

@@ -27,6 +27,14 @@ reads code for implementation details.
 > **Eliminate everything derivable from code.** No fixed line target.
 > Each doc settles at its natural size based on how much non-code knowledge it has.
 
+## Present state only
+
+Area docs describe **what exists now**. Unbuilt or planned work appears as a
+"Not implemented yet" line + pointer to its proposal in `docs/changes/` — never
+specified in the area doc as if it existed. Specs for future phases live in
+their proposals. Post-mortems and incident write-ups get their own linked file
+(or the changelog entry); the area doc keeps the resulting rule, in 1–3 lines.
+
 ## Content types and rules
 
 ### Architecture + Patterns → REWRITE when changed
@@ -39,15 +47,21 @@ Agent doesn't modify without explicit instruction.
 
 ### Decisions → Inline, append-only markers
 Marked with `> **Decision:**` in the area doc where they apply.
-`decisions.md` is just a pointer index, not a copy.
+`decisions.md` is just a pointer index, not a copy — **index entries are 1–2
+lines: the claim, without the argument**. The inline block states the decision
+and its trade-off; measurements and full derivations go to a linked file or
+the proposal, not the block.
 Never edit a decision — if it changes, add a new one referencing the old.
 
 ### Cross-file dependencies → `## If you touch...`
 "If you change X, also update Y." Each area doc has this section at the end.
 
 ### Status → Flows and rotates
-`changelog.md`: quarterly rotation to `_archive/changelog/YYYY-QN.md`.
-`planning.md`: only `[ ]` pending tasks. Never `[x]`.
+`changelog.md`: rotation **by size** — over 500 lines, move the oldest entries
+to `_archive/changelog/` until under; entries ≤5 bullets of one line each.
+`planning.md`: hard cap **100 lines**, current phase only (full phase plan and
+future scope live in `roadmap.md`); entries 1–2 lines + pointer, no inline
+diagnoses or narrative. Only `[ ]` pending tasks. Never `[x]`.
 When a task is completed:
 - **Standalone task** → delete the line + add summary to changelog
 - **Task in a group/phase** → ~~strikethrough~~ but keep in the file (shows progress within the group)

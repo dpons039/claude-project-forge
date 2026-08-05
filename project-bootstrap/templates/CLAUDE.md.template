@@ -13,9 +13,9 @@
 [CONVENTIONS]
 - "Pending definition" in docs → flag it, don't invent
 - Questions requiring web research → `docs/research-needed.md`, don't guess
-- Multi-step: plan commit points and `/compact` BEFORE starting. Commit after each logical group, compact after each commit (especially with large files like JSONs)
+- Multi-step: plan commit points BEFORE starting; commit after each logical group
 - Tool or action failure (Edit failed, Read error, Bash error, script crash, etc.): report to user what failed and why before retrying or continuing
-- Before planning, implementing, or debugging: consult relevant skills for the work area — don't improvise if a skill is available
+- Before planning, implementing, or debugging: check the active rule for the area — invoke the skills it lists when they match the task; skip them for trivial steps
 - Pre-commit with complex changes (multi-area, e.g.: migration + router, frontend + backend): invoke `doc-updater` subagent to verify cross-area docs
 [UI_CONTROLS_CONVENTION]
 
@@ -31,6 +31,13 @@
 When creating new file in `docs/`: update `docs/README.md`.
 When modifying [TRACKED_DIRS]:
 update `docs/planning.md` in the same commit.
+
+**Doc size limits (hard):** `planning.md` <100 lines, current phase only
+(full phase plan → `docs/roadmap.md`); entries 1–2 lines + pointer, no inline
+diagnoses. `decisions.md` index entries ≤2 lines. `changelog.md` entries ≤5
+bullets of one line each. Over the cap → compress or archive before adding.
+Docs describe **present state**; unbuilt work = "Not implemented yet" +
+proposal pointer, never specified as if it existed.
 
 **SKIP_DOC_CHECK:** Claude NEVER creates `.claude/skip-doc-authorized` without
 explicit authorization from the owner.
@@ -80,9 +87,28 @@ For significant changes (new feature, refactor >3 files, schema
 change, architecture change): if `docs/changes/README.md` exists,
 follow its workflow. Otherwise commit directly with clear messages.
 
+**Greenfield mode:** while the codebase is young (no stable base to break —
+roughly, before the first deployed release), every task is "significant" and
+the full SDD cycle over-fires. Use the light cycle instead: short proposal
+(≤1 page) → implement → close. Save `brainstorming` + full plans for genuinely
+ambiguous scope. The full cycle earns its cost once changes land on a stable
+base.
+
 <!-- This is a stub. If doc-system-bootstrap is installed, it will
      replace this block with the full SDD workflow (levels, mandatory
-     superpowers per phase, output routing). -->
+     superpowers per phase, output routing). Keep the greenfield-mode
+     paragraph when it does. -->
+
+<!-- Model-era note (2026-08): mandates in this template were originally
+     tuned for Claude 4.x, which under-followed process instructions.
+     5.x models follow them literally — prefer fewer unconditional mandates
+     and hard numeric limits over exhortations. -->
+
+## Session cost discipline
+
+Written prose compounds: every line added to planning/changelog/decisions is
+read by every future session. Telegraphic entries, pointers over copies,
+archive over narrative.
 
 
 ## Engineering principles

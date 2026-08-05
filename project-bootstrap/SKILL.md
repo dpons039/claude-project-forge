@@ -55,7 +55,7 @@ No more questions. Generate everything in order:
 7. `.claude/settings.local.json` — create with hooks config (or merge if exists)
 8. Rules — generate stack-specific rules from `templates/claude/rules/*.template`, copy fixed rules
 9. `.claude/skills/session-close/` — copy from `templates/claude/skills/session-close/`
-10. `.claudeignore`, `.prettierrc`, `.gitignore` entries, `.githooks/pre-commit`
+10. `.claudeignore`, `.prettierrc`, `.prettierignore`, `.gitignore` entries, `.githooks/pre-commit`
 11. `git config core.hooksPath .githooks`
 12. Ask: install `doc-system-bootstrap`? → if yes, invoke it.
     Install **local to the project** (one-time skill, can be
@@ -74,7 +74,7 @@ No more questions. Generate everything in order:
     install, ask the user explicitly whether they want it local
     (default) or global (`-g`, user-level). Global only with explicit
     confirmation.
-16. If has frontend + `teach-impeccable` approved → invoke it
+16. If has frontend and no `PRODUCT.md` at the root → install `impeccable` (pbakaus) temporarily, run `/impeccable teach` to generate PRODUCT.md (v4 successor of the old standalone `teach-impeccable`/`.impeccable.md`), then uninstall it (design-skill rule: only `frontend-design` stays installed)
 
 ### Phase 3: Confirmation
 
@@ -151,6 +151,7 @@ templates/
 ├── CLAUDE.md.template              → CLAUDE.md
 ├── claudeignore.template           → .claudeignore
 ├── prettierrc.template             → .prettierrc
+├── prettierignore.template         → .prettierignore (protects .claudeignore/.claude from format passes)
 ├── gitignore-claude.template       → appended to .gitignore
 ├── githooks/pre-commit.template    → .githooks/pre-commit
 └── claude/

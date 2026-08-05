@@ -159,6 +159,43 @@ def check_triggers(
 
 # ── Modo Stop ─────────────────────────────────────────────────────────────────
 
+
+
+# ── Size guardrails (2026-08: docs bloat is the failure mode 5.x models amplify) ──
+
+SIZE_CAPS = {
+    # path (repo-relative): (warn_lines, block_lines)
+    "docs/planning.md": (100, 130),
+    "docs/changelog.md": (500, 600),
+}
+AREA_DOC_CAPS = (350, 450)  # any other docs/*.md touched this session
+
+
+def check_doc_sizes(root: Path, changed_files: list[str]) -> tuple[list[str], list[str]]:
+    """Warn/block on oversized progress and area docs — only ones touched this session."""
+    warnings: list[str] = []
+    blockers: list[str] = []
+    for f in changed_files:
+        norm = f.replace("\\", "/")
+        if not (norm.startswith("docs/") and norm.endswith(".md")):
+            continue
+        if "/_archive/" in norm or norm.startswith("docs/changes/"):
+            continue
+        p = root / norm
+        try:
+            n = sum(1 for _ in open(p, encoding="utf-8", errors="replace"))
+        except OSError:
+            continue
+        warn, block = SIZE_CAPS.get(norm, AREA_DOC_CAPS if norm.count("/") == 1 else (0, 0))
+        if not warn:
+            continue
+        if n >= block:
+            blockers.append(f"{norm}: {n} lines (hard cap {block})")
+        elif n > warn:
+            warnings.append(f"{norm}: {n} lines (cap {warn})")
+    return warnings, blockers
+
+
 def run_stop_mode(root: Path) -> None:
     changes_path = root / ".session-changes.json"
 
@@ -178,6 +215,23 @@ def run_stop_mode(root: Path) -> None:
 
     config = load_coverage(root)
     doc_files = set(f for f in changed_files if is_doc(f))
+
+    # Check sizes (warn > cap, block > hard cap) - only files touched this session
+    size_warnings, size_blockers = check_doc_sizes(root, changed_files)
+    if size_warnings:
+        print("\n[SIZE] DOC SIZE: over the cap - compress or archive before adding more\n", file=sys.stderr)
+        for w in size_warnings:
+            print(f"   -> {w}", file=sys.stderr)
+        print("\n   planning.md: current phase only, 1-2 line entries (roadmap -> docs/roadmap.md)", file=sys.stderr)
+        print("   changelog.md: rotate oldest entries to docs/_archive/changelog/\n", file=sys.stderr)
+    if size_blockers:
+        print("\n[BLOCK] DOC SIZE: hard cap exceeded - fix it NOW\n", file=sys.stderr)
+        for b in size_blockers:
+            print(f"   -> {b}", file=sys.stderr)
+        print("\n   Compress the file (1-2 line entries, narrative -> _archive/ or a linked file)", file=sys.stderr)
+        print("   then stop again. Rules: docs/doc-system.md\n", file=sys.stderr)
+        sys.exit(2)
+
 
     # Check docs no indexados
     unindexed = check_doc_index(root, changed_files)

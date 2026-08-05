@@ -27,7 +27,7 @@ npx skills add <GIT_URL> --skill <skill-name>
 | clean-code | sickn33/antigravity-awesome-skills | Code quality and readability |
 | systematic-debugging | obra/superpowers | Root cause analysis before proposing fixes |
 | session-close | https://github.com/dpons039/claude-project-forge (skill: `session-close`) | End-of-session checklist |
-| doc-system-bootstrap | https://github.com/dpons039/claude-project-forge (skill: `doc-system-bootstrap`) | Documentation system + SDD workflow |
+| doc-system-bootstrap | https://github.com/dpons039/claude-project-forge (skill: `doc-system-bootstrap`) | Documentation system + SDD workflow. **Setup tool, not permanent: uninstall (skill dir + skills-lock entry) once the doc system is created** |
 
 ## SECURITY (always suggest, user decides)
 
@@ -40,7 +40,7 @@ npx skills add <GIT_URL> --skill <skill-name>
 | Skill | Source | Description |
 |-------|--------|-------------|
 | frontend-patterns | affaan-m/everything-claude-code | React patterns, hooks, state |
-| frontend-design | pbakaus/impeccable | Visual quality, anti-AI-slop |
+| frontend-design | pbakaus/impeccable | Visual quality, anti-AI-slop. **Design-skill rule: exactly ONE design skill per project** — the candidates (this, anthropics/skills `frontend-design`, pbakaus `impeccable` v4) are mutually exclusive. Two installed at once = two conflicting design personas competing for every frontend trigger (measured in a reference project, 2026-08) |
 | vite | antfu/skills | Vite config, plugins, SSR |
 | vitest | antfu/skills | Fast unit testing |
 | tailwind-responsive-ui | pproenca/dot-skills | Responsive patterns |
@@ -104,7 +104,7 @@ npx skills add <GIT_URL> --skill <skill-name>
 
 | Skill | Source | Description |
 |-------|--------|-------------|
-| teach-impeccable | pbakaus/impeccable | One-time design context setup |
+| ~~teach-impeccable~~ | pbakaus/impeccable | **Legacy** (wrote `.impeccable.md`). Current procedure: install `impeccable` v4, run `/impeccable teach` → writes `PRODUCT.md` at the root, then uninstall the skill |
 | color-palette | jezweb/claude-skills | OKLCH palette generation |
 
 ## UTILITIES
