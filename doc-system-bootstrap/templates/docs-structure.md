@@ -23,6 +23,7 @@ docs/
 │   └── .gitkeep
 │
 └── _archive/
+    ├── decisions.md       ← Superseded decisions (history, never current state)
     ├── changes/           ← Completed proposals
     │   └── .gitkeep
     └── changelog/         ← Rotated changelog entries
@@ -79,8 +80,9 @@ Brief technology stack and folder organization.
 What exists and how it works — **present state only**. Include:
 - Compact indexes (1 line per endpoint/component/service)
 - 1 canonical example showing the pattern
-- Decisions inline: > **Decision:** why X instead of Y (claim + trade-off;
-  measurements and derivations go to a linked file or the proposal)
+- Decisions inline: > **Decision:** (YYYY-MM-DD, D-n) why X instead of Y
+  (claim + trade-off; measurements and derivations go to a linked file or the
+  proposal). Only decisions in force — superseded ones move to `_archive/decisions.md`
 - Diagrams of topology/architecture (ASCII or mermaid)
 
 ## [Unbuilt area, if any]
@@ -105,11 +107,13 @@ Cross-file dependencies:
 # Architecture Decisions
 
 Index of non-obvious decisions. Each decision lives inline in its area doc,
-marked with `> **Decision:**`.
+marked with `> **Decision:** (YYYY-MM-DD, D-n)`. IDs are never reused.
+A superseded decision keeps its row here, pointing at `_archive/decisions.md`.
 
-| # | Decision | Doc | Section |
-|---|----------|-----|---------|
-| 1 | [title] | [area].md | § [section] |
+| # | Decision | Doc | Section | Status |
+|---|----------|-----|---------|--------|
+| D1 | [title] | [area].md | § [section] | active |
+| D2 | [older title] | _archive/decisions.md | — | superseded by D5 |
 ```
 
 ## README.md skeleton

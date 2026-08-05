@@ -16,7 +16,9 @@ Review session changes against the doc-updater checklist:
 - New pattern others should follow
 - Change to an existing convention
 - New cross-file dependency → § If you touch...
-- Architectural decision → inline with `> **Decision:**` + entry in `decisions.md`
+- Architectural decision → inline with `> **Decision:** (date, D-n)` + entry in `decisions.md`
+- Decision that replaces an existing one → new block + `Superseded by D-m` on the old +
+  move the old to `docs/_archive/decisions.md` + mark both rows in the index
 
 **DO NOT update area doc if there was only:**
 - Value change, bug fix, internal refactor
@@ -55,7 +57,9 @@ If `changelog.md` exceeds 500 lines → rotate the **oldest entries** to `docs/_
 ## Step 5 — Memory
 
 Review if during the session there were:
-- New architectural decisions (mark with `> **Decision:**` in area doc + entry in `decisions.md`)
+- New architectural decisions (mark with `> **Decision:** (date, D-n)` in area doc + entry in `decisions.md`)
+- Decisions replaced during the session (verify the old one has its `Superseded by` line and is archived —
+  a decision left in the area doc without that line reads as still in force)
 - Discovered gotchas or errors (add to § If you touch... in area doc)
 - Stack or configuration changes
 - User feedback on workflow

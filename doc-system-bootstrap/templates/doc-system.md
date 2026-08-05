@@ -46,12 +46,37 @@ Team rules. Live in `## Conventions` section of each area doc.
 Agent doesn't modify without explicit instruction.
 
 ### Decisions → Inline, append-only markers
-Marked with `> **Decision:**` in the area doc where they apply.
+Marked with `> **Decision:** (YYYY-MM-DD, D-n)` in the area doc where they apply.
+Every decision carries a short ID — `D1`, `D2`, … — assigned as the next free
+number in the `#` column of `decisions.md`. IDs are never reused, not even those
+of archived decisions.
 `decisions.md` is just a pointer index, not a copy — **index entries are 1–2
 lines: the claim, without the argument**. The inline block states the decision
 and its trade-off; measurements and full derivations go to a linked file or
 the proposal, not the block.
-Never edit a decision — if it changes, add a new one referencing the old.
+
+**Never rewrite the text of a decision.** The only edit ever allowed on an
+existing decision is adding its `Superseded by` line.
+
+When a decision changes, all four steps — a decision that only points forward
+leaves the old block reading as if it were still in force:
+
+1. Write the new one in the area doc with a new ID and a `Supersedes D-n` line.
+2. Add to the old block: `**Superseded by D-m (YYYY-MM-DD)** — doc.md § section`.
+3. Move the old block to `docs/_archive/decisions.md`, text intact.
+4. In `decisions.md`, mark the old row `superseded by D-m` and add the new row as `active`.
+
+```markdown
+# Area doc — only decisions in force
+> **Decision:** (2026-09-02, D14) Docker in development too.
+> Supersedes D7 (see `_archive/decisions.md`).
+
+# _archive/decisions.md — original reasoning, kept whole
+> **Decision:** (2026-08-01, D7) Docker is production-only. Dev runs native
+> via `dev.sh` against the remote DBs.
+>
+> **Superseded by D14 (2026-09-02)** — `infrastructure.md` § Docker.
+```
 
 ### Cross-file dependencies → `## If you touch...`
 "If you change X, also update Y." Each area doc has this section at the end.
@@ -74,7 +99,8 @@ When a task is completed:
 - New pattern others should follow → document with example
 - Convention changed → update `## Conventions`
 - New cross-file dependency → add to `## If you touch...`
-- New architecture decision → inline with `> **Decision:**`
+- New architecture decision → inline with `> **Decision:** (date, D-n)`
+- Decision that replaces an existing one → new inline block + `Superseded by` on the old + archive it
 
 ### NO update area doc if:
 - Value change (config, size, color, text)
@@ -88,7 +114,8 @@ When a task is completed:
 
 | Event | Action |
 |-------|--------|
-| New architecture decision | Inline `> **Decision:**` + entry in decisions.md |
+| New architecture decision | Inline `> **Decision:** (date, D-n)` + entry in decisions.md |
+| Decision replaced | New inline `D-m` + `Superseded by` line on the old + move old to `_archive/decisions.md` + mark both rows in the index |
 | New DB table | Create `db/[table].md` + update index |
 | Architectural change in an area | Rewrite section in area doc |
 | New convention | Add to `## Conventions` of area doc |

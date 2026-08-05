@@ -22,7 +22,7 @@ the checks are canonical, the paths are not.
 | 8 | Wireframe inline corrections still present | For each correction BrandKit.md enumerates, grep the embedded copy for the corrected form (a re-copy silently reverts them) | MEDIUM |
 | 9 | Transcribed numbers match the live test | Grep each prose figure (ratios, ranges) in the theme test file | HIGH |
 | 10 | Components shown are real imports, or documented recreations | Per `<Section>`, check import provenance; an undocumented local recreation is a flag | MEDIUM |
-| 11 | design.md ↔ BrandKit.md ↔ page coherence | Values stated in `> **Decision:**` blocks vs token CSS vs what the page reads | MEDIUM |
+| 11 | design.md ↔ BrandKit.md ↔ page coherence | Values stated in `> **Decision:**` blocks vs token CSS vs what the page reads. Skip blocks carrying a `Superseded by` line and anything under `_archive/` — those are history, not the contract in force | MEDIUM |
 | 12 | BrandKit.md size | `wc -l` — warn ≥ 350 (area-doc cap) | LOW |
 | 13 | design.md / voice.md size | `wc -l` — context only, not this system's own defect | LOW |
 | 14 | Missed cross-update | With git history: page content changed without its table-mates in the same range; without git: mtime (weak fallback). Also verify the doc-coverage warning trigger (page dir → BrandKit.md) exists | LOW |

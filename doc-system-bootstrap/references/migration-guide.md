@@ -124,7 +124,7 @@ For each area doc, write the new version:
 ## [Domain sections]
 [Compact indexes: 1 line per endpoint/component/service]
 [1 canonical example per pattern]
-> **Decision:** [inline where they apply]
+> **Decision:** (YYYY-MM-DD, D-n) [inline where they apply]
 
 ## Conventions
 [All GUIDE content consolidated]
@@ -144,13 +144,19 @@ For each area doc, write the new version:
 
 ## Step 5 — Build decisions.md index
 
-Scan all new area docs for `> **Decision:**` markers. Build the index:
+Scan all new area docs for `> **Decision:**` markers. Assign sequential `D-n` IDs
+in order of appearance, write each ID back into its inline marker, and build the index:
 
 ```markdown
-| # | Decision | Doc | Section |
-|---|----------|-----|---------|
-| 1 | [title] | [area].md | § [section] |
+| # | Decision | Doc | Section | Status |
+|---|----------|-----|---------|--------|
+| D1 | [title] | [area].md | § [section] | active |
 ```
+
+All migrated decisions start as `active`: a migration cannot tell which ones were
+superseded, since the old docs have no back-link (that's exactly the gap this system
+closes). If the user spots a superseded one, mark it by hand — `Superseded by` line
+on the block, move it to `_archive/decisions.md`, update the row.
 
 ## Step 6 — Update README.md
 

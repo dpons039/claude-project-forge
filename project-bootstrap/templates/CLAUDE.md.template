@@ -26,7 +26,9 @@
 - SSOT: `docs/` — read before working, update after architectural changes
 - Index: `docs/README.md` — read the area doc BEFORE touching code
 - System: `docs/doc-system.md` — principles and rules
-- Decisions: inline with `> **Decision:**` — index in `docs/decisions.md`
+- Decisions: inline with `> **Decision:** (date, D-n)` — index in `docs/decisions.md`.
+  Never rewrite one: if it changes, new decision + `Superseded by` on the old +
+  move the old to `docs/_archive/decisions.md`
 - Agent: `doc-updater` — invoke before multi-area commits
 [MIGRATIONS_RESTRICTION]
 

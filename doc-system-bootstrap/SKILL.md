@@ -97,6 +97,7 @@ Create these files (adapt to the project — only create area docs for areas tha
 - `docs/README.md` — Project map, adapt from `templates/docs-structure.md` § README skeleton
 - `docs/doc-system.md` — Copy from `templates/doc-system.md`
 - `docs/decisions.md` — Copy from `templates/decisions.md`
+- `docs/_archive/decisions.md` — Copy from `templates/archive-decisions.md`
 - `docs/planning.md` — Copy from `templates/planning.md`
 - `docs/roadmap.md` — Copy from `templates/roadmap.md`
 - `docs/changelog.md` — Copy from `templates/changelog.md`
@@ -214,7 +215,9 @@ Adapt language to match the project's. Use this content:
 - SSOT: `docs/` — read before working, update after architectural changes
 - Index: `docs/README.md` — read the area doc BEFORE touching code
 - System: `docs/doc-system.md` — principles and rules
-- Decisions: inline with `> **Decision:**` — index in `docs/decisions.md`
+- Decisions: inline with `> **Decision:** (date, D-n)` — index in `docs/decisions.md`.
+  Never rewrite one: if it changes, new decision + `Superseded by` on the old +
+  move the old to `docs/_archive/decisions.md`
 - Agent: `doc-updater` — invoke before multi-area commits
 
 When creating new file in `docs/`: update `docs/README.md`.
@@ -283,7 +286,7 @@ Summary of steps:
 2. Migrate structural files (planning, changelog, decisions, research-needed, proposals)
 3. Classify area doc content (REF/ARCH/GUIDE/STATUS/GOTCHA/DIAGRAM/PRESCRIPTIVE)
 4. Write new area docs with differentiated detail levels
-5. Build decisions.md index from `> **Decision:**` markers
+5. Build decisions.md index from `> **Decision:**` markers (assign sequential `D-n` IDs)
 6. Update docs/README.md
 7. Verify consistency (no old references, no duplication, size check)
 8. Review memory for doc-worthy content (move project knowledge to docs)
@@ -298,7 +301,8 @@ Read `templates/doc-system.md` for the full principles document. Key rules:
 - **SSOT**: docs = project knowledge. Code = implementation detail.
 - **No code duplication**: if Claude can read it from source → don't document it.
 - **Rewrite, don't append**: docs describe current state, not history.
-- **Decisions inline**: `> **Decision:**` marker, indexed in decisions.md.
+- **Decisions inline**: `> **Decision:** (date, D-n)` marker, indexed in decisions.md.
+  Never rewritten — replaced ones get a `Superseded by` line and move to `_archive/decisions.md`.
 - **Conventions in area docs**: `## Conventions`, 1-in-1-out rule.
 - **Cross-file deps**: `## If you touch...` in each area doc.
 - **Split threshold**: >350 lines + independent subtopics → subdirectory.
