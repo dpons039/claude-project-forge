@@ -21,9 +21,8 @@ Read, in this order, whatever exists:
 
 ## Step 2 — Ask only what cannot be inferred
 
-- **Domain tab name** — the 7th tab is project-specific (a reference project: "Data &
-  money"). No file states it; ask. A project may also have none — then the 6
-  fixed tabs are the set.
+- **Domain tab name** — the 7th tab is project-specific. No file states it;
+  ask. A project may also have none — then the 6 fixed tabs are the set.
 - Languages, if there is no `CLAUDE.md` — or if it only declares a code
   language and the actual `docs/` language differs from it.
 

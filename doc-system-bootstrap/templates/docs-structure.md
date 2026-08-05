@@ -47,8 +47,8 @@ docs/
 ├── BrandKit.md            ← If project has a dev BrandKit page (how it works, how to
 │                            add blocks) — created/maintained by the `brandkit` skill,
 │                            not by this bootstrap
-├── api.md                 ← If project consumes external APIs (domain extras like
-│                            another project's esi-api.md are allowed — always indexed in README.md)
+├── api.md                 ← If project consumes external APIs (domain extras named
+│                            after the API are allowed — always indexed in README.md)
 │
 ├── db/                    ← If project has a database
 │   └── [table].md         ← One per table: CREATE TABLE first, then

@@ -1,7 +1,6 @@
 # BrandKit page — canonical structure
 
-The complete set of headings the page covers, merged from the two reference
-implementations (a reference project's organization; another project's information coverage). This
+The complete set of headings the page covers. This
 file is an OUTLINE, not code: `init-page` generates each block fresh from the
 project's real tokens/components, and `audit` check #15 uses this list as the
 canonical coverage checklist.

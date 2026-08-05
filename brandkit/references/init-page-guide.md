@@ -3,9 +3,7 @@
 **This skill ships no page code.** The heading set comes from
 `templates/page/page-structure.md`; every file is generated for THIS project
 from its real tokens and components, carrying the debugged techniques listed
-in Step 8. Reference implementation for depth and shape: a reference project
-(`frontend/brandkit.html` + `frontend/src/brandkit/`) — cite it, never copy
-another project's values.
+in Step 8. Never copy another project's values.
 
 ## Step 1 — Detect stack facts
 
@@ -23,8 +21,8 @@ another project's values.
 - **Domain tab**: name + what belongs on it — or whether the 6 fixed tabs
   cover everything.
 - **Global controls**: expose whatever compound state controls exist
-  (a reference project: theme / accent / density = 60 combinations; a multi-identity
-  project may need an identity selector instead). The token CSS reveals the
+  (theme / accent / density multiply into dozens of combinations; a
+  multi-identity project may need an identity selector instead). The token CSS reveals the
   dimensions (`[data-theme]`, `[data-accent]`, density classes) — confirm the
   exposure with the user, don't hardcode a count of three.
 
@@ -101,11 +99,9 @@ consume.
 
 ## Step 7 — Generate the tabs (per project)
 
-One file per tab, headings from **`templates/page/page-structure.md`** — the
-canonical merge of both reference implementations. For each heading, read the
-project's real tokens/components and build the block; a reference project's tab of the
-same name is the worked example of shape and depth. Where the structure file
-leaves room, these rules apply:
+One file per tab, headings from **`templates/page/page-structure.md`**. For
+each heading, read the project's real tokens/components and build the block.
+Where the structure file leaves room, these rules apply:
 
 - **Foundations** includes **Iconography** and **Motion** (with
   `prefers-reduced-motion`, cross-ref Accessibility).

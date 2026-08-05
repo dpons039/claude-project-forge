@@ -40,7 +40,7 @@ npx skills add <GIT_URL> --skill <skill-name>
 | Skill | Source | Description |
 |-------|--------|-------------|
 | frontend-patterns | affaan-m/everything-claude-code | React patterns, hooks, state |
-| frontend-design | pbakaus/impeccable | Visual quality, anti-AI-slop. **Design-skill rule: exactly ONE design skill per project** — the candidates (this, anthropics/skills `frontend-design`, pbakaus `impeccable` v4) are mutually exclusive. Two installed at once = two conflicting design personas competing for every frontend trigger (measured in a reference project, 2026-08) |
+| frontend-design | pbakaus/impeccable | Visual quality, anti-AI-slop. **Design-skill rule: exactly ONE design skill per project** — the candidates (this, anthropics/skills `frontend-design`, pbakaus `impeccable` v4) are mutually exclusive. Two installed at once = two conflicting design personas competing for every frontend trigger |
 | vite | antfu/skills | Vite config, plugins, SSR |
 | vitest | antfu/skills | Fast unit testing |
 | tailwind-responsive-ui | pproenca/dot-skills | Responsive patterns |
