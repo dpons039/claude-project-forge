@@ -167,8 +167,17 @@ SIZE_CAPS = {
     # path (repo-relative): (warn_lines, block_lines)
     "docs/planning.md": (100, 130),
     "docs/changelog.md": (500, 600),
+    # A table, not prose: one row per phase plus a bullet per deferred idea. It should
+    # bite well before a prose-sized cap would, because the fix here is archiving rows,
+    # not compressing sentences.
+    "docs/roadmap.md": (150, 200),
 }
-AREA_DOC_CAPS = (350, 450)  # any other docs/*.md touched this session
+# Any other docs/*.md touched this session. An area doc that accumulates one decision
+# block per ruling grows legitimately, and the only compression left is deleting
+# reference tables that exist nowhere else — so the cap is set above that band rather
+# than forcing the deletion. Raise it the same way if it ever traps real content: by
+# 50 lines, not by removing the guardrail.
+AREA_DOC_CAPS = (400, 500)
 
 
 def check_doc_sizes(root: Path, changed_files: list[str]) -> tuple[list[str], list[str]]:

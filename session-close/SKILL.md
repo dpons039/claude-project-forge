@@ -39,6 +39,9 @@ If changes are multi-area → invoke `doc-updater` agent.
 Review open proposals in `docs/changes/`:
 - Completed proposals → integrate into area docs and archive to `docs/_archive/changes/`
 - Partial proposals → annotate current status in the proposal
+- Advance the `> Status:` line to match reality: a proposal being implemented is
+  `in-progress`, not `draft`. A folder still in `docs/changes/` marked `done` is an
+  error — archive it now. A `Status` never advanced makes the field meaningless
 
 ## Step 3 — Planning
 
@@ -48,6 +51,10 @@ Read `docs/planning.md` and update:
 - All group tasks ~~struck through~~ → delete entire group block
 - Partially advanced tasks → annotate current status
 - Newly discovered tasks → add
+
+If a phase started or finished this session → move its `State` in `docs/roadmap.md`
+§ Phase order, in the same commit. That table is where phase state actually lives;
+`planning.md` only describes the phase currently open.
 
 ## Step 4 — Changelog
 
@@ -65,7 +72,8 @@ Review if during the session there were:
   force. If anything is missing → invoke `doc-updater`, which owns the process
 - Discovered gotchas or errors (add to § If you touch... in area doc)
 - Stack or configuration changes
-- User feedback on workflow
+- User feedback on workflow — an instruction repeated, a value of theirs overridden,
+  "you didn't ask me". Save the pattern, not the incident
 
 Act directly: save new memories, update existing ones, clean up stale ones.
 
@@ -115,6 +123,7 @@ Generate brief summary:
 **Done:** [brief list]
 **Pending:** [next steps]
 **Notes:** [decisions, gotchas, or nothing]
+**Memory:** [what was saved/updated/deleted, or "nothing new"]
 **Docs:** [docs updated or "no architectural changes"]
 **Doc size:** [if any exceeds 300 lines, list]
 ```

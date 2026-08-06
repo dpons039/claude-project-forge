@@ -40,3 +40,7 @@ Documentation system principles: `docs/doc-system.md`. When modifying Claude Cod
 <!-- ADAPT: List your project's slash-command skills here -->
 **`session-close`** — invoke at end of every session (`/session-close`).
 Order: area docs → proposals → planning → changelog → memory → git status → summary.
+
+**`brandkit`** — if the skill is installed: on "audit the brandkit", "add a block",
+"brandkit is stale" or any BrandKit page/doc change. Operations: init-docs / init-page /
+update / audit (ambiguous trigger → audit, read-only).

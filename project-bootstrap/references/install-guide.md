@@ -73,8 +73,42 @@ Copy from `templates/claude/hooks/`:
 - `secret-scanner.py` → `.claude/hooks/secret-scanner.py`
 - `doc-check.py` → `.claude/hooks/doc-check.py`
 - `doc-track.py` → `.claude/hooks/doc-track.py`
+- `sdd-gate.py` → `.claude/hooks/sdd-gate.py` (only with the SDD doc system installed —
+  it reads `docs/roadmap.md`, `docs/planning.md`, `docs/changes/`, `.session-changes.json`
+  and `.claude/doc-coverage.json`)
 
-Create `.claude/settings.local.json` with hooks config (or merge if exists).
+Create `.claude/settings.local.json` with hooks config (or merge if exists):
+
+```json
+{
+  "hooks": {
+    "UserPromptSubmit": [
+      { "hooks": [{ "type": "command",
+        "command": "python \"$CLAUDE_PROJECT_DIR/.claude/hooks/sdd-gate.py\"" }] }
+    ],
+    "PreToolUse": [
+      { "matcher": "Bash", "hooks": [{ "type": "command",
+        "command": "python \"$CLAUDE_PROJECT_DIR/.claude/hooks/secret-scanner.py\"" }] },
+      { "matcher": "Write|Edit", "hooks": [{ "type": "command",
+        "command": "python \"$CLAUDE_PROJECT_DIR/.claude/hooks/sdd-gate.py\" --guard" }] }
+    ],
+    "PostToolUse": [
+      { "matcher": "Write|Edit", "hooks": [{ "type": "command",
+        "command": "python \"$CLAUDE_PROJECT_DIR/.claude/hooks/doc-track.py\"" }] }
+    ],
+    "Stop": [
+      { "hooks": [{ "type": "command",
+        "command": "python \"$CLAUDE_PROJECT_DIR/.claude/hooks/doc-check.py\"" }] }
+    ]
+  }
+}
+```
+
+`sdd-gate.py` appears twice on purpose: `UserPromptSubmit` injects the open phase before
+any planning, and `--guard` blocks a source edit when no proposal was opened or advanced
+and the file falls outside the phase's scope. It reads state only — `docs/roadmap.md`,
+`docs/planning.md`, `.session-changes.json` and `doc-coverage.json` — and writes nothing.
+Bypass is `.claude/skip-doc-authorized`, the same sentinel `doc-check.py` honours.
 
 ### 2.7 — Rules
 Copy fixed rules from `templates/claude/rules/`:

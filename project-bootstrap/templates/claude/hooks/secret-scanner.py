@@ -159,7 +159,13 @@ EXCLUDED_DIRS = [
     '.pytest_cache/',
     'venv/',
     'env/',
-    'public/locales/',  # i18n translation files — keys like "password" are labels, not secrets
+    # i18n catalogues. A key like "password" holds the *label* rendered above the input,
+    # never a credential — and the catalogue is compiled into the client bundle by design,
+    # so it cannot hold a secret. Matched as a path segment rather than a fixed prefix:
+    # projects put the catalogue under public/, src/, or app/, and a prefix that assumes
+    # one layout silently matches nothing in the others, which surfaces as a false
+    # positive blocking a legitimate commit.
+    'locales/',
     '.claude/skills/',  # third-party skill docs contain example passwords in code snippets
 ]
 

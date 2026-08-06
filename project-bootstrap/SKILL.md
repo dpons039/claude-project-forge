@@ -53,13 +53,17 @@ No more questions. Generate everything in order:
 3. `.claude/TOKEN-BUDGET.md` — from template
 4. `.claude/doc-coverage.json` — from template, with declared TRACKED_DIRS
 5. Agents — copy from `templates/claude/agents/` (only those that apply)
-6. Hooks — copy from `templates/claude/hooks/` (secret-scanner, doc-check, doc-track)
+6. Hooks — copy from `templates/claude/hooks/` (secret-scanner, doc-check, doc-track;
+   plus `sdd-gate.py` if the SDD doc system is installed — see step 12)
 7. `.claude/settings.local.json` — create with hooks config (or merge if exists)
 8. Rules — generate stack-specific rules from `templates/claude/rules/*.template`, copy fixed rules
 9. `.claude/skills/session-close/` — copy from `templates/claude/skills/session-close/`
 10. `.claudeignore`, `.prettierrc`, `.prettierignore`, `.gitignore` entries, `.githooks/pre-commit`
 11. `git config core.hooksPath .githooks`
-12. Ask: install `doc-system-bootstrap`? → if yes, invoke it.
+12. Ask: install `doc-system-bootstrap`? → if yes, invoke it, then copy `sdd-gate.py`
+    into `.claude/hooks/` and wire it (step 7). Without the doc system there is no
+    `docs/roadmap.md`, `docs/planning.md` or `docs/changes/`, so the gate has nothing
+    to read: skip it.
     Install **local to the project** (one-time skill, can be
     uninstalled after running). If the user says yes, `doc-system-bootstrap`
     will replace the stub § Change Workflow in CLAUDE.md with the full

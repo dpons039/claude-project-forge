@@ -97,7 +97,13 @@ roughly, before the first deployed release), every task is "significant" and
 the full SDD cycle over-fires. Use the light cycle instead: short proposal
 (≤1 page) → implement → close. Save `brainstorming` + full plans for genuinely
 ambiguous scope. The full cycle earns its cost once changes land on a stable
-base.
+base. Light cycle still means a proposal — greenfield never means none.
+
+Enforced by `.claude/hooks/sdd-gate.py` when installed: it names the open phase
+at the start of every prompt, and blocks a source edit when no proposal was
+opened or advanced and the file is outside that phase's area. Config paths
+(anything starting with `.`) are outside the SDD entirely — those changes go
+through `/project-bootstrap` mode 3.
 
 <!-- This is a stub. If doc-system-bootstrap is installed, it will
      replace this block with the full SDD workflow (levels, mandatory
