@@ -65,18 +65,41 @@ If `changelog.md` exceeds 500 lines → rotate the **oldest entries** to `docs/_
 
 ## Step 5 — Memory
 
-Review if during the session there were:
-- New architectural decisions (mark with `> **Decision:** (date, D-n)` in area doc + entry in `decisions.md`)
-- Decisions affected during the session — verify the old block carries its `Superseded by`
-  or `Refined by` line, that superseded ones reached `_archive/decisions.md` and refined ones
-  did NOT, and that the index rows match. A decision left without that line reads as still in
-  force. If anything is missing → invoke `doc-updater`, which owns the process
-- Discovered gotchas or errors (add to § If you touch... in area doc)
-- Stack or configuration changes
-- User feedback on workflow — an instruction repeated, a value of theirs overridden,
-  "you didn't ask me". Save the pattern, not the incident
+**The filter (apply to EACH thing you're about to save):** is it a *project fact*
+(domain rule, environment quirk, stack gotcha) or a *personal preference of the
+user's* — or is it *how-to-work* guidance? If it's how-to-work AND a rule already
+covers it (`.claude/rules/`: debugging, code-quality, code-search, frontend,
+commits…), **do not save it to memory — it belongs in the rule, and duplicating
+it just bloats every future session.** Memory is for what the rules don't capture:
+domain facts and this user's preferences.
 
-Act directly: save new memories, update existing ones, clean up stale ones.
+Decisions are docs, not memory:
+- New architectural decisions → `> **Decision:** (date, D-n)` in the area doc +
+  entry in `decisions.md` (not a memory)
+- Decisions affected during the session — verify the old block carries its
+  `Superseded by` or `Refined by` line, that superseded ones reached
+  `_archive/decisions.md` and refined ones did NOT, and the index rows match. If
+  anything is missing → invoke `doc-updater`, which owns the process
+- Discovered gotchas → § If you touch... in the area doc
+
+**What actually goes to memory (passes the filter):**
+- A domain fact the code can't tell you (a product-identity call, an authorization
+  rule, a naming convention that isn't enforced)
+- An environment/stack quirk (a tool that behaves unexpectedly here, a file that
+  can't be read, a deploy template that only validates on the server)
+- A preference of the user's about how they want to work that no rule states
+
+Save the pattern, not the incident. Group the index by section
+(Project / Feedback / Reference), don't let it grow into a flat list.
+
+**A glance at the index you already have loaded:** if you notice entries that a
+rule now covers, or the index reads as unmanageable, say so and propose pruning —
+move project knowledge to docs, keep only facts and preferences. (No need to
+measure — `.claude/count-context-tokens.py` exists for that but is a manual,
+occasional audit, not part of the close.)
+
+Act directly: save what passes the filter, update existing ones, prune what a rule
+already covers.
 
 ## Step 6 — Doc size check
 
