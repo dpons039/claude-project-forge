@@ -6,16 +6,28 @@ Apply improvements from the skill templates to an existing project.
 
 ### System files (updatable)
 
-These files are generic infrastructure, not project-specific:
+These files are generic infrastructure, copied verbatim — no placeholders, nothing
+the project fills in. Safe to overwrite from templates:
 
 | Category | Files |
 |----------|-------|
-| Rules (fixed) | `system-health.md`, `debugging.md`, `code-search.md`, `code-quality.md`, `env-windows.md` |
-| Agents | `doc-updater.md`, `git-ops.md`, `migration-checker.md`, `ui-reviewer.md` |
-| Hooks | `secret-scanner.py`, `doc-track.py`, `doc-check.py` |
-| Skills | `session-close/SKILL.md`. `brandkit` is NOT template-copied — lock-managed, update via `npx skills add https://github.com/dpons039/claude-project-forge --skill brandkit -y` |
-| Config | `TOKEN-BUDGET.md` |
-| Git hooks | `.githooks/pre-commit` |
+| Rules (fixed) | `system-health.md`, `debugging.md`, `code-search.md`, `code-quality.md` |
+| Agents | `doc-updater.md`, `git-ops.md`, `migration-checker.md` |
+| Hooks | `secret-scanner.py`, `doc-track.py`, `doc-check.py`, `count-context-tokens.py` |
+| Skills | none template-copied — `session-close`, `doc-system-bootstrap`, `brandkit` are lock-managed; update each via `npx skills add https://github.com/dpons039/claude-project-forge --skill <name> -y` |
+
+### NOT auto-updatable (placeholders or project-measured — never overwrite)
+
+The template ships these with `[PLACEHOLDER]`s the install resolves, or with values
+the project measures. Overwriting from the template destroys the resolved/measured
+version. Offer a **diff only** and let the user merge by hand — never bulk-copy:
+
+| File | Why |
+|------|-----|
+| `ui-reviewer.md` (from `.md.template`) | `[PROJECT_DESIGN_DOC]`, `[COMPONENT_LIBRARY_SKILL]`… resolved at install |
+| `env-windows.md` (from `.md.template`) | `[PROJECT_PATH]` resolved at install |
+| `.githooks/pre-commit` (from `.template`) | project-specific test/lint/audit commands |
+| `TOKEN-BUDGET.md` | the `Current` column is measured per project |
 
 ### Project files (DO NOT touch)
 
@@ -54,6 +66,12 @@ These are configured specifically for this project:
 - For `.py` files: normalize line endings before comparing
 - For `.md` files: ignore trailing whitespace
 - Show meaningful diffs, not raw git diff (summarize what changed)
+- **Anti-regression (symmetric to Mode 3):** if the project's version of a file
+  carries content the template lacks — a pinned version, a measured value, a
+  documented platform quirk, a resolved placeholder — the project wins. Flag it
+  ("project is ahead here") and offer to propagate that content back to the
+  template via Mode 3, rather than overwriting it. Never let a Mode 2 update erase
+  something the project learned.
 
 ---
 
@@ -72,7 +90,7 @@ Scan all dotfiles and dotfolders at the project root (files/folders starting wit
 | Hooks | `.claude/hooks/` (all .py files) |
 | Skills | `.claude/skills/session-close/`; `.claude/skills/brandkit/` (special destination — see Path mapping) |
 | Config | `.claude/TOKEN-BUDGET.md` |
-| Dotfiles | `.claudeignore`, `.githooks/`, `.gitea/`, `.prettierrc`, `.gitattributes` |
+| Dotfiles | `.claudeignore`, `.githooks/`, `.prettierrc`, `.gitattributes` |
 
 ### Dotfiles EXCLUDED (project-specific)
 
@@ -116,17 +134,28 @@ Never propagate these — they contain project-specific data:
 | `.claude/rules/debugging.md` | `templates/claude/rules/debugging.md` |
 | `.claude/rules/code-search.md` | `templates/claude/rules/code-search.md` |
 | `.claude/rules/code-quality.md` | `templates/claude/rules/code-quality.md` |
+| `.claude/rules/env-windows.md` | `templates/claude/rules/env-windows.md.template` (project has `[PROJECT_PATH]` resolved — propagate content, not placeholders) |
 | `.claude/agents/doc-updater.md` | `templates/claude/agents/doc-updater.md` |
 | `.claude/agents/git-ops.md` | `templates/claude/agents/git-ops.md` |
 | `.claude/agents/migration-checker.md` | `templates/claude/agents/migration-checker.md` |
+| `.claude/agents/ui-reviewer.md` | `templates/claude/agents/ui-reviewer.md.template` (project has `[PROJECT_*]` resolved — propagate content, not placeholders) |
 | `.claude/hooks/secret-scanner.py` | `templates/claude/hooks/secret-scanner.py` |
 | `.claude/hooks/doc-check.py` | `templates/claude/hooks/doc-check.py` |
 | `.claude/hooks/doc-track.py` | `templates/claude/hooks/doc-track.py` |
-| `.claude/skills/session-close/SKILL.md` | `templates/claude/skills/session-close/SKILL.md` |
+| `.claude/count-context-tokens.py` | `templates/claude/count-context-tokens.py` |
+| `.claude/skills/session-close/SKILL.md` | the forge's top-level `session-close/SKILL.md` — the skill's own source (what `npx skills` serves), NOT project-bootstrap templates |
 | `.claude/skills/brandkit/` (any file) | the forge's top-level `brandkit/` folder — the skill's own source, NOT project-bootstrap templates |
 | `.claude/TOKEN-BUDGET.md` | `templates/claude/TOKEN-BUDGET.md.template` |
 | `.claudeignore` | `templates/claudeignore.template` |
 | `.prettierrc` | `templates/prettierrc.template` |
+| `.gitattributes` | `.gitattributes` (repo root) |
 | `.githooks/pre-commit` | `templates/githooks/pre-commit.template` |
 
 For files not in this mapping → ask user if they should be added to the skill templates.
+
+**Duplicated templates — propagate to BOTH copies.** `doc-check.py`, `doc-track.py`,
+`doc-updater.md`, `git-ops.md` and system-health exist in *both*
+`project-bootstrap/templates/claude/` and `doc-system-bootstrap/templates/` — each
+skill ships its own copy because they install independently. When Mode 3 updates one
+of these, apply the same change to its twin, or the two skills drift apart. (The
+repo's `.gitattributes` keeps them from drifting on line endings alone.)

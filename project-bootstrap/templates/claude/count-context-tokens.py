@@ -9,6 +9,11 @@ count-context-tokens.py — Context Load Simulation for Claude Code
 Simulates what Claude Code injects into the context window at startup
 and during a session. Based on observed Claude Code behavior (Mar 2026).
 
+⚠️  The EAGER/LAZY/PARSED classification below is tied to a specific harness
+    version (Mar 2026). The harness changes; if a project suspects the numbers
+    have drifted, re-check the classification against the current harness before
+    trusting the totals. This is an estimate, not a contract.
+
 Classification based on documented behavior:
   EAGER  = always in context window from first message
   LAZY   = loaded on-demand when relevant (skill invoked, command run, etc.)
@@ -25,10 +30,10 @@ Sources:
 Estimation: len(text) // 4 (~±10% vs cl100k_base tokenizer)
 For exact count: anthropic API client.messages.count_tokens()
 
-Usage:
-  python scripts/claude/count-context-tokens.py           # auto-detect repo root
-  python scripts/claude/count-context-tokens.py /path     # explicit root
-  python scripts/claude/count-context-tokens.py --verbose  # show file-level detail in lazy
+Usage (installed at .claude/count-context-tokens.py):
+  python .claude/count-context-tokens.py           # auto-detect repo root
+  python .claude/count-context-tokens.py /path     # explicit root
+  python .claude/count-context-tokens.py --verbose  # show file-level detail in lazy
 """
 
 import json

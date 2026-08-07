@@ -1,0 +1,4 @@
+# Normalize line endings — LF in the repo, checkout native.
+# Keeps the template hooks/scripts from drifting between CRLF and LF, which was
+# showing up as phantom diffs (doc-track.py, git-ops.md).
+* text=auto eol=lf

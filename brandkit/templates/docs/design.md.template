@@ -4,6 +4,17 @@
      definition" as decisions land — flag, don't invent. Keep under 350 lines;
      present state only. -->
 
+## Brief — read this first
+
+<!-- The one-paragraph version an implementer needs before writing UI: the core
+     palette tokens, the type family, the density/spacing unit, and the single
+     hardest constraint. Everything below is the reference detail; this is the
+     at-a-glance. Same index/detail split as roadmap.md vs planning.md — the
+     actionable summary up top, the full spec beneath. Fill when the sections
+     below have real values. -->
+
+Pending definition — fill once tokens/type/scale are set below.
+
 ## Typography
 
 Pending definition — typefaces (mark / interface / figures), type scale

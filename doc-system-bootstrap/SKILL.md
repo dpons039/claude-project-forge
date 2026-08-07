@@ -234,7 +234,10 @@ explicit authorization from the owner.
 - **Standard cycle** (clear scope, ≤5 files): `writing-plans` → proposal with inline plan → implement → close
 - **Complex cycle** (multi-area, architecture, ambiguous scope): `brainstorming` → spec → `writing-plans` → `plan.md` → implement → close
 - **Mandatory superpowers per phase** — see `docs/changes/README.md` for the full mapping
-- **Domain skills and agents:** in each phase, consult skills indicated by active rules (`.claude/rules/`)
+- **Domain skills and agents:** in each phase, **invoke** (Skill tool) the skills the
+  active rules (`.claude/rules/`) mark as core, and the conditional ones whose trigger
+  applies. Apply them **while writing the code**, not only when planning. When
+  delegating to a subagent, list in its prompt the skills it must load.
 - On completing standalone task from `planning.md`: delete the line + summary to changelog
   **in the same commit**. If group task: ~~strikethrough~~ but don't delete.
 - `planning.md`: only `[ ]` pending — NEVER `[x]`. Completed group tasks get

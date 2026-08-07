@@ -16,6 +16,19 @@ If you already read the file this session → use what you have in context, don'
 
 Grep and ast-grep solve different problems — choose by what you're searching for, don't escalate from one to the other.
 
+## Read vs search
+
+Search finds *where*; reading tells you *what it says*. Don't confuse them:
+
+- About to **edit** a file, or **confirm what a specific line says** → **Read the
+  whole file** (if ≲300 lines; if larger, Read the range with margin above and
+  below — never a single isolated line). The adjacent context is where the
+  contradictions hide: a line can be correct and the line above it invalidate it.
+- Only need to **locate** which file/line something is in, among many → Grep. Then
+  Read it.
+- A `grep`/`sed` of one isolated line **never** settles a claim. "Line N says X"
+  requires having read its surroundings.
+
 ## When to activate `ast-grep`
 
 The search depends on **syntactic structure**, not text:

@@ -26,6 +26,7 @@ npx skills add <GIT_URL> --skill <skill-name>
 | superpowers | obra/superpowers | Base system: plans, debugging, TDD, worktrees |
 | clean-code | sickn33/antigravity-awesome-skills | Code quality and readability |
 | systematic-debugging | obra/superpowers | Root cause analysis before proposing fixes |
+| ast-grep | ast-grep/agent-skill | Structural code search. **Required by the fixed rule `code-search.md`, which routes structural searches to it — install it or that rule points at a missing tool.** |
 | session-close | https://github.com/dpons039/claude-project-forge (skill: `session-close`) | End-of-session checklist |
 | doc-system-bootstrap | https://github.com/dpons039/claude-project-forge (skill: `doc-system-bootstrap`) | Documentation system + SDD workflow. **Setup tool, not permanent: uninstall (skill dir + skills-lock entry) once the doc system is created** |
 
@@ -107,12 +108,6 @@ npx skills add <GIT_URL> --skill <skill-name>
 | ~~teach-impeccable~~ | pbakaus/impeccable | **Legacy** (wrote `.impeccable.md`). Current procedure: install `impeccable` v4, run `/impeccable teach` → writes `PRODUCT.md` at the root, then uninstall the skill |
 | color-palette | jezweb/claude-skills | OKLCH palette generation |
 | brandkit | https://github.com/dpons039/claude-project-forge (skill: `brandkit`) | Dev-only BrandKit page + satellite docs (BrandKit.md/design.md/voice.md/PRODUCT.md § Brand Commitments). FOUR operations: init-docs, init-page, update, audit. **Exempt from the design-skill rule above** — it documents and verifies the design system, it is not a design-authoring persona. Install AFTER PRODUCT.md exists (its init-docs appends a section to it) |
-
-## UTILITIES
-
-| Skill | Source | Description |
-|-------|--------|-------------|
-| ast-grep | ast-grep/agent-skill | Structural code search |
 
 ---
 

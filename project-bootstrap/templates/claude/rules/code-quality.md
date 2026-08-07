@@ -25,11 +25,17 @@ These skills apply to **any code change** in the project, regardless of the area
 
 ## On failures / unexpected behavior
 
-- **`systematic-debugging`** — MANDATORY before proposing a fix. Investigate root cause in Phase 1, do not patch. See `.claude/rules/debugging.md`.
+- **`systematic-debugging`** — before proposing a fix for anything non-trivial or
+  already-attempted, investigate root cause first (don't patch blind). When it
+  applies and when a typo is just a typo: see `.claude/rules/debugging.md`.
 
 ## Before declaring work complete
 
-- **`verification-before-completion`** — run `build`, `test`, `lint` and confirm output BEFORE marking tasks done or asking for a commit. No claim without evidence.
+- **`verification-before-completion`** — before declaring something done, run the
+  verification commands **the project actually declares** and confirm their output.
+  If there are none, or the change isn't executable (doc, config), say so — don't
+  invent a verification. And don't fire build/test on an approach the user hasn't
+  validated yet (a rejected approach makes that whole run wasted).
 - **`requesting-code-review`** — before merging large features, ask for review with `requesting-code-review` (separate Claude instance, clean context).
 
 ## When receiving review feedback

@@ -16,8 +16,9 @@ There are two flow levels depending on change complexity:
 ### Standard (clear scope, ≤5 files, known pattern)
 
 1. **Propose + Plan** (`writing-plans`): create `proposal.md` with inline plan → user reviews and approves
-2. **Implement** (`executing-plans` or `subagent-driven-development` + `test-driven-development`): status `in-progress`, commits at session close
-3. **Close** (`verification-before-completion` + `requesting-code-review`): when complete:
+2. **Verify** (approval gate — see below): re-check the proposal's premises against the repo → status `verified`
+3. **Implement** (`executing-plans` or `subagent-driven-development` + `test-driven-development`): status `in-progress`, commits at session close
+4. **Close** (`verification-before-completion` + `requesting-code-review`): when complete:
    - Integrate relevant content into area docs
    - Add executive summary to `docs/changelog.md` (≤5 bullets)
    - Remove items from `docs/planning.md`
@@ -27,8 +28,9 @@ There are two flow levels depending on change complexity:
 
 1. **Propose** (`brainstorming`): create `proposal.md` as spec → user reviews and approves
 2. **Plan** (`writing-plans`): create `plan.md` in the same folder → user reviews and approves
-3. **Implement** (`executing-plans` or `subagent-driven-development` + `test-driven-development`): status `in-progress`, commits at session close
-4. **Close** (`verification-before-completion` + `requesting-code-review`): when complete:
+3. **Verify** (approval gate — see below): re-check every premise against the repo → status `verified`
+4. **Implement** (`executing-plans` or `subagent-driven-development` + `test-driven-development`): status `in-progress`, commits at session close
+5. **Close** (`verification-before-completion` + `requesting-code-review`): when complete:
    - Integrate relevant content into area docs
    - Add executive summary to `docs/changelog.md` (≤5 bullets)
    - Remove items from `docs/planning.md`
@@ -36,15 +38,38 @@ There are two flow levels depending on change complexity:
 
 > **Criterion:** if you already know what to build → standard. If you need to explore alternatives or scope is unclear → complex.
 
+## Approval gate — re-verify before implementing
+
+A proposal/plan is edited many times before it is approved. Each edit can leave a
+`file:line` reference stale, a number that no longer adds up, or two sections that
+now contradict each other. **Between approval and implementation, re-check every
+verifiable premise against the repo _now_ — not as it was when written:**
+
+- For each `file:line` reference, each quoted line, and each "exists / doesn't
+  exist / is identical" claim → **read the file and confirm** (read it, don't
+  `grep`/`sed` a single line — the contradiction usually lives in the adjacent
+  context; see `.claude/rules/code-search.md` § Read vs search).
+- A premise that no longer holds invalidates its task → fix the proposal **before**
+  implementing, not during.
+- Only then set `Status: verified`. **Never implement from `approved` — only from
+  `verified`.** `verified` is the mechanical mark that the premises were re-checked,
+  not a judgement call.
+
+Cost is proportional: a 2-task proposal is a minute; a 20-task one earns the full
+gate. This is enforced by process, not a hook — a hook cannot read a file and judge
+whether a premise still holds.
+
 ## Mandatory superpowers per phase
 
 | Level | Phase | Superpowers | Output |
 |---|---|---|---|
 | **Standard** | Propose + Plan | `writing-plans` | `proposal.md` with inline plan |
+| **Standard** | Verify | (read the files — approval gate) | `Status: verified` |
 | **Standard** | Implement | `executing-plans` or `subagent-driven-development` + `test-driven-development` | Code ready, commits at close |
 | **Standard** | Close | `verification-before-completion` + `requesting-code-review` | Verification + archive |
 | **Complex** | Propose | `brainstorming` | `proposal.md` (spec) |
 | **Complex** | Plan | `writing-plans` | Separate `plan.md` |
+| **Complex** | Verify | (read the files — approval gate) | `Status: verified` |
 | **Complex** | Implement | `executing-plans` or `subagent-driven-development` + `test-driven-development` | Code ready, commits at close |
 | **Complex** | Close | `verification-before-completion` + `requesting-code-review` | Verification + archive |
 

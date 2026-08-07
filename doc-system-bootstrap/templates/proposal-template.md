@@ -1,8 +1,12 @@
 # Proposal: {title}
 
 > Date: {YYYY-MM-DD}
-> Status: draft | approved | in-progress | done
+> Status: draft | approved | verified | in-progress | done
 > Author: {name}
+
+<!-- verified = premises re-checked against the repo (approval gate, see
+     changes/README.md). Never go from approved straight to in-progress. -->
+
 
 <!--
   Flow selection:

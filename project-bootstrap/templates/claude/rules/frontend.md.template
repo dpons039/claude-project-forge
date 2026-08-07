@@ -18,6 +18,15 @@ paths:
    design skills work from the prompt, they do not load these files themselves.
 [BRANDKIT_LINE]
 
+<!-- [BRANDKIT_LINE] is replaced at install with, when the brandkit skill is
+     approved: "4. **BrandKit**: when building or changing UI, invoke the
+     `brandkit` skill (Skill tool) to keep the dev BrandKit page and its docs in
+     sync — it is the living component/token reference. Consult the page too, but
+     invoking the skill is what updates it." Removed otherwise. This lives here
+     (loaded on frontend paths), not in system-health.md (loaded only on config),
+     so the trigger is reachable while building UI. -->
+
+
 ## Core skill
 
 **[SKILL_FRONTEND]** — always active for frontend work.
@@ -26,11 +35,25 @@ paths:
 
 [FRONTEND_SKILLS_LIST]
 
+## Order for new pages/components
+
+1. Short proposal (what + why — not the full layout).
+2. **Build a first render and show it to the user** before writing the third
+   document. For visual work, seeing the screen beats the third doc — the user
+   corrects the layout in seconds by looking, and that correction invalidates part
+   of what was written ahead of it.
+3. Agree, then complete the proposal/plan with what was learned.
+4. `ui-reviewer` in `review` mode (it reads — no build needed) **before** the
+   verification step, not after: running it after forces a second verify cycle.
+5. `verification-before-completion` once, at the end, with the reviewer's notes
+   already folded in.
+
 ## Agents
 
-- **ui-reviewer** — invoke when creating new pages or modifying existing UI
-  - Modes: `review` (report only) or `fix` (report + corrections)
-- **doc-updater** — invoke if changes are multi-area
+- **ui-reviewer** — invoke when creating new pages or modifying existing UI.
+  `review` (report only) runs *before* verification; `fix` (report + corrections)
+  when you want it to apply them.
+- **doc-updater** — invoke if changes are multi-area.
 
 ## After modifying, update
 

@@ -52,9 +52,10 @@ Read `docs/planning.md` and update:
 - Partially advanced tasks → annotate current status
 - Newly discovered tasks → add
 
-If a phase started or finished this session → move its `State` in `docs/roadmap.md`
-§ Phase order, in the same commit. That table is where phase state actually lives;
-`planning.md` only describes the phase currently open.
+If a phase started or finished this session → update its `State` in `docs/roadmap.md`
+§ Phase order, in the same commit. That table is the ONLY place phase state lives;
+`planning.md` references the active phase but never repeats its state (no second
+place to keep in sync).
 
 ## Step 4 — Changelog
 
@@ -107,12 +108,22 @@ This step ensures project-level improvements to configuration are not lost and c
 
 ## Step 8 — Git commit
 
-Invoke `git-ops` agent to get current status.
+Invoke `git-ops` agent to get current status (`git status` / `git diff --cached`).
 
-- If there are uncommitted changes → commit directly with descriptive message (DO NOT ask for confirmation)
-- If no changes → continue
-- Include ALL relevant modified/new files (except secrets)
-- Commit message: describe the session changes
+Commit **without asking** if and only if ALL of these hold (mechanical check, not a
+judgement call — verifiable from `git status`):
+- everything modified is under `docs/`, `.claude/`, or was created/edited this session
+- no untracked files the session did not create
+- no merge/rebase in progress
+- the secret-scanner reports nothing
+
+If all hold → commit directly with a descriptive message covering the session
+changes (all relevant files except secrets). **If any fails** → list what is
+foreign, propose the message, and wait for the user.
+If no changes → continue.
+
+(This is the single exception to CLAUDE.md's "never commit automatically": the user
+invoked `/session-close` precisely to close out.)
 
 ## Step 9 — Summary
 

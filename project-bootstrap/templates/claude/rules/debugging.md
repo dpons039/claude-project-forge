@@ -2,13 +2,19 @@
 description: Activate systematic-debugging on any error or unexpected behavior
 ---
 
-# Debugging — Mandatory Skill
+# Debugging — when to run the protocol
 
-**`systematic-debugging`** — invoke ALWAYS on:
-- Any compilation error, test failure, or startup crash
-- Unexpected API or frontend behavior
-- Performance problems or slow queries
-- Integration errors (rate limits, pagination, auth flows)
+**`systematic-debugging`** — invoke when **any** of these holds:
+- the failure is not obvious at a glance, **or**
+- a first fix attempt already failed, **or**
+- it spans more than one subsystem (integration: rate limits, pagination, auth flows).
+
+A typo, a missing import, a visible off-by-one → fix it directly and move on; the
+protocol would cost more than the bug. Reach for it the moment the cause isn't
+plain, or the first fix bounced.
+
+Applies to: compilation errors, test failures, startup crashes, unexpected
+API/frontend behavior, slow queries — whenever they clear the bar above.
 
 ## The iron law
 

@@ -2,13 +2,13 @@
 """
 doc-check.py — Stop hook + modo pre-commit
 
-Dos niveles de verificación:
-  • blocking_triggers: migraciones BD, infra → BLOQUEA commit si falta doc
-  • warning_triggers: código general → AVISA pero no bloquea (el agente decide)
+Two verification levels:
+  • blocking_triggers: DB migrations, infra → BLOCKS commit if doc missing
+  • warning_triggers: general code → WARNS but does not block (the agent decides)
 
-Modos de uso:
-  • Stop hook (Claude Code):  invocado desde settings.local.json sin argumentos
-  • Pre-commit (git hook):    invocado con --pre-commit desde .githooks/pre-commit
+Usage modes:
+  • Stop hook (Claude Code):  invoked from settings.local.json with no arguments
+  • Pre-commit (git hook):    invoked with --pre-commit from .githooks/pre-commit
 
 Bypass: SKIP_DOC_CHECK=1 git commit -m "..."
 """
@@ -131,8 +131,8 @@ def check_triggers(
     doc_files: set[str],
 ) -> tuple[list[str], dict[str, list[str]]]:
     """
-    Verifica si ficheros que matchean un trigger tienen su doc esperado en el commit.
-    Retorna (ficheros_sin_cobertura, {fichero: [docs_esperados]}).
+    Check whether files matching a trigger have their expected doc in the commit.
+    Returns (uncovered_files, {file: [expected_docs]}).
     """
     uncovered: list[str] = []
     suggestions: dict[str, list[str]] = {}
@@ -157,7 +157,7 @@ def check_triggers(
     return uncovered, suggestions
 
 
-# ── Modo Stop ─────────────────────────────────────────────────────────────────
+# ── Stop mode ─────────────────────────────────────────────────────────────────
 
 
 
@@ -172,18 +172,23 @@ SIZE_CAPS = {
     # not compressing sentences.
     "docs/roadmap.md": (150, 200),
 }
-# Any other docs/*.md touched this session. An area doc that accumulates one decision
-# block per ruling grows legitimately, and the only compression left is deleting
-# reference tables that exist nowhere else — so the cap is set above that band rather
-# than forcing the deletion. Raise it the same way if it ever traps real content: by
-# 50 lines, not by removing the guardrail.
-AREA_DOC_CAPS = (400, 500)
+# Area docs (any other docs/*.md) grow legitimately — one decision block per ruling.
+# Two thresholds, generous on purpose:
+#   soft (500): suggest splitting into subdocuments (docs/X.md -> docs/X/). No block.
+#   hard (1000): actually block — a 1000-line area doc is unmanageable, split it now.
+# The soft/hard gap gives room to grow; the hard cap is the safety net so a doc
+# can't balloon forever unnoticed. (Progress docs keep their own tighter SIZE_CAPS.)
+AREA_DOC_SUBDIVIDE = 500
+AREA_DOC_HARD = 1000
 
 
-def check_doc_sizes(root: Path, changed_files: list[str]) -> tuple[list[str], list[str]]:
-    """Warn/block on oversized progress and area docs — only ones touched this session."""
+def check_doc_sizes(root: Path, changed_files: list[str]) -> tuple[list[str], list[str], list[str]]:
+    """Sizes of progress + area docs touched this session.
+    Returns (warnings, blockers, subdivide_suggestions). Progress docs block at
+    their SIZE_CAPS; area docs suggest a split at 500 and hard-block at 1000."""
     warnings: list[str] = []
     blockers: list[str] = []
+    subdivide: list[str] = []
     for f in changed_files:
         norm = f.replace("\\", "/")
         if not (norm.startswith("docs/") and norm.endswith(".md")):
@@ -195,14 +200,20 @@ def check_doc_sizes(root: Path, changed_files: list[str]) -> tuple[list[str], li
             n = sum(1 for _ in open(p, encoding="utf-8", errors="replace"))
         except OSError:
             continue
-        warn, block = SIZE_CAPS.get(norm, AREA_DOC_CAPS if norm.count("/") == 1 else (0, 0))
-        if not warn:
-            continue
-        if n >= block:
-            blockers.append(f"{norm}: {n} lines (hard cap {block})")
-        elif n > warn:
-            warnings.append(f"{norm}: {n} lines (cap {warn})")
-    return warnings, blockers
+        if norm in SIZE_CAPS:
+            warn, block = SIZE_CAPS[norm]
+            if n >= block:
+                blockers.append(f"{norm}: {n} lines (hard cap {block})")
+            elif n > warn:
+                warnings.append(f"{norm}: {n} lines (cap {warn})")
+        elif norm.count("/") == 1:
+            # area doc: split-suggestion at soft, hard block only at 1000
+            if n >= AREA_DOC_HARD:
+                blockers.append(f"{norm}: {n} lines (hard cap {AREA_DOC_HARD}) — split it now")
+            elif n > AREA_DOC_SUBDIVIDE:
+                subdivide.append(f"{norm}: {n} lines — consider splitting into docs/"
+                                 f"{norm[len('docs/'):-len('.md')]}/")
+    return warnings, blockers, subdivide
 
 
 def run_stop_mode(root: Path) -> None:
@@ -225,8 +236,15 @@ def run_stop_mode(root: Path) -> None:
     config = load_coverage(root)
     doc_files = set(f for f in changed_files if is_doc(f))
 
-    # Check sizes (warn > cap, block > hard cap) - only files touched this session
-    size_warnings, size_blockers = check_doc_sizes(root, changed_files)
+    # Check sizes - only files touched this session. Progress docs can block;
+    # area docs only ever suggest splitting (they grow legitimately).
+    size_warnings, size_blockers, size_subdivide = check_doc_sizes(root, changed_files)
+    if size_subdivide:
+        print("\n[SPLIT] AREA DOC: large enough to split into subdocuments (not a block)\n", file=sys.stderr)
+        for s in size_subdivide:
+            print(f"   -> {s}", file=sys.stderr)
+        print("\n   Area docs grow legitimately; when one gets big, split it (docs/X.md -> docs/X/)", file=sys.stderr)
+        print("   and index the parts in docs/README.md. No rush — this is a suggestion.\n", file=sys.stderr)
     if size_warnings:
         print("\n[SIZE] DOC SIZE: over the cap - compress or archive before adding more\n", file=sys.stderr)
         for w in size_warnings:
@@ -242,46 +260,46 @@ def run_stop_mode(root: Path) -> None:
         sys.exit(2)
 
 
-    # Check docs no indexados
+    # Check unindexed docs
     unindexed = check_doc_index(root, changed_files)
     if unindexed:
-        print("\n📋 DOC INDEX: fichero(s) en docs/ no registrados en docs/README.md\n", file=sys.stderr)
+        print("\n📋 DOC INDEX: file(s) in docs/ not listed in docs/README.md\n", file=sys.stderr)
         for path in unindexed:
             print(f"   → {path}", file=sys.stderr)
-        print("\n   Añádelos a docs/README.md\n", file=sys.stderr)
+        print("\n   Add them to docs/README.md\n", file=sys.stderr)
 
-    # Check planning y changelog
+    # Check planning and changelog
     missing_planning, missing_changelog = check_progress_docs(changed_files, config)
     if missing_planning:
-        print("\n📅 PLANNING: cambios en áreas de progreso sin actualizar docs/planning.md\n", file=sys.stderr)
+        print("\n📅 PLANNING: changes in tracked areas without updating docs/planning.md\n", file=sys.stderr)
         for path in missing_planning[:5]:
             print(f"   → {path}", file=sys.stderr)
-        print("\n   Actualiza el estado en docs/planning.md si la tarea sigue en curso\n", file=sys.stderr)
+        print("\n   Update the status in docs/planning.md if the task is still in progress\n", file=sys.stderr)
     if missing_changelog:
-        print("\n📋 CHANGELOG: cambios completados sin registrar en docs/changelog.md\n", file=sys.stderr)
+        print("\n📋 CHANGELOG: completed changes not recorded in docs/changelog.md\n", file=sys.stderr)
         for path in missing_changelog[:5]:
             print(f"   → {path}", file=sys.stderr)
-        print("\n   Registra el cambio en docs/changelog.md si la tarea está completada\n", file=sys.stderr)
+        print("\n   Record the change in docs/changelog.md if the task is complete\n", file=sys.stderr)
 
-    # Check blocking triggers (migraciones, infra)
+    # Check blocking triggers (migrations, infra)
     blocking = config.get("blocking_triggers", [])
     uncovered_blocking, suggestions_blocking = check_triggers(changed_files, blocking, doc_files)
     if uncovered_blocking:
-        print("\n📚 DOC OBLIGATORIO: ficheros con cobertura requerida sin actualizar docs\n", file=sys.stderr)
+        print("\n📚 DOC REQUIRED: files with required coverage without updating docs\n", file=sys.stderr)
         printed: set[str] = set()
         for src, docs in suggestions_blocking.items():
             for doc in docs:
                 if doc not in printed:
-                    print(f"   → {doc}  (requerido por: {src})", file=sys.stderr)
+                    print(f"   → {doc}  (required by: {src})", file=sys.stderr)
                     printed.add(doc)
         print("", file=sys.stderr)
 
-    # Check warning triggers (código general)
+    # Check warning triggers (general code)
     warning = config.get("warning_triggers", [])
     uncovered_warning, suggestions_warning = check_triggers(changed_files, warning, doc_files)
     if uncovered_warning:
-        print("\n💡 DOC SUGERIDO: cambios en áreas con docs de área asociados\n", file=sys.stderr)
-        print("   Si el cambio es arquitectónico, considera actualizar:\n", file=sys.stderr)
+        print("\n💡 DOC SUGGESTED: changes in areas with associated area docs\n", file=sys.stderr)
+        print("   If the change is architectural, consider updating:\n", file=sys.stderr)
         printed: set[str] = set()
         for src, docs in suggestions_warning.items():
             for doc in docs:
@@ -291,15 +309,15 @@ def run_stop_mode(root: Path) -> None:
         print("", file=sys.stderr)
 
 
-# ── Modo pre-commit ───────────────────────────────────────────────────────────
+# ── Pre-commit mode ───────────────────────────────────────────────────────────
 
 def run_precommit_mode(root: Path) -> None:
     if os.environ.get("SKIP_DOC_CHECK", "0") == "1":
         if consume_skip_authorization(root):
             sys.exit(0)
-        print("\n🔒 SKIP_DOC_CHECK=1 requiere autorización previa del propietario\n", file=sys.stderr)
-        print("   Crea manualmente el fichero .claude/skip-doc-authorized para autorizar", file=sys.stderr)
-        print("   un bypass puntual (se elimina automáticamente tras el uso)\n", file=sys.stderr)
+        print("\n🔒 SKIP_DOC_CHECK=1 requires prior owner authorization\n", file=sys.stderr)
+        print("   Manually create .claude/skip-doc-authorized to authorize", file=sys.stderr)
+        print("   a one-off bypass (auto-deleted after use)\n", file=sys.stderr)
         sys.exit(1)
 
     try:
@@ -317,56 +335,56 @@ def run_precommit_mode(root: Path) -> None:
     config = load_coverage(root)
     doc_files = set(f for f in staged if is_doc(f))
 
-    # Check docs no indexados (BLOCKING)
+    # Check unindexed docs (BLOCKING)
     unindexed = check_doc_index(root, staged)
     if unindexed:
-        print("\n📋 COMMIT BLOQUEADO — fichero(s) en docs/ no registrados en docs/README.md\n", file=sys.stderr)
+        print("\n📋 COMMIT BLOCKED — file(s) in docs/ not listed in docs/README.md\n", file=sys.stderr)
         for path in unindexed:
             print(f"   → {path}", file=sys.stderr)
-        print("\n   Añádelos a docs/README.md antes de commitear\n", file=sys.stderr)
-        print('   Para saltar: SKIP_DOC_CHECK=1 git commit -m "..."\n', file=sys.stderr)
+        print("\n   Add them to docs/README.md before committing\n", file=sys.stderr)
+        print('   To skip: SKIP_DOC_CHECK=1 git commit -m "..."\n', file=sys.stderr)
         sys.exit(1)
 
-    # Check planning y changelog (BLOCKING)
+    # Check planning and changelog (BLOCKING)
     missing_planning, missing_changelog = check_progress_docs(staged, config)
     if missing_planning or missing_changelog:
-        print("\n📅 COMMIT BLOQUEADO — docs de progreso desactualizados\n", file=sys.stderr)
+        print("\n📅 COMMIT BLOCKED — progress docs out of date\n", file=sys.stderr)
         if missing_planning:
-            print("   ❌ docs/planning.md no está en el commit", file=sys.stderr)
-            print("      Actualiza el estado de la tarea\n", file=sys.stderr)
+            print("   ❌ docs/planning.md is not in the commit", file=sys.stderr)
+            print("      Update the task status\n", file=sys.stderr)
         if missing_changelog:
-            print("   ❌ docs/changelog.md no está en el commit", file=sys.stderr)
-            print("      Registra el cambio completado\n", file=sys.stderr)
+            print("   ❌ docs/changelog.md is not in the commit", file=sys.stderr)
+            print("      Record the completed change\n", file=sys.stderr)
         triggered = missing_planning or missing_changelog
         for path in triggered[:5]:
             print(f"   → {path}", file=sys.stderr)
         print('', file=sys.stderr)
-        print('   Para saltar: SKIP_DOC_CHECK=1 git commit -m "..."\n', file=sys.stderr)
+        print('   To skip: SKIP_DOC_CHECK=1 git commit -m "..."\n', file=sys.stderr)
         sys.exit(1)
 
-    # Check blocking triggers (BLOCKING — migraciones, infra)
+    # Check blocking triggers (BLOCKING — migrations, infra)
     blocking = config.get("blocking_triggers", [])
     uncovered_blocking, suggestions_blocking = check_triggers(staged, blocking, doc_files)
     if uncovered_blocking:
-        print("\n📚 COMMIT BLOQUEADO — docs obligatorios no actualizados\n", file=sys.stderr)
+        print("\n📚 COMMIT BLOCKED — required docs not updated\n", file=sys.stderr)
         for f in uncovered_blocking[:8]:
             print(f"   • {f}", file=sys.stderr)
-        print("\n   Docs que necesitan actualización:\n", file=sys.stderr)
+        print("\n   Docs that need updating:\n", file=sys.stderr)
         printed: set[str] = set()
         for src, docs in suggestions_blocking.items():
             for doc in docs:
                 if doc not in printed:
                     print(f"   → {doc}", file=sys.stderr)
                     printed.add(doc)
-        print('\n   Para saltar: SKIP_DOC_CHECK=1 git commit -m "..."\n', file=sys.stderr)
+        print('\n   To skip: SKIP_DOC_CHECK=1 git commit -m "..."\n', file=sys.stderr)
         sys.exit(1)
 
-    # Check warning triggers (WARNING — código general, no bloquea)
+    # Check warning triggers (WARNING — general code, non-blocking)
     warning = config.get("warning_triggers", [])
     uncovered_warning, suggestions_warning = check_triggers(staged, warning, doc_files)
     if uncovered_warning:
-        print("\n💡 AVISO: cambios en áreas con docs asociados\n", file=sys.stderr)
-        print("   Si el cambio es arquitectónico, considera actualizar:\n", file=sys.stderr)
+        print("\n💡 NOTICE: changes in areas with associated docs\n", file=sys.stderr)
+        print("   If the change is architectural, consider updating:\n", file=sys.stderr)
         printed: set[str] = set()
         for src, docs in suggestions_warning.items():
             for doc in docs:

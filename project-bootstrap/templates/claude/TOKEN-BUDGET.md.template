@@ -4,20 +4,30 @@ Claude Code loads these files on EVERY conversation turn. Keep them lean.
 
 ## Budget limits
 
-| Component | Limit | Current |
+Loose, realistic ceilings — measured on live projects, not aspirational. The goal
+is a limit you can actually meet, so the numbers get checked. Run the measurer
+(below) and fill `Current`.
+
+| Component | Budget | Current |
 |---|---|---|
-| CLAUDE.md | 1,600 tok | — |
-| Rules (path-scoped) | ~350 tok each | — |
-| Agents | ~350 tok each | — |
-| Skills metadata (descriptions) | ~100 tok each | — |
-| **Total eager** | **~6,100 tok** | **—** |
+| CLAUDE.md | ~2,200 tok | — |
+| Rules (always-loaded, no `paths`) | ~2,000 tok total | — |
+| Agents | ~2,700 tok total | — |
+| Skills metadata (descriptions) | ~1,300 tok total | — |
+| Memory index (`MEMORY.md`) | ~1,500 tok | — |
+| **Total eager** | **~10,000 tok** | **—** |
 
-## Per-component limits
+These are the five categories that actually load every turn. Agents and the memory
+index are the two most often forgotten — count them.
 
-- Each path-scoped rule: max 350 tokens
-- Each agent: max 350 tokens
-- Each skill description: max 100 tokens (~50 words)
-- CLAUDE.md: if exceeds 1,600 tokens → move to path-scoped rules
+## Per-component guidance
+
+- Path-scoped rule: keep lean, but it only loads on its paths — not eager everywhere.
+- A rule with NO `paths` loads every turn — that is the expensive kind; keep those few.
+- Agent: no hard cap. The biggest (`doc-updater`) is ~1,600 tok and earns it — don't
+  shrink it by moving its procedure out (the agent then invents what it can't read).
+- Skill description: ~100 tokens (~50 words) each.
+- CLAUDE.md over ~2,200 tok → move project-specific detail to path-scoped rules.
 
 ## Maintenance rules
 

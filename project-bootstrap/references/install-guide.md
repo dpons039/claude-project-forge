@@ -50,7 +50,10 @@ Read `templates/claude/settings.json.template`. Adapt commands to the project's 
 Write to `.claude/settings.json`.
 
 ### 2.3 — .claude/TOKEN-BUDGET.md
-Copy `templates/claude/TOKEN-BUDGET.md.template` as-is. User fills in actual values later.
+Copy `templates/claude/TOKEN-BUDGET.md.template`. After the measurer is in place
+(§ 2.6), run `python .claude/count-context-tokens.py` and fill the `Current`
+column with the measured numbers — do NOT leave it blank "for later" (an empty
+budget is decorative and nobody comes back to it).
 
 ### 2.4 — .claude/doc-coverage.json
 Read `templates/claude/doc-coverage.json.template`. Replace placeholders:
@@ -73,24 +76,19 @@ Copy from `templates/claude/hooks/`:
 - `secret-scanner.py` → `.claude/hooks/secret-scanner.py`
 - `doc-check.py` → `.claude/hooks/doc-check.py`
 - `doc-track.py` → `.claude/hooks/doc-track.py`
-- `sdd-gate.py` → `.claude/hooks/sdd-gate.py` (only with the SDD doc system installed —
-  it reads `docs/roadmap.md`, `docs/planning.md`, `docs/changes/`, `.session-changes.json`
-  and `.claude/doc-coverage.json`)
+
+Also copy the budget measurer (not a hook, but shipped under `templates/claude/`
+so Mode 2 keeps it current):
+- `count-context-tokens.py` → `.claude/count-context-tokens.py`
 
 Create `.claude/settings.local.json` with hooks config (or merge if exists):
 
 ```json
 {
   "hooks": {
-    "UserPromptSubmit": [
-      { "hooks": [{ "type": "command",
-        "command": "python \"$CLAUDE_PROJECT_DIR/.claude/hooks/sdd-gate.py\"" }] }
-    ],
     "PreToolUse": [
       { "matcher": "Bash", "hooks": [{ "type": "command",
-        "command": "python \"$CLAUDE_PROJECT_DIR/.claude/hooks/secret-scanner.py\"" }] },
-      { "matcher": "Write|Edit", "hooks": [{ "type": "command",
-        "command": "python \"$CLAUDE_PROJECT_DIR/.claude/hooks/sdd-gate.py\" --guard" }] }
+        "command": "python \"$CLAUDE_PROJECT_DIR/.claude/hooks/secret-scanner.py\"" }] }
     ],
     "PostToolUse": [
       { "matcher": "Write|Edit", "hooks": [{ "type": "command",
@@ -104,11 +102,12 @@ Create `.claude/settings.local.json` with hooks config (or merge if exists):
 }
 ```
 
-`sdd-gate.py` appears twice on purpose: `UserPromptSubmit` injects the open phase before
-any planning, and `--guard` blocks a source edit when no proposal was opened or advanced
-and the file falls outside the phase's scope. It reads state only — `docs/roadmap.md`,
-`docs/planning.md`, `.session-changes.json` and `doc-coverage.json` — and writes nothing.
-Bypass is `.claude/skip-doc-authorized`, the same sentinel `doc-check.py` honours.
+These three hooks answer mechanical questions: `secret-scanner.py` (regex over Bash
+commands), `doc-track.py` (records edited files), `doc-check.py` (doc-coverage and size
+checks at Stop, blocking commit checks with `--pre-commit`). The SDD change workflow is
+enforced by process, not a hook — see the change workflow in CLAUDE.md and
+`docs/changes/README.md`. Phase state lives in one place (`docs/roadmap.md § Phase
+order`), so there is nothing to cross-check.
 
 ### 2.7 — Rules
 Copy fixed rules from `templates/claude/rules/`:
@@ -129,15 +128,20 @@ Generate stack rules from templates (only those that apply):
 
 For each template rule, replace `[SKILL_*]` placeholders with the actual skills the user approved.
 
-In `frontend.md`, replace `[BRANDKIT_LINE]` with the BrandKit reference line
-("4. **BrandKit page** (dev-only): living reference for components/tokens —
-consult it before building UI; maintain it via the `brandkit` skill
-(update/audit)") if `brandkit` was approved; remove the placeholder line
-otherwise. Same in `ui-reviewer.md`: fill `[PROJECT_BRANDKIT_DOC]` with
-`docs/BrandKit.md` or remove the row.
+In `frontend.md`, replace `[BRANDKIT_LINE]` — if `brandkit` was approved — with an
+**invocation** line (not just "consult the page"):
+"4. **BrandKit**: when building or changing UI, invoke the `brandkit` skill (Skill
+tool) to keep the dev BrandKit page and its docs in sync — it is the living
+component/token reference. Consult the page too, but invoking the skill is what
+updates it." Remove the placeholder otherwise. This lives in `frontend.md` (loaded
+on frontend paths) so the trigger is reachable while building UI — `system-health.md`
+(loaded only on config) keeps only the verbal maintenance triggers. Same in
+`ui-reviewer.md`: fill `[PROJECT_BRANDKIT_DOC]` with `docs/BrandKit.md` or remove the row.
 
 ### 2.8 — Session-close skill
-Copy `templates/claude/skills/session-close/SKILL.md` → `.claude/skills/session-close/SKILL.md`
+Not copied from templates — `session-close` is a standalone skill installed from
+the forge repo via `npx skills` in step 2.10 (Skills installation), like
+`doc-system-bootstrap` and `brandkit`. Nothing to do here.
 
 ### 2.9 — Dotfiles
 - `.claudeignore` from `templates/claudeignore.template` (adapt migrations dir)

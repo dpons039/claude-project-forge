@@ -17,7 +17,7 @@
 - Questions requiring web research → `docs/research-needed.md`, don't guess
 - Multi-step: plan commit points BEFORE starting; commit after each logical group
 - Tool or action failure (Edit failed, Read error, Bash error, script crash, etc.): report to user what failed and why before retrying or continuing
-- Before planning, implementing, or debugging: check the active rule for the area — invoke the skills it lists when they match the task; skip them for trivial steps
+- Before planning, implementing, or debugging: check the active rule for the area and **invoke** (Skill tool) the skills it lists when they match — while writing the code, not only when planning; skip them for trivial steps. When delegating, name the needed skills in the subagent's prompt
 - Pre-commit with complex changes (multi-area, e.g.: migration + router, frontend + backend): invoke `doc-updater` subagent to verify cross-area docs
 [UI_CONTROLS_CONVENTION]
 
@@ -44,16 +44,22 @@ bullets of one line each. Over the cap → compress or archive before adding.
 Docs describe **present state**; unbuilt work = "Not implemented yet" +
 proposal pointer, never specified as if it existed.
 
-**SKIP_DOC_CHECK:** Claude NEVER creates `.claude/skip-doc-authorized` without
-explicit authorization from the owner.
+**SKIP_DOC_CHECK:** `.claude/skip-doc-authorized` is created only with explicit
+authorization from the owner. **If the owner gives it in the conversation, that
+condition is met** — create the file and commit in one step, without asking again.
+(The file is what the pre-commit hook checks; the owner's word in chat is the
+authorization it stands in for.)
 
 ## Model
 
-Delegate to subagents when the task allows, specifying model in the Agent tool:
+Delegate to a subagent only when: the task spans **≥3 independent files**, or it's a
+broad search whose result fits in a summary. Otherwise do it inline — a subagent that
+reads code to hand it back compressed loses more signal than it saves. Specify the
+model in the Agent tool:
 
 - Explore (model="haiku"): find files, understand code, read without editing
 - Plan: design before implementing on complex tasks
-- general-purpose (model="sonnet"): scoped implementation, 2-3 files
+- general-purpose (model="sonnet"): scoped implementation across several files
 
 **Dedicated agents** (`.claude/agents/`):
 
@@ -82,7 +88,7 @@ Known paths and errors: `.claude/rules/[ENV_RULE_FILE]`
 
 - **Git:** delegate `git-ops` for status/diff/log. Main context proposes message and executes `git add` + `git commit`. Never delegate the commit to the subagent.
 - **Docs:** delegate `doc-updater` to update docs (multi-area only). Docs updated BEFORE committing, but updating doesn't mean committing.
-- **Commits:** NEVER create a commit automatically. Wait for the user to explicitly say "commit".
+- **Commits:** never automatic — wait for the user to say "commit". Single exception: `/session-close`, which the user invoked to close out; its Step 8 commits without asking **if and only if** `git status` shows no files foreign to the session and no conflicts, and otherwise proposes the message and waits.
 - **Area change:** ask before moving to another work area.
 - **High-impact changes:** ask before modifying core files (CLAUDE.md, .gitignore, doc-coverage.json) outside the task scope.
 
@@ -99,11 +105,10 @@ the full SDD cycle over-fires. Use the light cycle instead: short proposal
 ambiguous scope. The full cycle earns its cost once changes land on a stable
 base. Light cycle still means a proposal — greenfield never means none.
 
-Enforced by `.claude/hooks/sdd-gate.py` when installed: it names the open phase
-at the start of every prompt, and blocks a source edit when no proposal was
-opened or advanced and the file is outside that phase's area. Config paths
-(anything starting with `.`) are outside the SDD entirely — those changes go
-through `/project-bootstrap` mode 3.
+Enforced by process, not a hook: before implementing a significant change, open
+its proposal (see `docs/changes/README.md`). Config paths (anything starting with
+`.`) are outside the SDD entirely — those changes go through `/project-bootstrap`
+mode 3.
 
 <!-- This is a stub. If doc-system-bootstrap is installed, it will
      replace this block with the full SDD workflow (levels, mandatory

@@ -53,22 +53,20 @@ No more questions. Generate everything in order:
 3. `.claude/TOKEN-BUDGET.md` — from template
 4. `.claude/doc-coverage.json` — from template, with declared TRACKED_DIRS
 5. Agents — copy from `templates/claude/agents/` (only those that apply)
-6. Hooks — copy from `templates/claude/hooks/` (secret-scanner, doc-check, doc-track;
-   plus `sdd-gate.py` if the SDD doc system is installed — see step 12)
+6. Hooks — copy from `templates/claude/hooks/` (secret-scanner, doc-check, doc-track).
+   Also copy `templates/claude/count-context-tokens.py` → `.claude/` (budget measurer;
+   under templates/ so Mode 2 updates it), then fill TOKEN-BUDGET.md `Current` (step 3)
 7. `.claude/settings.local.json` — create with hooks config (or merge if exists)
 8. Rules — generate stack-specific rules from `templates/claude/rules/*.template`, copy fixed rules
-9. `.claude/skills/session-close/` — copy from `templates/claude/skills/session-close/`
+9. `session-close` skill — NOT copied here; installed from the forge repo via `npx skills` (step 13)
 10. `.claudeignore`, `.prettierrc`, `.prettierignore`, `.gitignore` entries, `.githooks/pre-commit`
 11. `git config core.hooksPath .githooks`
-12. Ask: install `doc-system-bootstrap`? → if yes, invoke it, then copy `sdd-gate.py`
-    into `.claude/hooks/` and wire it (step 7). Without the doc system there is no
-    `docs/roadmap.md`, `docs/planning.md` or `docs/changes/`, so the gate has nothing
-    to read: skip it.
-    Install **local to the project** (one-time skill, can be
-    uninstalled after running). If the user says yes, `doc-system-bootstrap`
-    will replace the stub § Change Workflow in CLAUDE.md with the full
-    SDD block (Standard/Complex levels + mandatory superpowers per phase
-    + Superpowers output routing).
+12. Ask: install `doc-system-bootstrap`? → if yes, invoke it. Install **local to
+    the project** (one-time skill, can be uninstalled after running). If the user
+    says yes, `doc-system-bootstrap` will replace the stub § Change Workflow in
+    CLAUDE.md with the full SDD block (Standard/Complex levels + mandatory
+    superpowers per phase + Superpowers output routing). The SDD is enforced by
+    process, not a hook.
 13. Ask: install `session-close` skill? → if yes, install **local to the
     project** via
     `npx skills add https://github.com/dpons039/claude-project-forge --skill session-close -y`
@@ -104,14 +102,16 @@ Read `references/update-guide.md` § "Mode 2" for full details.
 
 ### What gets updated (system files)
 
-- Fixed rules: `system-health.md`, `debugging.md`, `code-search.md`, `env-windows.md`
-- Agents: `doc-updater.md`, `git-ops.md`, `migration-checker.md`, `ui-reviewer.md`
-- Hooks: `secret-scanner.py`, `doc-track.py`, `doc-check.py`
-- Skills: `session-close/SKILL.md`. The `brandkit` skill is NOT template-copied —
-  it is lock-managed: update it by re-running
-  `npx skills add https://github.com/dpons039/claude-project-forge --skill brandkit -y`
-- Config: `TOKEN-BUDGET.md`
-- Git hooks: `.githooks/pre-commit`
+- Fixed rules: `system-health.md`, `debugging.md`, `code-search.md`, `code-quality.md`
+- Agents: `doc-updater.md`, `git-ops.md`, `migration-checker.md`
+- Hooks: `secret-scanner.py`, `doc-track.py`, `doc-check.py`, `count-context-tokens.py`
+- Skills: none are template-copied. `session-close`, `doc-system-bootstrap` and
+  `brandkit` are lock-managed — update each by re-running
+  `npx skills add https://github.com/dpons039/claude-project-forge --skill <name> -y`
+
+**NOT auto-updatable** (placeholders or project-measured — diff only, never
+overwrite): `ui-reviewer.md`, `env-windows.md`, `.githooks/pre-commit`,
+`TOKEN-BUDGET.md`. See `references/update-guide.md` § "NOT auto-updatable".
 
 ### What is NEVER touched (project files)
 
@@ -176,9 +176,11 @@ templates/
     ├── doc-coverage.json.template  → .claude/doc-coverage.json
     ├── agents/                     → .claude/agents/
     ├── hooks/                      → .claude/hooks/
-    ├── rules/                      → .claude/rules/
-    └── skills/session-close/       → .claude/skills/session-close/
+    └── rules/                      → .claude/rules/
 ```
+
+`session-close`, `doc-system-bootstrap` and `brandkit` are standalone skills
+installed from the forge repo via `npx skills` — never copied from templates.
 
 Files ending in `.template` have `[PLACEHOLDERS]` that get replaced during install.
 Files without `.template` extension are copied as-is.
