@@ -41,7 +41,7 @@ Ask questions sequentially, one at a time. These determine what gets generated:
 9. Code dirs that trigger doc updates (TRACKED_DIRS)
 10. Has Superpowers installed? (if not → provide instructions)
 11. Additional skills — show curated list from `references/skills-catalog.md`.
-    If the project has or wants a dev BrandKit page, offer `brandkit`
+    If the project has or wants a dev BrandKit page, offer `brandkit-manager`
     (DESIGN section) — its install is step 17, after PRODUCT.md exists
 
 ### Phase 2: Generation
@@ -79,8 +79,8 @@ No more questions. Generate everything in order:
     (default) or global (`-g`, user-level). Global only with explicit
     confirmation.
 16. If has frontend and no `PRODUCT.md` at the root → install `impeccable` (pbakaus) temporarily, run `/impeccable teach` to generate PRODUCT.md (v4 successor of the old standalone `teach-impeccable`/`.impeccable.md`), then uninstall it (design-skill rule: only `frontend-design` stays installed)
-17. If `brandkit` approved (step 11) → install **local** from the forge repo
-    (`npx skills add https://github.com/dpons039/claude-project-forge --skill brandkit -y`)
+17. If `brandkit-manager` approved (step 11) → install **local** from the forge repo
+    (`npx skills add https://github.com/dpons039/claude-project-forge --skill brandkit-manager -y`)
     and invoke its `init-docs` (no frontend dependency; runs after step 16 so
     PRODUCT.md exists for the § Brand Commitments append). If the frontend
     already exists, offer `init-page` too.
@@ -106,7 +106,7 @@ Read `references/update-guide.md` § "Mode 2" for full details.
 - Agents: `doc-updater.md`, `git-ops.md`, `migration-checker.md`
 - Hooks: `secret-scanner.py`, `doc-track.py`, `doc-check.py`, `count-context-tokens.py`
 - Skills: none are template-copied. `session-close`, `doc-system-bootstrap` and
-  `brandkit` are lock-managed — update each by re-running
+  `brandkit-manager` are lock-managed — update each by re-running
   `npx skills add https://github.com/dpons039/claude-project-forge --skill <name> -y`
 
 **NOT auto-updatable** (placeholders or project-measured — diff only, never
@@ -138,8 +138,8 @@ Read `references/update-guide.md` § "Mode 3" for full details.
 All dotfiles and dotfolders at the project root that are system-level:
 - `.claude/rules/` (fixed rules only), `.claude/agents/`, `.claude/hooks/`
 - `.claude/skills/session-close/`, `.claude/TOKEN-BUDGET.md`
-- `.claude/skills/brandkit/` — special destination: propagates to the forge's
-  top-level `brandkit/` folder (the skill's source), NOT to project-bootstrap
+- `.claude/skills/brandkit-manager/` — special destination: propagates to the forge's
+  top-level `brandkit-manager/` folder (the skill's source), NOT to project-bootstrap
   templates
 - `.claudeignore`, `.githooks/`, `.prettierrc`, `.gitattributes`
 
@@ -179,7 +179,7 @@ templates/
     └── rules/                      → .claude/rules/
 ```
 
-`session-close`, `doc-system-bootstrap` and `brandkit` are standalone skills
+`session-close`, `doc-system-bootstrap` and `brandkit-manager` are standalone skills
 installed from the forge repo via `npx skills` — never copied from templates.
 
 Files ending in `.template` have `[PLACEHOLDERS]` that get replaced during install.

@@ -1,0 +1,50 @@
+{/*
+  Example tab — copy this shape for a new tab.
+
+  A tab .mdx is plain markdown prose plus one or more <Block> specimens.
+  `Block` and `Demo` are injected globally by `mdx-components.tsx`, so this
+  file never imports them. The intro (eyebrow + h1 + paragraph) is optional
+  but recommended — it orients someone who lands on the tab from a deep link.
+*/}
+
+<div className="bk-tab-intro">
+  <p className="bk-eyebrow">Example</p>
+  <h1>Buttons</h1>
+  <p>
+    One rule, one specimen: this is the minimum shape of a tab. Duplicate this
+    file, rename it, and add a line to `config.tabs` to register it.
+  </p>
+</div>
+
+<Block
+  title="Primary button"
+  spec={
+    <p>
+      Use the primary button for the single most important action in a view.
+      Never show two primary buttons side by side — pair a primary action with
+      a secondary or ghost button instead.
+    </p>
+  }
+>
+  <Demo
+    code={`<button className="btn btn-primary">Save</button>`}
+  >
+    <button className="btn btn-primary">Save</button>
+  </Demo>
+</Block>
+
+<Block
+  title="Secondary button"
+  spec={
+    <p>
+      Use the secondary button for a supporting action next to a primary one —
+      typically <code>Cancel</code> beside <code>Save</code>.
+    </p>
+  }
+>
+  <Demo
+    code={`<button className="btn btn-secondary">Cancel</button>`}
+  >
+    <button className="btn btn-secondary">Cancel</button>
+  </Demo>
+</Block>

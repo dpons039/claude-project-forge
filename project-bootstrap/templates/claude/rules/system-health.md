@@ -41,7 +41,7 @@ Documentation system principles: `docs/doc-system.md`. When modifying Claude Cod
 **`session-close`** — invoke at end of every session (`/session-close`).
 Order: area docs → proposals → planning → changelog → memory → git status → summary.
 
-**`brandkit`** — if the skill is installed: **verbal maintenance triggers only** —
+**`brandkit-manager`** — if the skill is installed: **verbal maintenance triggers only** —
 "audit the brandkit", "add a block", "brandkit is stale". Operations: init-docs /
 init-page / update / audit (ambiguous trigger → audit, read-only). The *build-time*
 trigger (invoke when building/changing UI) lives in `frontend.md`, which loads on

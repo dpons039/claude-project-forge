@@ -19,7 +19,7 @@ Ask these questions sequentially, one at a time:
 8b. **Exclude `node_modules/` from Claude's eager context?** — per-project choice; default yes. Sets `[NODE_MODULES_LINE]` in `.claudeignore` (`node_modules/` or a commented line)
 9. **Code dirs that trigger doc updates (TRACKED_DIRS)** — e.g.: `backend/src/`, `frontend/src/`
 10. **Has Superpowers installed?** — if not, provide instructions
-11. **Additional skills** — show curated list from `references/skills-catalog.md`, user approves. If the project has or wants a dev BrandKit page, offer `brandkit` (DESIGN section)
+11. **Additional skills** — show curated list from `references/skills-catalog.md`, user approves. If the project has or wants a dev BrandKit page, offer `brandkit-manager` (DESIGN section)
 
 ## Phase 2: Generation
 
@@ -128,9 +128,9 @@ Generate stack rules from templates (only those that apply):
 
 For each template rule, replace `[SKILL_*]` placeholders with the actual skills the user approved.
 
-In `frontend.md`, replace `[BRANDKIT_LINE]` — if `brandkit` was approved — with an
+In `frontend.md`, replace `[BRANDKIT_LINE]` — if `brandkit-manager` was approved — with an
 **invocation** line (not just "consult the page"):
-"4. **BrandKit**: when building or changing UI, invoke the `brandkit` skill (Skill
+"4. **BrandKit**: when building or changing UI, invoke the `brandkit-manager` skill (Skill
 tool) to keep the dev BrandKit page and its docs in sync — it is the living
 component/token reference. Consult the page too, but invoking the skill is what
 updates it." Remove the placeholder otherwise. This lives in `frontend.md` (loaded
@@ -141,7 +141,7 @@ on frontend paths) so the trigger is reachable while building UI — `system-hea
 ### 2.8 — Session-close skill
 Not copied from templates — `session-close` is a standalone skill installed from
 the forge repo via `npx skills` in step 2.10 (Skills installation), like
-`doc-system-bootstrap` and `brandkit`. Nothing to do here.
+`doc-system-bootstrap` and `brandkit-manager`. Nothing to do here.
 
 ### 2.9 — Dotfiles
 - `.claudeignore` from `templates/claudeignore.template` (adapt migrations dir)
@@ -164,7 +164,7 @@ the forge repo via `npx skills` in step 2.10 (Skills installation), like
 - If `session-close` approved → install **local** from the forge repo
   (depends on the project being up to date).
 - If has frontend and no `PRODUCT.md` → install `impeccable` (pbakaus) temporarily, run `/impeccable teach` → PRODUCT.md, then uninstall (only `frontend-design` stays; see the design-skill rule in skills-catalog.md)
-- If `brandkit` approved → install **local** from the forge repo AFTER the
+- If `brandkit-manager` approved → install **local** from the forge repo AFTER the
   PRODUCT.md step above (its `init-docs` appends § Brand Commitments to an
   existing PRODUCT.md), then invoke `init-docs` (no frontend dependency).
   Offer `init-page` if the frontend already exists.

@@ -14,7 +14,7 @@ the project fills in. Safe to overwrite from templates:
 | Rules (fixed) | `system-health.md`, `debugging.md`, `code-search.md`, `code-quality.md` |
 | Agents | `doc-updater.md`, `git-ops.md`, `migration-checker.md` |
 | Hooks | `secret-scanner.py`, `doc-track.py`, `doc-check.py`, `count-context-tokens.py` |
-| Skills | none template-copied — `session-close`, `doc-system-bootstrap`, `brandkit` are lock-managed; update each via `npx skills add https://github.com/dpons039/claude-project-forge --skill <name> -y` |
+| Skills | none template-copied — `session-close`, `doc-system-bootstrap`, `brandkit-manager` are lock-managed; update each via `npx skills add https://github.com/dpons039/claude-project-forge --skill <name> -y` |
 
 ### NOT auto-updatable (placeholders or project-measured — never overwrite)
 
@@ -88,7 +88,7 @@ Scan all dotfiles and dotfolders at the project root (files/folders starting wit
 | Rules (fixed) | `.claude/rules/system-health.md`, `debugging.md`, `code-search.md`, `code-quality.md`, `env-windows.md` |
 | Agents | `.claude/agents/` (all) |
 | Hooks | `.claude/hooks/` (all .py files) |
-| Skills | `.claude/skills/session-close/`; `.claude/skills/brandkit/` (special destination — see Path mapping) |
+| Skills | `.claude/skills/session-close/`; `.claude/skills/brandkit-manager/` (special destination — see Path mapping) |
 | Config | `.claude/TOKEN-BUDGET.md` |
 | Dotfiles | `.claudeignore`, `.githooks/`, `.prettierrc`, `.gitattributes` |
 
@@ -144,7 +144,7 @@ Never propagate these — they contain project-specific data:
 | `.claude/hooks/doc-track.py` | `templates/claude/hooks/doc-track.py` |
 | `.claude/count-context-tokens.py` | `templates/claude/count-context-tokens.py` |
 | `.claude/skills/session-close/SKILL.md` | the forge's top-level `session-close/SKILL.md` — the skill's own source (what `npx skills` serves), NOT project-bootstrap templates |
-| `.claude/skills/brandkit/` (any file) | the forge's top-level `brandkit/` folder — the skill's own source, NOT project-bootstrap templates |
+| `.claude/skills/brandkit-manager/` (any file) | the forge's top-level `brandkit-manager/` folder — the skill's own source, NOT project-bootstrap templates |
 | `.claude/TOKEN-BUDGET.md` | `templates/claude/TOKEN-BUDGET.md.template` |
 | `.claudeignore` | `templates/claudeignore.template` |
 | `.prettierrc` | `templates/prettierrc.template` |

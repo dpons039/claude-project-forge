@@ -63,16 +63,20 @@ If dotfiles changed during the session, suggests running `/project-bootstrap` mo
 npx skills add <repo-url> --skill session-close
 ```
 
-### brandkit
+### brandkit-manager
 
 Creates, maintains, and audits a project's dev-only BrandKit page (living
 design-system reference) and its satellite docs (`docs/BrandKit.md`,
 `docs/design.md`, `docs/voice.md`, root `PRODUCT.md § Brand Commitments`).
+The page is an MDX-driven, config-parameterised visualizer: a fixed universal
+chrome (shipped as copy-paste files) plus, per tab, a `.mdx` (prose rule + a live
+demo) paired with a `.examples.tsx` (the stateful specimens), all varying content
+declared in `config.ts`.
 
 | Operation | Needs frontend | What it does |
 |-----------|----------------|-------------|
 | **init-docs** | No | Creates the doc satellites (never overwrites existing ones) |
-| **init-page** | Yes | Scaffolds the page: separate build entry excluded from prod by construction, one file per tab, live tokens |
+| **init-page** | Yes | Scaffolds the page: copies the universal chrome unchanged, wires a separate build entry excluded from prod by construction, fills `config.ts`, one `.mdx` per tab (8 tabs) |
 | **update** | — | Any change walks a cross-update table so page and docs move together |
 | **audit** | — | 16 mechanical drift checks; findings report, no fixes applied |
 
@@ -81,7 +85,7 @@ design-authoring skill — it documents and verifies, so it coexists with
 `frontend-design`.
 
 ```bash
-npx skills add <repo-url> --skill brandkit
+npx skills add <repo-url> --skill brandkit-manager
 ```
 
 ## Workflows

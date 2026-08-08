@@ -1,0 +1,38 @@
+<!doctype html>
+<!-- The MDX BrandKit — a config-parameterised, MDX-driven showroom. Separate
+     Vite entry, not a route of the app; keep it out of production by
+     construction (no rollupOptions.input for this file, so only your app's
+     index.html gets built).
+
+     In dev: localhost:[YOUR_DEV_PORT]/brandkit.html
+
+     scroll-padding-top reserves room under the sticky header for
+     scroll-into-view (WCAG 2.4.11 Focus Not Obscured). -->
+<html
+  lang="en"
+  data-theme="[THEME_LIGHT]"
+  data-accent="blue"
+  class="dens-cozy"
+  style="scroll-padding-top: 7rem"
+>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex" />
+
+    <!-- Preload any web fonts your project's real stylesheet loads, so the
+         chrome and specimens don't flash unstyled text. Delete if you use
+         only system fonts. -->
+    <!--
+    <link rel="preload" href="/fonts/your-font.woff2" as="font" type="font/woff2" crossorigin />
+    -->
+
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+
+    <title>[PROJECT_NAME] BrandKit</title>
+  </head>
+  <body>
+    <div id="brandkit"></div>
+    <script type="module" src="/src/brandkit/main.tsx"></script>
+  </body>
+</html>

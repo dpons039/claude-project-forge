@@ -106,7 +106,7 @@ Create these files (adapt to the project — only create area docs for areas tha
 - `docs/changes/_template/proposal.md` — Copy from `templates/proposal-template.md`
 - Area doc skeletons (from `templates/docs-structure.md` § Area doc skeleton)
   - Exception: do NOT create `docs/BrandKit.md` here — it is owned by the
-    `brandkit` skill (its `init-docs` operation creates and fills it)
+    `brandkit-manager` skill (its `init-docs` operation creates and fills it)
 
 ### Step 4 — Install agents and rules
 

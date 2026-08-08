@@ -1,0 +1,555 @@
+/*
+ * The BrandKit chrome — its OWN palette, independent of the project.
+ *
+ * Rule: the project's tokens (--accent, --surface, type-*, …) appear ONLY inside
+ * a demo's preview (`.bk-demo__preview`), where showing the real system is the
+ * point. Everything else — bars, nav, prose, the on-this-page rail — uses the
+ * `--bk-*` palette below, so the chrome reads the same in any project and its
+ * contrast is guaranteed here rather than inherited. All `--bk-*` text pairs are
+ * AA (≥4.5) and most clear a stricter internal floor if your project has one.
+ *
+ * Dev-only; never shipped. Class names are prefixed `bk-`.
+ */
+
+.bk-root {
+  /* Light chrome (default). */
+  --bk-bg: #f7f7f6;
+  --bk-panel: #ffffff;
+  --bk-elevated: #f0f0ee;
+  --bk-line: #dcdcd8;
+  --bk-line-soft: #e8e8e5;
+  --bk-fg: #16181a; /* 17.8:1 on panel */
+  --bk-fg-2: #3d444b; /* 9.9:1 on panel — body prose */
+  --bk-muted: #626973; /* 5.5:1 on panel — labels only */
+  --bk-brand: #0e6d66; /* 6.2:1 — chrome accent, not the project's */
+  --bk-brand-fg: #ffffff;
+  --bk-code-bg: #f5f5f3;
+  --bk-shadow: 0 1px 2px rgba(0, 0, 0, 0.05), 0 1px 3px rgba(0, 0, 0, 0.04);
+  --space-unit: 1;
+}
+[data-theme$="-dark"] .bk-root,
+.bk-root[data-bk-dark] {
+  --bk-bg: #0e1113;
+  --bk-panel: #181b1e;
+  --bk-elevated: #22262a;
+  --bk-line: #2c3237;
+  --bk-line-soft: #23282c;
+  --bk-fg: #eceff1; /* 15.0:1 on panel */
+  --bk-fg-2: #b6bec6; /* 9.2:1 on panel */
+  --bk-muted: #8a929b; /* 5.5:1 on panel — labels only */
+  --bk-brand: #4fd1c5;
+  --bk-brand-fg: #0e1113;
+  --bk-code-bg: #12161a;
+  --bk-shadow: 0 0 0 1px #2c323766;
+}
+
+.bk-root {
+  background: var(--bk-bg);
+  color: var(--bk-fg);
+  font-family: "Geist", system-ui, -apple-system, "Segoe UI", sans-serif;
+  min-height: 100dvh;
+  -webkit-font-smoothing: antialiased;
+}
+.bk-root *,
+.bk-root *::before,
+.bk-root *::after {
+  box-sizing: border-box;
+}
+/* One focus ring for the whole chrome, keyed on --bk-brand like hover and the
+   pressed/current states — so keyboard focus matches the interaction language
+   instead of the UA default clashing with the panel. */
+.bk-root :focus-visible {
+  outline: 2px solid var(--bk-brand);
+  outline-offset: 2px;
+  border-radius: var(--bk-control-radius, 7px);
+}
+.bk-root .bk-swatch:focus-visible {
+  outline-offset: 3px;
+}
+
+/* ===== Top bar (sticky) — two rows:
+   L1 brand · all controls (theme / width / accent / density)
+   L2 tabs ===== */
+.bk-bar {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  background: var(--bk-panel);
+  border-bottom: 1px solid var(--bk-line);
+}
+.bk-bar__inner {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+.bk-row {
+  display: flex;
+  align-items: center;
+  gap: 10px 14px;
+  flex-wrap: wrap;
+}
+.bk-row--l1 {
+  padding: 10px 0;
+  justify-content: flex-end;
+}
+/* Brand anchored left; it pushes the controls to the right. On wrap, each
+   control drops individually and the wrapped lines stay right-aligned. */
+.bk-row--l1 .bk-brand {
+  margin-right: auto;
+}
+/* L2 has only the tabs nav, which should fill the row. */
+.bk-row--l2 {
+  justify-content: flex-start;
+}
+.bk-row--l2 {
+  padding: 0;
+  border-top: 1px solid var(--bk-line-soft);
+}
+.bk-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: none;
+  /* The mark stays stable in the chrome even if it derives its colour from the
+     app's selected accent elsewhere — pin it here to a fixed pair so the brand
+     chip does not flicker as the accent control is exercised. Replace these
+     with your own mark's "at rest" colours, or drop the two custom properties
+     entirely if your logo component takes no such variables. */
+  --logo-g: #006e5d;
+  --logo-word: #14433b;
+}
+[data-theme$="-dark"] .bk-brand,
+.bk-root[data-bk-dark] .bk-brand {
+  --logo-g: #6ec4b1;
+  --logo-word: #a1d4c7;
+}
+.bk-brand svg {
+  height: 26px;
+  width: auto;
+}
+.bk-devtag {
+  font-size: 10.5px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--bk-muted);
+  border: 1px solid var(--bk-line);
+  border-radius: 999px;
+  padding: 2px 8px;
+}
+/* L2 tabs, full-width row */
+.bk-tabs {
+  display: flex;
+  gap: 2px;
+  overflow-x: auto;
+  width: 100%;
+  min-width: 0;
+}
+.bk-tab {
+  font-family: "Familjen Grotesk", "Geist", sans-serif;
+  font-size: 14px;
+  color: var(--bk-muted);
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  padding: 11px 12px 9px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.bk-tab:hover {
+  color: var(--bk-fg);
+}
+.bk-tab[aria-current="page"] {
+  color: var(--bk-fg);
+  border-bottom-color: var(--bk-brand);
+  font-weight: 600;
+}
+
+/* controls — display:contents so each control is a direct flex item of the row.
+   The row is justify-content:flex-end and the brand takes margin-right:auto, so
+   controls wrap ONE BY ONE and each wrapped line stays aligned to the right. */
+.bk-controls {
+  display: contents;
+}
+.bk-ctl {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.bk-ctl__label {
+  font-size: 10px;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--bk-muted);
+}
+.bk-divider {
+  width: 1px;
+  height: 22px;
+  background: var(--bk-line);
+  flex: none;
+  margin: 0 2px;
+}
+/* One control height/shape for every control — button, segmented, swatch row. */
+.bk-root {
+  --bk-control-h: 30px;
+  --bk-control-radius: 7px;
+}
+.bk-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  height: var(--bk-control-h);
+  border: 1px solid var(--bk-line);
+  background: var(--bk-panel);
+  color: var(--bk-fg);
+  border-radius: var(--bk-control-radius);
+  padding: 0 10px;
+  font: inherit;
+  font-size: 12.5px;
+  cursor: pointer;
+}
+/* Icons inside chrome buttons match the control scale, not the 18px default,
+   so a button with an icon is the same height as one without. */
+.bk-btn svg {
+  width: 15px;
+  height: 15px;
+}
+.bk-btn:hover {
+  background: var(--bk-elevated);
+}
+.bk-btn[aria-pressed="true"] {
+  border-color: var(--bk-brand);
+  color: var(--bk-brand);
+}
+.bk-seg {
+  display: inline-flex;
+  height: var(--bk-control-h);
+  border: 1px solid var(--bk-line);
+  border-radius: var(--bk-control-radius);
+  background: var(--bk-panel);
+  overflow: hidden;
+}
+.bk-seg button {
+  font: inherit;
+  font-size: 12px;
+  color: var(--bk-muted);
+  background: transparent;
+  border: none;
+  padding: 0 10px;
+  cursor: pointer;
+  border-right: 1px solid var(--bk-line);
+}
+.bk-seg button:last-child {
+  border-right: none;
+}
+.bk-seg button[aria-pressed="true"] {
+  background: var(--bk-brand);
+  color: var(--bk-brand-fg);
+}
+/* The accent row sits in a bordered control box the same height as the rest, so
+   the swatches read as one control among equals rather than loose dots. */
+.bk-swatches {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  height: var(--bk-control-h);
+  padding: 0 5px;
+  border: 1px solid var(--bk-line);
+  border-radius: var(--bk-control-radius);
+  background: var(--bk-panel);
+  flex-wrap: wrap; /* narrow viewports: wrap rather than overflow the box */
+}
+/* The button is a 24px hit target (WCAG 2.5.8); the visible dot is the 15px
+   `::before` centred inside it, so the click area clears the minimum without
+   enlarging the chip. */
+.bk-swatch {
+  width: 24px;
+  height: 24px;
+  border: none;
+  background: transparent;
+  padding: 0;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.bk-swatch::before {
+  content: "";
+  width: 15px;
+  height: 15px;
+  border-radius: 999px;
+  /* The chip carries its own `data-theme`/`data-accent`, so your theme CSS
+     resolves `--accent` to the real hex for that pair — light or dark, no
+     copy here. */
+  background: var(--accent, currentColor);
+  box-shadow: 0 0 0 1px var(--bk-line);
+}
+.bk-swatch[aria-pressed="true"]::before {
+  box-shadow: 0 0 0 2px var(--bk-panel), 0 0 0 3px var(--bk-brand);
+}
+
+/* ===== Page shell (content + on-this-page rail) ===== */
+.bk-shell {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 28px 24px 72px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 172px;
+  gap: 40px;
+  align-items: start;
+}
+[data-width="full"] .bk-shell,
+[data-width="full"] .bk-bar__inner {
+  max-width: none;
+}
+.bk-main {
+  min-width: 0;
+}
+
+.bk-toc {
+  position: sticky;
+  top: 100px;
+  align-self: start;
+  font-size: 12.5px;
+}
+.bk-toc__title {
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--bk-muted);
+  margin: 0 0 8px;
+}
+.bk-toc a {
+  display: block;
+  color: var(--bk-muted);
+  text-decoration: none;
+  padding: 4px 0 4px 11px;
+  margin-left: -13px;
+  border-left: 2px solid transparent;
+}
+.bk-toc a:hover {
+  color: var(--bk-fg);
+}
+.bk-toc a[aria-current="true"] {
+  color: var(--bk-brand);
+  border-left-color: var(--bk-brand);
+}
+.bk-toc__sep {
+  height: 1px;
+  background: var(--bk-line-soft);
+  margin: 10px 0;
+}
+.bk-toc a.bk-toc__mdx {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--bk-fg-2);
+  font-family: "Geist Mono", monospace;
+  font-size: 11.5px;
+  white-space: nowrap;
+  padding-left: 0;
+  margin-left: 0;
+  border-left: none;
+}
+.bk-toc a.bk-toc__mdx:hover {
+  color: var(--bk-fg);
+}
+.bk-toc__mdx svg {
+  width: 14px;
+  height: 14px;
+  flex: none;
+}
+@media (max-width: 1080px) {
+  .bk-shell {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .bk-toc {
+    display: none;
+  }
+}
+
+/* ===== Tab intro + blocks — tighter, less wasted space ===== */
+.bk-tab-intro {
+  max-width: 66ch;
+  margin-bottom: 24px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--bk-line);
+}
+.bk-eyebrow {
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--bk-brand);
+  font-weight: 600;
+  margin: 0 0 8px;
+}
+.bk-tab-intro h1 {
+  font-family: "Familjen Grotesk", "Geist", sans-serif;
+  font-size: 26px;
+  line-height: 1.15;
+  font-weight: 600;
+  margin: 0 0 10px;
+  letter-spacing: -0.01em;
+  color: var(--bk-fg);
+}
+.bk-tab-intro p {
+  font-size: 14.5px;
+  line-height: 1.6;
+  color: var(--bk-fg-2);
+  margin: 0;
+}
+
+.bk-block {
+  border-top: 1px solid var(--bk-line-soft);
+  padding: 28px 0;
+  scroll-margin-top: 100px;
+}
+.bk-block:first-of-type {
+  border-top: none;
+  padding-top: 8px;
+}
+.bk-block__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 34%) minmax(0, 66%);
+  gap: 36px;
+  align-items: start;
+}
+/* Stacked: prose above, preview full-width. For wide specimens (wireframe rows,
+   comparison tables) that the 66% column would crush. The spec keeps its reading
+   width; the preview spans the whole block. */
+.bk-block__stack {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  /* A flex column establishes a min-width:auto on its items — a wide specimen
+     (five fields, a table) then pushes the item past the .bk-main track and
+     over the on-this-page rail. Cap the column itself and zero its items so a
+     too-wide child overflows INSIDE its own box (its grid wraps or scrolls)
+     rather than widening the whole page. */
+  min-width: 0;
+  max-width: 100%;
+}
+.bk-block__stack > * {
+  min-width: 0;
+  max-width: 100%;
+}
+.bk-block__stack .bk-block__spec p {
+  max-width: 80ch;
+}
+.bk-block__spec {
+  min-width: 0;
+}
+.bk-block__spec h2 {
+  font-family: "Familjen Grotesk", "Geist", sans-serif;
+  font-size: 20px;
+  line-height: 1.2;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  margin: 0 0 10px;
+  color: var(--bk-fg);
+}
+.bk-block__spec p {
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--bk-fg-2);
+  margin: 0 0 10px;
+  max-width: 48ch;
+}
+.bk-block__spec p:last-child {
+  margin-bottom: 0;
+}
+.bk-block__spec strong {
+  color: var(--bk-fg);
+  font-weight: 600;
+}
+.bk-block__spec code {
+  font-family: "Geist Mono", monospace;
+  font-size: 0.86em;
+  background: var(--bk-elevated);
+  border-radius: 4px;
+  padding: 1px 5px;
+}
+.bk-block__preview-wrap {
+  min-width: 0;
+}
+@media (max-width: 860px) {
+  .bk-block__grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+}
+
+/* ===== Demo (the dual block) — chrome palette; preview hosts project tokens ===== */
+.bk-demo {
+  border: 1px solid var(--bk-line);
+  border-radius: 8px;
+  overflow: hidden;
+  background: var(--bk-panel);
+  box-shadow: var(--bk-shadow);
+}
+/* The preview is the ONE place the project's tokens live. Centred so the
+   specimen sits in the middle of the frame rather than pinned to the edge. */
+.bk-demo__preview {
+  padding: 28px 24px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  min-height: 112px;
+}
+.bk-demo__bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 10px;
+  border-top: 1px solid var(--bk-line);
+  background: var(--bk-elevated);
+}
+.bk-demo__bar-left,
+.bk-demo__bar-right {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.bk-demo__toggle,
+.bk-demo__copy,
+.bk-demo__reset {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font: inherit;
+  font-size: 12px;
+  color: var(--bk-muted);
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  padding: 4px 8px;
+  cursor: pointer;
+}
+.bk-demo__toggle:hover,
+.bk-demo__copy:hover,
+.bk-demo__reset:hover {
+  color: var(--bk-fg);
+  border-color: var(--bk-line);
+}
+.bk-demo__copy[data-copied="true"] {
+  color: var(--bk-brand);
+  border-color: var(--bk-brand);
+}
+.bk-demo__file {
+  margin-left: 8px;
+  font-family: "Geist Mono", monospace;
+  color: var(--bk-muted);
+}
+.bk-demo__code {
+  margin: 0;
+  padding: 14px 16px;
+  overflow-x: auto;
+  border-top: 1px solid var(--bk-line);
+  background: var(--bk-code-bg);
+  font-family: "Geist Mono", ui-monospace, monospace;
+  font-size: 12.5px;
+  line-height: 1.6;
+  color: var(--bk-fg);
+}

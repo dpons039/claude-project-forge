@@ -45,7 +45,7 @@ docs/
 ├── voice.md               ← If the product has user-facing copy (tone, vocabulary)
 ├── testing.md             ← If project has a test suite (layout, runners, policies)
 ├── BrandKit.md            ← If project has a dev BrandKit page (how it works, how to
-│                            add blocks) — created/maintained by the `brandkit` skill,
+│                            add blocks) — created/maintained by the `brandkit-manager` skill,
 │                            not by this bootstrap
 ├── api.md                 ← If project consumes external APIs (domain extras named
 │                            after the API are allowed — always indexed in README.md)

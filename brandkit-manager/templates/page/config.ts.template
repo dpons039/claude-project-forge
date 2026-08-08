@@ -1,0 +1,129 @@
+/**
+ * The BrandKit's single configuration point.
+ *
+ * The chrome (the dir-4 layout, the controls, the nav) is fixed and universal —
+ * a project never edits it. Everything a project DOES vary lives here: the name,
+ * which mark to show, and the ordered lists of themes / accents / densities /
+ * tabs. Adding a tab = create its `.mdx` and add one line to `tabs` below.
+ *
+ * **Accents and densities: two patterns, pick one.**
+ *
+ * (a) Derive-from-app (preferred once your app declares these centrally): if
+ * your app already exports its accent/density lists from one module (e.g. a
+ * boot/bootstrap file), import and map over them here — see the commented
+ * block below. The direction is deliberate: the BrandKit is a dev-only viewer,
+ * so it depends on the app, never the reverse. The app's own bootstrap must
+ * never import a dev tool.
+ *
+ * (b) Explicit literal list (the default below, and the only option if your
+ * app has no such central declaration yet): edit the arrays directly. Keep
+ * `value` in sync with what your theme CSS actually defines under
+ * `[data-accent="…"]` — a mismatch here shows a swatch that doesn't apply.
+ */
+
+import type { ComponentType } from "react";
+
+// --- Pattern (a): derive from where your app already declares these lists ---
+// import { ACCENTS, DENSITIES } from "@/your/central/tokens/module";
+
+// The project's own mark. The chrome takes it through `config.logo` rather than
+// importing it, so `BrandKit.tsx` stays copy-paste-identical across projects —
+// this line is the one place a project names its brand component.
+// import { YourMark } from "@/components/YourMark";
+
+export interface ThemeOption {
+  /** The `data-theme` attribute value. */
+  value: string;
+  /** Human label on the control. */
+  label: string;
+}
+
+export interface AccentOption {
+  /** The `data-accent` attribute value; your theme CSS defines its hex. */
+  value: string;
+  /** Human label on the control. */
+  label: string;
+}
+
+export interface DensityOption {
+  /** The density class applied to `<html>` (e.g. `dens-cozy`). */
+  value: string;
+  label: string;
+}
+
+export interface TabConfig {
+  /** URL-hash id and MDX filename stem (`tabs/${id}.mdx`). */
+  id: string;
+  /** Label in the tab nav. */
+  label: string;
+}
+
+export interface BrandkitConfig {
+  /** Product name, shown beside the mark. */
+  name: string;
+  /**
+   * The mark component, shown in the top-left brand chip. The project passes its
+   * own — the chrome never imports a project component itself, which is what
+   * keeps `BrandKit.tsx` copy-paste-identical across projects. Any component that
+   * renders a small inline logo works.
+   */
+  logo: ComponentType;
+  themes: ThemeOption[];
+  accents: AccentOption[];
+  densities: DensityOption[];
+  /** Default appearance on first load. */
+  defaults: { theme: string; accent: string; density: string };
+  /** Ordered tabs; the nav and the panels are built from this. */
+  tabs: TabConfig[];
+}
+
+/**
+ * Title-cases a slug for a control label: `amber` → `Amber`. The BrandKit
+ * chrome is English and universal, so it cannot reach for the app's own i18n
+ * catalogue if it has one — that would tie the showroom to one project's
+ * locale. A capitalised slug is honest and needs no second list to keep in
+ * step. Override `accents`/`densities` below directly if you want prettier
+ * labels.
+ */
+const label = (slug: string): string => slug.charAt(0).toUpperCase() + slug.slice(1);
+
+export const config: BrandkitConfig = {
+  name: "[PROJECT_NAME]",
+  logo: /* YourMark */ (() => null) as unknown as ComponentType, // replace with your imported mark component
+  themes: [
+    { value: "[THEME_LIGHT]", label: "Light" },
+    { value: "[THEME_DARK]", label: "Dark" },
+  ],
+
+  // --- Pattern (b): explicit list — edit directly. Delete if using pattern (a). ---
+  accents: [
+    { value: "blue", label: "Blue" },
+    { value: "green", label: "Green" },
+    { value: "amber", label: "Amber" },
+  ],
+  densities: [
+    { value: "dens-compact", label: "Compact" },
+    { value: "dens-cozy", label: "Cozy" },
+  ],
+
+  // --- Pattern (a) alternative — uncomment and delete the block above instead. ---
+  // accents: ACCENTS.map((value) => ({ value, label: label(value) })),
+  // densities: DENSITIES.map((value) => ({ value: `dens-${value}`, label: label(value) })),
+
+  defaults: { theme: "[THEME_LIGHT]", accent: "blue", density: "dens-cozy" },
+
+  // The canonical eight (see page-structure.md). Tokens/foundations before the
+  // things built from them; the identity tab (Brand) first; cross-cutting Voice
+  // and Accessibility last. Each id maps to `tabs/<id>.mdx`. Drop any your
+  // project does not have (note it as "skipped" in docs/BrandKit.md).
+  tabs: [
+    { id: "brand", label: "Brand" },
+    { id: "foundations", label: "Foundations" },
+    { id: "colour", label: "Colour" },
+    { id: "components", label: "Components" },
+    { id: "formatting", label: "Formatting" },
+    { id: "layouts", label: "Layouts" },
+    { id: "voice", label: "Voice" },
+    { id: "accessibility", label: "Accessibility" },
+  ],
+};

@@ -18,9 +18,9 @@ paths:
    design skills work from the prompt, they do not load these files themselves.
 [BRANDKIT_LINE]
 
-<!-- [BRANDKIT_LINE] is replaced at install with, when the brandkit skill is
+<!-- [BRANDKIT_LINE] is replaced at install with, when the brandkit-manager skill is
      approved: "4. **BrandKit**: when building or changing UI, invoke the
-     `brandkit` skill (Skill tool) to keep the dev BrandKit page and its docs in
+     `brandkit-manager` skill (Skill tool) to keep the dev BrandKit page and its docs in
      sync — it is the living component/token reference. Consult the page too, but
      invoking the skill is what updates it." Removed otherwise. This lives here
      (loaded on frontend paths), not in system-health.md (loaded only on config),

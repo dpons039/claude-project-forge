@@ -29,14 +29,26 @@ folder the build copies wholesale (e.g. `public/`).
 The app never imports from the page's directory: one such import would pull
 its code into the production bundle without the build-output check seeing it.
 
+## How the page is built
+
+An **MDX-driven, config-parameterised visualizer**: a fixed universal chrome
+(nav, the dual live-preview-plus-code block, the on-this-page rail, the global
+controls) copied in unchanged, plus content this project supplies —
+`src/brandkit/config.ts` and, per tab, `tabs/<id>.mdx` (the prose rule + a live
+`<Demo>`) paired with `tabs/<id>.examples.tsx` (the stateful specimens the `.mdx`
+imports — anything with hooks, i18n or types, which cannot live inline in MDX).
+The chrome is never edited here; this project varies only the config, the tabs,
+and the mark component `config.logo` names.
+
 ## The tabs
 
 | Tab | What it answers |
 |---|---|
-| **Foundations** | The mark, the typefaces, the type scale, spacing, radii — plus iconography and motion |
-| **Colour** | The neutrals per theme, the accents/identities, ratios measured live |
+| **Brand** | The mark: variants, on every surface, in context — this project's identity |
+| **Foundations** | Typefaces, type scale, spacing, radii, iconography, elevation, motion |
+| **Colour** | The neutrals per theme, the accents/identities, ratios measured live, the semantic ink pairs |
 | **Components** | [BLOCK_COUNT] blocks: [BLOCK_LIST] |
-| **[DOMAIN_TAB_NAME]** | [DOMAIN_TAB_CONTENT] |
+| **Formatting** | Amounts/figures, signed values, dates, percentages — live output from the format module |
 | **Layouts** | The shell and the screens, from the original mockups at real widths |
 | **Voice** | Errors, empty states, destructive confirmation |
 | **Accessibility** | The criteria, focus, target size, colour vision |
@@ -45,22 +57,30 @@ Controls sit above them and change everything at once ([CONTROLS_LIST]).
 They are not tabs — the point is finding out whether a decision survives every
 combination, not just the default.
 
-A canonical block may be skipped only with a note here: "skipped: <reason>".
+A canonical tab or block may be skipped only with a note here: "skipped: <reason>".
 
 ## How to add a block
 
-```tsx
-<Section
+Add a `<Block>` to the tab's `.mdx`. Simple specimens go inline; a specimen with
+state, hooks, i18n or types goes in the tab's `.examples.tsx` and is imported
+(MDX inline expressions are plain JS — no `as const`, no type annotations).
+
+```mdx
+import { MySpecimen } from "./<id>.examples";  // only if the specimen has state
+
+<Block
   title="What it is"
-  note="Why it is that way — one or two sentences, not a paragraph."
+  spec={<p>Why it is that way — the rule, and why.</p>}
 >
-  <Frame>{/* the specimen */}</Frame>
-  <CodeBlock code={`/* the exact code to paste */`} />
-</Section>
+  <Demo title="thing.tsx" code={`/* the exact code to paste */`}>
+    {/* the live specimen — inline, or <MySpecimen /> from the examples file */}
+  </Demo>
+</Block>
 ```
 
-`wide` puts the note above rather than beside, for specimens that need the
-whole line.
+A new tab: create `<id>.mdx` (+ `<id>.examples.tsx` if needed), register it in
+`tabs/index.ts`, add `{id,label}` to `config.tabs`. `<Block stacked>` puts the
+prose above a full-width preview, for wide specimens (wireframe rows, tables).
 
 Four rules every block follows:
 
@@ -94,8 +114,8 @@ inside still measures its true width and picks the right breakpoint.
 ## The specimen has to sit where the defect can show
 
 A block that renders the right code can still be a passing test of nothing.
-A component that shares its background with `Frame` proves nothing about the
-boundary; a one-line specimen is a screenshot of the good case.
+A component that shares its background with the preview surface proves nothing
+about the boundary; a one-line specimen is a screenshot of the good case.
 
 - Show the specimen in the state that breaks it, not the tidiest one.
 - Put a control on the background it will actually meet.
