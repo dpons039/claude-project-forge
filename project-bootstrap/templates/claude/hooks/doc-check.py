@@ -181,6 +181,34 @@ SIZE_CAPS = {
 AREA_DOC_SUBDIVIDE = 500
 AREA_DOC_HARD = 1000
 
+# decisions.md is the store of decision reasoning (### D-n per decision), so it grows
+# with the project — a fixed cap would choke a large project or let a small one bloat.
+# The soft threshold scales with the number of area docs; the hook only WARNS past it
+# (the fix is rotating superseded entries to _archive, not splitting the file). A high
+# fixed hard cap is the backstop so it can't balloon forever unnoticed.
+DECISIONS_SOFT_BASE = 200      # baseline lines allowed
+DECISIONS_SOFT_PER_AREA = 40   # + this many per area doc in docs/*.md
+DECISIONS_HARD = 1500          # absolute backstop (block)
+
+
+def _count_area_docs(root: Path) -> int:
+    """Number of top-level area docs in docs/*.md, excluding the progress docs that
+    carry their own SIZE_CAPS and decisions.md itself. Used to scale the decisions cap."""
+    docs = root / "docs"
+    if not docs.is_dir():
+        return 0
+    n = 0
+    for p in docs.glob("*.md"):
+        rel = f"docs/{p.name}"
+        if rel in SIZE_CAPS or p.name == "decisions.md":
+            continue
+        n += 1
+    return n
+
+
+def _decisions_soft_cap(root: Path) -> int:
+    return DECISIONS_SOFT_BASE + DECISIONS_SOFT_PER_AREA * _count_area_docs(root)
+
 
 def check_doc_sizes(root: Path, changed_files: list[str]) -> tuple[list[str], list[str], list[str]]:
     """Sizes of progress + area docs touched this session.
@@ -206,6 +234,14 @@ def check_doc_sizes(root: Path, changed_files: list[str]) -> tuple[list[str], li
                 blockers.append(f"{norm}: {n} lines (hard cap {block})")
             elif n > warn:
                 warnings.append(f"{norm}: {n} lines (cap {warn})")
+        elif norm == "docs/decisions.md":
+            # dynamic soft cap (scales with area-doc count), fixed hard backstop
+            soft = _decisions_soft_cap(root)
+            if n >= DECISIONS_HARD:
+                blockers.append(f"{norm}: {n} lines (hard cap {DECISIONS_HARD})")
+            elif n > soft:
+                warnings.append(f"{norm}: {n} lines (dynamic cap {soft}) — "
+                                f"rotate superseded ### D-n to _archive/, keep minors one line")
         elif norm.count("/") == 1:
             # area doc: split-suggestion at soft, hard block only at 1000
             if n >= AREA_DOC_HARD:

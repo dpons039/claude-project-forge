@@ -26,10 +26,14 @@
 - SSOT: `docs/` — read before working, update after architectural changes
 - Index: `docs/README.md` — read the area doc BEFORE touching code
 - System: `docs/doc-system.md` — principles and rules
-- Decisions: inline with `> **Decision:** (date, D-n)` — index in `docs/decisions.md`.
-  Never rewrite one: if it changes, new decision + `Superseded by` on the old
-  (old claim false → move it to `docs/_archive/decisions.md`) or `Refined by`
-  (old claim still holds → it stays put)
+- Decisions: a one-line marker `> **Decision:** (date, D-n) claim` in the area doc;
+  the reasoning as a `### D-n` in `docs/decisions.md` (major = full block, minor =
+  one line). Recorded only if it passes the three-part test (see
+  `docs/doc-system.md` § Decisions); a calibrated value that fails it stays as prose,
+  no `### D-n`. Never rewrite one: if it changes, new `### D-m` + `Superseded by`
+  (old claim false → move the old `### D-n`, heading and all, to
+  `docs/_archive/decisions.md`) or `Refined by` (old claim still holds → it stays in
+  decisions.md). Live-on-a-surface (BrandKit) → the `### D-n` points at the surface
 - Agent: `doc-updater` — invoke before multi-area commits
 [MIGRATIONS_RESTRICTION]
 
@@ -39,8 +43,10 @@ update `docs/planning.md` in the same commit.
 
 **Doc size limits (hard):** `planning.md` <100 lines, current phase only
 (full phase plan → `docs/roadmap.md`); entries 1–2 lines + pointer, no inline
-diagnoses. `decisions.md` index entries ≤2 lines. `changelog.md` entries ≤5
-bullets of one line each. Over the cap → compress or archive before adding.
+diagnoses. `decisions.md` has a **dynamic** cap (scales with area-doc count; the
+hook warns) — rotate superseded `### D-n` to `_archive`, keep minors one line.
+`changelog.md` entries ≤5 bullets of one line each. Over the cap → compress or
+archive before adding.
 Docs describe **present state**; unbuilt work = "Not implemented yet" +
 proposal pointer, never specified as if it existed.
 

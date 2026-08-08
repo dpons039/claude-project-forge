@@ -215,10 +215,14 @@ Adapt language to match the project's. Use this content:
 - SSOT: `docs/` — read before working, update after architectural changes
 - Index: `docs/README.md` — read the area doc BEFORE touching code
 - System: `docs/doc-system.md` — principles and rules
-- Decisions: inline with `> **Decision:** (date, D-n)` — index in `docs/decisions.md`.
-  Never rewrite one: if it changes, new decision + `Superseded by` on the old
-  (old claim false → move it to `docs/_archive/decisions.md`) or `Refined by`
-  (old claim still holds → it stays put)
+- Decisions: a one-line marker `> **Decision:** (date, D-n) claim` in the area doc;
+  the reasoning as a `### D-n` in `docs/decisions.md` (major = full block, minor =
+  one line). Recorded only if it passes the three-part test (see
+  `docs/doc-system.md` § Decisions); a calibrated value that fails it stays as prose,
+  no `### D-n`. Never rewrite one: if it changes, new `### D-m` + `Superseded by`
+  (old claim false → move the old `### D-n`, heading and all, to
+  `docs/_archive/decisions.md`) or `Refined by` (old claim still holds → it stays in
+  decisions.md). Live-on-a-surface (BrandKit) → the `### D-n` points at the surface
 - Agent: `doc-updater` — invoke before multi-area commits
 
 When creating new file in `docs/`: update `docs/README.md`.
@@ -305,9 +309,14 @@ Read `templates/doc-system.md` for the full principles document. Key rules:
 - **SSOT**: docs = project knowledge. Code = implementation detail.
 - **No code duplication**: if Claude can read it from source → don't document it.
 - **Rewrite, don't append**: docs describe current state, not history.
-- **Decisions inline**: `> **Decision:** (date, D-n)` marker, indexed in decisions.md.
-  Never rewritten — superseded ones get a `Superseded by` line and move to
-  `_archive/decisions.md`; refined ones get a `Refined by` line and stay put.
+- **Decisions**: a one-line marker in the area doc, reasoning as a `### D-n` in
+  decisions.md (major block / minor line), **only if it passes the three-part test**
+  (real alternative + reason invisible in code + reverting hurts); calibration that
+  fails it stays as prose, no `### D-n`. Never rewritten — superseded ones get a
+  `Superseded by` line and **move (heading and all) to `_archive/decisions.md`**;
+  refined ones get a `Refined by` line and stay. A decision rendered live on a
+  surface (BrandKit) keeps its `### D-n`, pointed at the surface — an attribute, not
+  a third relation. `decisions.md` has a dynamic size cap that scales with area docs.
 - **Conventions in area docs**: `## Conventions`, 1-in-1-out rule.
 - **Cross-file deps**: `## If you touch...` in each area doc.
 - **Split threshold**: >350 lines + independent subtopics → subdirectory.
@@ -330,6 +339,7 @@ All templates are in the `templates/` directory:
 | `planning.md` | `docs/` | Template with rules |
 | `changelog.md` | `docs/` | Template with rules |
 | `decisions.md` | `docs/` | Template with rules |
+| `archive-decisions.md` | `docs/_archive/decisions.md` | Template with rules |
 | `research-needed.md` | `docs/` | Template with rules |
 | `changes-readme.md` | `docs/changes/README.md` | SDD workflow |
 | `proposal-template.md` | `docs/changes/_template/proposal.md` | SDD template |

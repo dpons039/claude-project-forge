@@ -142,21 +142,31 @@ For each area doc, write the new version:
 | backend, frontend | STANDARD | Compact index + 1 canonical example + patterns |
 | infrastructure | STANDARD | Topology diagram + deploy flow |
 
-## Step 5 — Build decisions.md index
+## Step 5 — Build decisions.md (the store)
 
-Scan all new area docs for `> **Decision:**` markers. Assign sequential `D-n` IDs
-in order of appearance, write each ID back into its inline marker, and build the index:
+`decisions.md` is the **store** of decision reasoning, not an index. Scan all new
+area docs for `> **Decision:**` blocks. For each, assign the next sequential `D-n`,
+**move the reasoning into a `### D-n` section** in `decisions.md`, and leave only a
+one-line marker `> **Decision:** (date, D-n) claim` in the area doc.
+
+Classify each while migrating:
+- **Major** — the block has a trade-off, rejected alternatives, or measurements →
+  keep the full block under `### D-n`.
+- **Minor** — a one-line claim with no alternatives → a single line under `### D-n`.
+- When in doubt, **major** — never drop reasoning the old doc had.
 
 ```markdown
-| # | Decision | Doc | Section | Status |
-|---|----------|-----|---------|--------|
-| D1 | [title] | [area].md | § [section] | active |
+## Decisions
+
+### D1 — <claim>
+<full block if major, one line if minor>
 ```
 
-All migrated decisions start as `active`: a migration cannot tell which ones were
-superseded, since the old docs have no back-link (that's exactly the gap this system
-closes). If the user spots a superseded one, mark it by hand — `Superseded by` line
-on the block, move it to `_archive/decisions.md`, update the row.
+All migrated decisions start in force (no status line): a migration cannot tell
+which were superseded, since the old docs have no back-link (that's exactly the gap
+this system closes). If the user spots a superseded one, mark it by hand — add a
+`**Superseded by**` line and move that `### D-n` (heading and all) to
+`_archive/decisions.md`.
 
 ## Step 6 — Update README.md
 

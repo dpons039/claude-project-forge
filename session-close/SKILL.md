@@ -74,11 +74,12 @@ it just bloats every future session.** Memory is for what the rules don't captur
 domain facts and this user's preferences.
 
 Decisions are docs, not memory:
-- New architectural decisions → `> **Decision:** (date, D-n)` in the area doc +
-  entry in `decisions.md` (not a memory)
-- Decisions affected during the session — verify the old block carries its
-  `Superseded by` or `Refined by` line, that superseded ones reached
-  `_archive/decisions.md` and refined ones did NOT, and the index rows match. If
+- New architectural decisions → a one-line marker `> **Decision:** (date, D-n)` in
+  the area doc + the reasoning as a `### D-n` in `decisions.md` (major block / minor
+  line), not a memory. The marker carries no trade-off — that lives in the `### D-n`
+- Decisions affected during the session — verify the old `### D-n` carries its
+  `Superseded by` or `Refined by` line, that superseded ones **left `decisions.md`
+  for `_archive/decisions.md`** (heading and all) and refined ones stayed. If
   anything is missing → invoke `doc-updater`, which owns the process
 - Discovered gotchas → § If you touch... in the area doc
 
@@ -113,8 +114,9 @@ If any doc exceeds 300 lines → verify it has no REF derivable from code.
 If `planning.md` exceeds 100 lines → **fix it now, not just report**: move
 roadmap/future content to `roadmap.md`, compress entries to 1–2 lines +
 pointer, delete struck narrative. Same for `changelog.md` over 500 (rotate,
-Step 4) and `decisions.md` entries over 2 lines (compress — the reasoning
-lives inline in the area doc).
+Step 4). For `decisions.md`, the hook warns past a **dynamic** cap (it scales with
+the number of area docs) — if warned, rotate superseded `### D-n` to
+`_archive/decisions.md` and make sure minors are one line, not creeping blocks.
 
 ## Step 7 — Dotfile change detection
 

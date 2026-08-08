@@ -11,7 +11,7 @@ docs/
 ├── changelog.md           ← Recent changes; rotation by size (>500 lines)
 ├── planning.md            ← Current phase only, hard cap 100 lines, entries 1-2 lines
 ├── roadmap.md             ← Full phase plan + deferred future scope, read on demand
-├── decisions.md           ← Index of inline decisions (pointers, 1-2 lines each)
+├── decisions.md           ← Store of decision reasoning (### D-n each); dynamic size cap
 ├── research-needed.md     ← Open questions
 │
 ├── changes/               ← SDD proposals (active)
@@ -80,9 +80,10 @@ Brief technology stack and folder organization.
 What exists and how it works — **present state only**. Include:
 - Compact indexes (1 line per endpoint/component/service)
 - 1 canonical example showing the pattern
-- Decisions inline: > **Decision:** (YYYY-MM-DD, D-n) why X instead of Y
-  (claim + trade-off; measurements and derivations go to a linked file or the
-  proposal). Only decisions in force — superseded ones move to `_archive/decisions.md`
+- Decision markers only: > **Decision:** (YYYY-MM-DD, D-n) one-line claim.
+  No trade-off here — the reasoning is the `### D-n` in `decisions.md` (the `D-n`
+  is the pointer). Only decisions in force — superseded ones leave for
+  `_archive/decisions.md`
 - Diagrams of topology/architecture (ASCII or mermaid)
 
 ## [Unbuilt area, if any]
@@ -106,15 +107,29 @@ Cross-file dependencies:
 ```markdown
 # Architecture Decisions
 
-Index of non-obvious decisions. Each decision lives inline in its area doc,
-marked with `> **Decision:** (YYYY-MM-DD, D-n)`. IDs are never reused.
-A superseded decision keeps its row here, pointing at `_archive/decisions.md`.
+Store of the project's non-obvious decisions. Each area doc carries a one-line
+marker `> **Decision:** (date, D-n) claim`; the `D-n` resolves to the `### D-n`
+here, where the reasoning lives. Only decisions in force are here; superseded ones
+move to `_archive/decisions.md`. IDs are never reused.
 
-| # | Decision | Doc | Section | Status |
-|---|----------|-----|---------|--------|
-| D1 | [title] | [area].md | § [section] | active |
-| D2 | [older title] | _archive/decisions.md | — | superseded by D5 |
+## How to fill this
+### Levels (major / minor)   ← major = full block, minor = one line
+### Superseded / Refined     ← superseded leaves for _archive; refined stays
+### Live surface             ← ### D-n points at the surface, no duplicate block
+
+## How to search / find      ← grep '^### D' (all); ### D-n → next ### (one)
+
+## Decisions
+
+### D2 — <newer claim>
+<full block if major, one line if minor>
+
+### D1 — <claim>
+**Refined by D2 (date)**
+<block; still in force>
 ```
+
+(See the full rules in `docs/decisions.md` itself — this is just the shape.)
 
 ## README.md skeleton
 
