@@ -49,11 +49,13 @@ archive before adding.
 Docs describe **present state**; unbuilt work = "Not implemented yet" +
 proposal pointer, never specified as if it existed.
 
-**SKIP_DOC_CHECK:** `.claude/skip-doc-authorized` is created only with explicit
-authorization from the owner. **If the owner gives it in the conversation, that
-condition is met** — create the file and commit in one step, without asking again.
-(The file is what the pre-commit hook checks; the owner's word in chat is the
-authorization it stands in for.)
+**SKIP_DOC_CHECK:** the pre-commit hook has two independent bypasses, either of
+which skips the check: the env var `SKIP_DOC_CHECK=1`, or a `.claude/skip-doc-authorized`
+file (a one-shot token, consumed on use). Both require explicit owner authorization —
+Claude NEVER sets the env var or creates the file on its own. **If the owner gives
+authorization in the conversation, that condition is met** — bypass and commit in one
+step, without asking again; the owner's word in chat is the authorization the file/var
+stands in for.
 
 ## Model
 

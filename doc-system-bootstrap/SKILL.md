@@ -226,8 +226,9 @@ Adapt language to match the project's. Use this content:
 
 When creating new file in `docs/`: update `docs/README.md`.
 
-**SKIP_DOC_CHECK:** Claude NEVER creates `.claude/skip-doc-authorized` without
-explicit authorization from the owner.
+**SKIP_DOC_CHECK:** the pre-commit hook skips on either bypass — the env var
+`SKIP_DOC_CHECK=1` or a one-shot `.claude/skip-doc-authorized` file. Claude NEVER
+sets the env var or creates the file without explicit authorization from the owner.
 
 ## Change Workflow (SDD)
 
