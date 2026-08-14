@@ -1,5 +1,6 @@
 # Claude Code — files excluded from context
-# These files are not read by Claude unless explicitly requested
+# Explicit Read still works on these paths; this only keeps them out of
+# automatic context loading.
 
 # node_modules/ — per-project choice, asked during install (Phase 1):
 # exclude it unless the project wants Claude reading installed packages
