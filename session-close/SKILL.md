@@ -16,10 +16,11 @@ Review session changes against the doc-updater checklist:
 - New pattern others should follow
 - Change to an existing convention
 - New cross-file dependency → § If you touch...
-- Architectural decision → inline with `> **Decision:** (date, D-n)` + entry in `decisions.md`
-- Decision affected by a later one → `Superseded by` (old claim false → archive it) or
-  `Refined by` (old claim still holds → stays put) on the old block, both rows marked in
-  the index. **The four steps live in `doc-updater`** — delegate there, don't reimplement
+- Architectural decision → a `### D-n` in `decisions.md` (its only home — no area-doc
+  marker, no `D-n` in code)
+- Decision affected by a later one → **supersede** (the only relation): new `### D-m` +
+  move the old `### D-n` (heading and all) to `_archive`. **The steps live in
+  `doc-updater`** — delegate there, don't reimplement
 
 **DO NOT update area doc if there was only:**
 - Value change, bug fix, internal refactor
@@ -74,13 +75,12 @@ it just bloats every future session.** Memory is for what the rules don't captur
 domain facts and this user's preferences.
 
 Decisions are docs, not memory:
-- New architectural decisions → a one-line marker `> **Decision:** (date, D-n)` in
-  the area doc + the reasoning as a `### D-n` in `decisions.md` (major block / minor
-  line), not a memory. The marker carries no trade-off — that lives in the `### D-n`
+- New architectural decisions → a `### D-n` in `decisions.md` (its only home — no
+  area-doc marker, no `D-n` in code), not a memory
 - Decisions affected during the session — verify the old `### D-n` carries its
-  `Superseded by` or `Refined by` line, that superseded ones **left `decisions.md`
-  for `_archive/decisions.md`** (heading and all) and refined ones stayed. If
-  anything is missing → invoke `doc-updater`, which owns the process
+  `Superseded by` line and **left `decisions.md` for `_archive/decisions.md`**
+  (heading and all). If anything is missing → invoke `doc-updater`, which owns the
+  process
 - Discovered gotchas → § If you touch... in the area doc
 
 **What actually goes to memory (passes the filter):**
@@ -114,9 +114,10 @@ If any doc exceeds 300 lines → verify it has no REF derivable from code.
 If `planning.md` exceeds 100 lines → **fix it now, not just report**: move
 roadmap/future content to `roadmap.md`, compress entries to 1–2 lines +
 pointer, delete struck narrative. Same for `changelog.md` over 500 (rotate,
-Step 4). For `decisions.md`, the hook warns past a **dynamic** cap (it scales with
-the number of area docs) — if warned, rotate superseded `### D-n` to
-`_archive/decisions.md` and make sure minors are one line, not creeping blocks.
+Step 4). `decisions.md` is self-limiting — the hook warns only past a high fixed
+backstop; if warned, a superseded `### D-n` never left for `_archive/decisions.md` —
+move it. It also warns on single-source breaks (duplicate IDs, a `Superseded by` line
+still in the store); fix by delegating to `doc-updater`.
 
 ## Step 7 — Dotfile change detection
 

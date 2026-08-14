@@ -215,14 +215,13 @@ Adapt language to match the project's. Use this content:
 - SSOT: `docs/` — read before working, update after architectural changes
 - Index: `docs/README.md` — read the area doc BEFORE touching code
 - System: `docs/doc-system.md` — principles and rules
-- Decisions: a one-line marker `> **Decision:** (date, D-n) claim` in the area doc;
-  the reasoning as a `### D-n` in `docs/decisions.md` (major = full block, minor =
-  one line). Recorded only if it passes the three-part test (see
-  `docs/doc-system.md` § Decisions); a calibrated value that fails it stays as prose,
-  no `### D-n`. Never rewrite one: if it changes, new `### D-m` + `Superseded by`
-  (old claim false → move the old `### D-n`, heading and all, to
-  `docs/_archive/decisions.md`) or `Refined by` (old claim still holds → it stays in
-  decisions.md). Live-on-a-surface (BrandKit) → the `### D-n` points at the surface
+- Decisions: a decision lives in ONE place — a `### D-n` block in `docs/decisions.md`.
+  No marker in the area doc, no `D-n` in code (its consequences are documented where
+  they land; the decision and its ID stay in decisions.md). Recorded only if it passes
+  the three-part test (see `docs/doc-system.md` § Decisions); a calibrated value that
+  fails it stays as prose, no `### D-n`. Never rewrite one — the only relation is
+  **supersede**: new `### D-m` (`Supersedes D-n`) + move the old `### D-n` (heading and
+  all) to `docs/_archive/decisions.md` with a `Superseded by` line
 - Agent: `doc-updater` — invoke before multi-area commits
 
 When creating new file in `docs/`: update `docs/README.md`.
@@ -294,7 +293,8 @@ Summary of steps:
 2. Migrate structural files (planning, changelog, decisions, research-needed, proposals)
 3. Classify area doc content (REF/ARCH/GUIDE/STATUS/GOTCHA/DIAGRAM/PRESCRIPTIVE)
 4. Write new area docs with differentiated detail levels
-5. Build decisions.md index from `> **Decision:**` markers (assign sequential `D-n` IDs)
+5. Build decisions.md from any old decision content (assign sequential `D-n` IDs);
+   drop old `> **Decision:**` markers — decisions live only as `### D-n`, no marker
 6. Update docs/README.md
 7. Verify consistency (no old references, no duplication, size check)
 8. Review memory for doc-worthy content (move project knowledge to docs)
@@ -309,14 +309,13 @@ Read `templates/doc-system.md` for the full principles document. Key rules:
 - **SSOT**: docs = project knowledge. Code = implementation detail.
 - **No code duplication**: if Claude can read it from source → don't document it.
 - **Rewrite, don't append**: docs describe current state, not history.
-- **Decisions**: a one-line marker in the area doc, reasoning as a `### D-n` in
-  decisions.md (major block / minor line), **only if it passes the three-part test**
-  (real alternative + reason invisible in code + reverting hurts); calibration that
-  fails it stays as prose, no `### D-n`. Never rewritten — superseded ones get a
-  `Superseded by` line and **move (heading and all) to `_archive/decisions.md`**;
-  refined ones get a `Refined by` line and stay. A decision rendered live on a
-  surface (BrandKit) keeps its `### D-n`, pointed at the surface — an attribute, not
-  a third relation. `decisions.md` has a dynamic size cap that scales with area docs.
+- **Decisions**: a decision lives in ONE place — a `### D-n` in `decisions.md`, **only
+  if it passes the three-part test** (real alternative + reason invisible in code +
+  reverting hurts); calibration that fails it stays as prose, no `### D-n`. No marker in
+  the area doc, no `D-n` in code. Never rewritten — the only relation is **supersede**:
+  the old `### D-n` gets a `Superseded by` line and **moves (heading and all) to
+  `_archive/decisions.md`**, so the store holds only in-force decisions and is
+  self-limiting (a single high fixed backstop, no scaling cap).
 - **Conventions in area docs**: `## Conventions`, 1-in-1-out rule.
 - **Cross-file deps**: `## If you touch...` in each area doc.
 - **Split threshold**: >350 lines + independent subtopics → subdirectory.

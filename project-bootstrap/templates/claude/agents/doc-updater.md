@@ -26,13 +26,12 @@ From the main agent: diff/file list + summary of session actions
 - New cross-file dependency discovered → add to § If you touch...
 - New architectural decision → **only if it passes the three-part test** in
   `doc-system.md` § Decisions (real alternative + reason invisible in code +
-  reverting hurts): a one-line marker `> **Decision:** (date, D-n) claim` in the
-  area doc **and** the reasoning as a `### D-n` in `decisions.md`. Classify
-  **major** (full block) or **minor** (one line); when in doubt, major. Fails the
-  test but still non-obvious (a calibrated value, a contrast figure) → prose only,
-  in the area doc — **no `### D-n`**.
-- Decision that replaces an existing one → new `### D-m` + move the old `### D-n` to `_archive` + repoint the old marker
-- Decision that refines an existing one → new `### D-m` + `Refined by` line on the old `### D-n`, which stays in `decisions.md`
+  reverting hurts): add a `### D-n` block to `docs/decisions.md` — that is the ONE
+  and only home. **No marker in the area doc, no `D-n` reference in code.** Fails
+  the test but still non-obvious (a calibrated value, a contrast figure) → prose
+  only, in the area doc — **no `### D-n`**.
+- Decision that replaces an existing one → **supersede** (the only relation): new
+  `### D-m` in `decisions.md` + move the old `### D-n` (heading and all) to `_archive`
 
 ### NO update area doc if:
 - Value change (rate limit, size, color, text)
@@ -80,34 +79,17 @@ any existing one is already enforced by the system (lint, type, test) and remove
    - New pattern: document with ONE canonical example
    - Convention: update § Conventions (apply 1-in-1-out)
    - Dependency: add to § If you touch...
-   - New decision: add a one-line marker `> **Decision:** (YYYY-MM-DD, D-n) claim`
-     in the area doc; put the reasoning in a `### D-n` in `decisions.md` (major
-     block / minor line). The area-doc marker carries NO trade-off and NO
-     `Superseded/Refined` line — those live in the `### D-n`.
-   - Decision affected by a later one: **never rewrite the old text.** Ask whether
-     the old claim still holds, then apply both directions in the same edit —
-     working on the `### D-n` in `decisions.md`, not the area-doc marker:
-
-     **Superseded** (old claim now false):
-     1. New `### D-m` in `decisions.md` with a `Supersedes D-n` line
+   - New decision: add a `### D-n` block to `docs/decisions.md` (this file is its
+     only home — no area-doc marker, no `D-n` in code). The entry is as long as its
+     reasoning needs: a line if the *why* is a line, a block with trade-off and
+     rejected alternatives if that's what the *why* contains.
+   - Decision affected by a later one: **never rewrite the old text.** There is one
+     relation — **supersede** (archive-and-replace):
+     1. New `### D-m` in `decisions.md` with a `Supersedes D-n` line, restating the
+        FULL current claim (whatever the old one still asserted plus the change)
      2. Add `**Superseded by D-m (YYYY-MM-DD)**` to the old `### D-n` body
      3. **Move the old `### D-n` (heading and all) to `docs/_archive/decisions.md`**,
-        text intact
-     4. Repoint the old area-doc marker to note the archive; no `Superseded by`
-        line remains in `decisions.md`
-
-     **Refined** (old claim still holds, narrowed or extended):
-     1. New `### D-m` in `decisions.md` with a `Refines D-n` line
-     2. Add `**Refined by D-m (YYYY-MM-DD)**` to the old `### D-n` body
-     3. The old `### D-n` **stays in `decisions.md`** — never archive a decision
-        still in force
-   - Decision whose reasoning is rendered live on an external surface (a BrandKit
-     MDX page): keep the marker in the area doc and the `### D-n` in `decisions.md`,
-     but its body **points at the surface** instead of a full block. Do **not**
-     duplicate the prose. The decision stays active (live surface is an attribute,
-     not a relation — see `doc-system.md` § Decisions). If that surface is later
-     removed with no replacement, move the `### D-n` to `_archive/decisions.md`
-     marked `**Detail archived**` (still in force — not a supersession).
+        text intact — nothing superseded stays in `decisions.md`
 3. **DO NOT add** detail derivable from code (params, props, values)
 
 #### docs/db/*.md:
@@ -125,15 +107,13 @@ Add entry at the top (≤5 bullets + pointers).
 Update status. Only `[ ]` pending, delete completed.
 
 #### docs/decisions.md:
-This file is the **store**, not an index. On a new decision → add a `### D-n`
-(newest first), next free ID (never reused, not even archived), major = block /
-minor = one line. An active decision carries no status line.
-On supersede → the old `### D-n` **leaves for `_archive/decisions.md`** with a
-`**Superseded by D-m**` line; nothing superseded stays here. On refine → the old
-`### D-n` **stays** with a `**Refined by D-m**` line. On a live-surface decision →
-the `### D-n` stays, its body pointing at the surface instead of a full block.
-Keep `decisions.md` under its dynamic size cap (§ Step 6): rotate superseded to
-`_archive`, keep minors to one line.
+This file is the **store** and the ONE home of every decision — not an index, and
+never mirrored by a marker in an area doc or a `D-n` in code. On a new decision →
+add a `### D-n` (newest first), next free ID (never reused, not even archived); the
+entry is as long as its reasoning needs. An in-force decision carries no status line.
+On supersede (the only relation) → the old `### D-n` **leaves for
+`_archive/decisions.md`** with a `**Superseded by D-m**` line; nothing superseded
+stays here. There is no refine, no live-surface, no marker.
 
 **This agent owns the archiving process.** `session-close` verifies the result and
 delegates here when a step is missing; the steps are written down only in this file.
@@ -152,15 +132,14 @@ After editing, check `wc -l` of each modified doc.
 If an area doc exceeds 350 lines → report in output as ⚠️.
 Before suggesting split, verify: does it have code-derivable content that can be removed?
 
-`decisions.md` has a **dynamic** cap that scales with the number of area docs (the
-hook computes it — see `doc-check.py`). If it warns, don't split: rotate superseded
-`### D-n` to `_archive/decisions.md` and make sure minors are one line, not blocks.
+`decisions.md` is self-limiting — superseded `### D-n` leave for `_archive`
+the moment they're superseded, so the store holds only in-force decisions. The
+hook warns only past a high fixed backstop; if it warns, a superseded entry never
+left for `_archive` — move it.
 
 ## Scope
 
 DO NOT modify: CLAUDE.md, MEMORY.md, `.claude/rules/`, `.claude/agents/`.
-DO NOT edit a live surface (BrandKit MDX and its sources) — it belongs to its own
-skill (`brandkit-manager`). Point a decision's `### D-n` at it, but never write it.
 DO NOT read files excluded in `.claudeignore`.
 
 ## Output
@@ -178,10 +157,8 @@ DO NOT read files excluded in `.claudeignore`.
 - `docs/Z.md` — verified, up to date
 
 ### ⚠️ Manual attention
-- New decision added → verify: area-doc marker + `### D-n` in decisions.md, major/minor classified
-- Decision D-n superseded by D-m → verify: `### D-n` moved to `_archive` (heading and all) with Superseded line; none left in decisions.md
-- Decision D-n refined by D-m → verify: Refined line on the old `### D-n`, which stays in decisions.md
-- Decision D-n on a live surface → verify: `### D-n` body points at the surface, no duplicated block
+- New decision added → verify: a `### D-n` in decisions.md and nowhere else (no area-doc marker, no `D-n` in code)
+- Decision superseded → verify: the old `### D-n` moved to `_archive` (heading and all) with its `Superseded by` line; none left in decisions.md
 - Change routed to prose (failed the three-part test) → verify: NO `### D-n` was added
 - SIZE: `docs/X.md` has N lines (>350) — consider compression or split
 ```

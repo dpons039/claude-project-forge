@@ -48,6 +48,10 @@ These skills apply to **any code change** in the project, regardless of the area
 - Reuse before creating: `Glob`/`Grep` to find existing utilities before writing new ones.
 - No "boy scout" cleanup in fix commits (a fix is a fix; refactors go separately).
 - Comments only when the "why" is not obvious from the name/structure.
+- Never cite a decision ID (`D-n`) in code or comments. A decision lives only as a
+  `### D-n` in `docs/decisions.md`; code carries its *consequence*, not a back-reference
+  to the decision. (The `why` belongs in the decision, discoverable by `grep`, not
+  pinned to a line that will drift.)
 
 ## If you touch...
 

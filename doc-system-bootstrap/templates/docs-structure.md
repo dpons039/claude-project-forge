@@ -11,7 +11,7 @@ docs/
 ├── changelog.md           ← Recent changes; rotation by size (>500 lines)
 ├── planning.md            ← Current phase only, hard cap 100 lines, entries 1-2 lines
 ├── roadmap.md             ← Full phase plan + deferred future scope, read on demand
-├── decisions.md           ← Store of decision reasoning (### D-n each); dynamic size cap
+├── decisions.md           ← Store + ONE home of decisions (### D-n each); superseded → _archive
 ├── research-needed.md     ← Open questions
 │
 ├── changes/               ← SDD proposals (active)
@@ -80,11 +80,11 @@ Brief technology stack and folder organization.
 What exists and how it works — **present state only**. Include:
 - Compact indexes (1 line per endpoint/component/service)
 - 1 canonical example showing the pattern
-- Decision markers only: > **Decision:** (YYYY-MM-DD, D-n) one-line claim.
-  No trade-off here — the reasoning is the `### D-n` in `decisions.md` (the `D-n`
-  is the pointer). Only decisions in force — superseded ones leave for
-  `_archive/decisions.md`
 - Diagrams of topology/architecture (ASCII or mermaid)
+
+(No decision markers here — a decision lives only as a `### D-n` in `docs/decisions.md`.
+The area doc records the decision's *consequences* — a convention, a gotcha — never the
+decision or its ID.)
 
 ## [Unbuilt area, if any]
 Not implemented yet — [proposal](changes/YYYY-MM-DD-slug/proposal.md).
@@ -107,29 +107,24 @@ Cross-file dependencies:
 ```markdown
 # Architecture Decisions
 
-Store of the project's non-obvious decisions. Each area doc carries a one-line
-marker `> **Decision:** (date, D-n) claim`; the `D-n` resolves to the `### D-n`
-here, where the reasoning lives. Only decisions in force are here; superseded ones
-move to `_archive/decisions.md`. IDs are never reused.
-
-## How to fill this
-### Levels (major / minor)   ← major = full block, minor = one line
-### Superseded / Refined     ← superseded leaves for _archive; refined stays
-### Live surface             ← ### D-n points at the surface, no duplicate block
-
-## How to search / find      ← grep '^### D' (all); ### D-n → next ### (one)
+Store and ONE home of the project's non-obvious decisions — no area-doc marker, no
+`D-n` in code. Only decisions in force are here; superseded ones move whole to
+`_archive/decisions.md`. IDs are never reused. Recording procedure: the `doc-updater`
+agent.
 
 ## Decisions
 
 ### D2 — <newer claim>
-<full block if major, one line if minor>
+<a line if the why is a line; a block with trade-off + rejected alternatives otherwise>
 
 ### D1 — <claim>
-**Refined by D2 (date)**
-<block; still in force>
+<block; in force — no status line>
+
+## How to search
+- grep '^### D' (all, in force); ### D-n → next ### (one whole decision)
 ```
 
-(See the full rules in `docs/decisions.md` itself — this is just the shape.)
+(See the full rules in `docs/decisions.md` and the `doc-updater` agent — this is the shape.)
 
 ## README.md skeleton
 
@@ -152,6 +147,6 @@ Source of truth for project knowledge.
 | docs/infrastructure.md | Infra | Docker, deploy, CI/CD |
 | docs/planning.md | Planning | Pending tasks |
 | docs/changelog.md | Changelog | Recent changes |
-| docs/decisions.md | Decisions | Index of architecture decisions |
+| docs/decisions.md | Decisions | Store of decision reasoning (one `### D-n` each) |
 | docs/doc-system.md | System | Documentation principles and rules |
 ```

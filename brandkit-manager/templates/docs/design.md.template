@@ -19,8 +19,9 @@ Pending definition — table: token · light · dark · use.
 
 Pending definition — table: name · light · dark · contrast floor met.
 
-> **Decision:** Pending definition — where the accent reaches and where it
-> does not.
+Pending definition — where the accent reaches and where it does not. (If that
+boundary was a real choice with a rejected alternative, record the *why* as a
+`### D-n` in `docs/decisions.md`, not here.)
 
 ## Mark
 

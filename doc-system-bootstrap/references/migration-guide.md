@@ -59,8 +59,8 @@ For each file: read old → show user what was found → transform → write new
 ### decisions.md — build from scratch
 
 1. If `docs.old/decisions.md` exists → read it, extract any existing decision entries
-2. The bulk of decisions.md will be populated in Step 5 by scanning area docs
-   for `> **Decision:**` markers
+2. The bulk of decisions.md will be populated in Step 5 by scanning the old docs
+   for decision content (old markers, rationale prose, ADR entries)
 3. Write `docs/decisions.md` using template with whatever entries exist so far
 
 ### research-needed.md — clean up
@@ -86,7 +86,7 @@ For each area doc in docs.old/, read it and classify EVERY section/heading:
 |------|-----------|-------------|
 | **REF** (code-derivable) | Params, props, values, file trees, test counts | **DISCARD** |
 | **REF** (architecture) | What exists, how organized, compact indexes | **AREA DOC** |
-| **ARCH** (decisions) | Why, trade-offs, alternatives | **AREA DOC** inline `> **Decision:**` |
+| **ARCH** (decisions) | Why, trade-offs, alternatives | **`### D-n` in `decisions.md`** (no area-doc marker) |
 | **GUIDE** (conventions) | Team rules not in linters | **AREA DOC** `## Conventions` |
 | **STATUS** (temporal) | "175 tests", "session X" | **DISCARD** or **CHANGELOG** |
 | **GOTCHA** (cross-file) | "If you change X, update Y" | **AREA DOC** `## If you touch...` |
@@ -100,7 +100,7 @@ Before discarding, verify each DISCARD section:
 
 | Hidden value | Example | Action if found |
 |-------------|---------|----------------|
-| Rationale embedded in REF | "Uses X because Y" | Extract as `> **Decision:**`, discard the rest |
+| Rationale embedded in REF | "Uses X because Y" | Extract as a `### D-n` in `decisions.md`, discard the rest |
 | Non-obvious thresholds | "Polling every 15min = API TTL" | Keep as decision or convention |
 | Semantic usage rules | "Warning color only for alerts" | Keep as convention |
 | Accessibility decisions | "WCAG AA contrast mapping" | **KEEP** — cross-cutting, not inferrable |
@@ -124,7 +124,7 @@ For each area doc, write the new version:
 ## [Domain sections]
 [Compact indexes: 1 line per endpoint/component/service]
 [1 canonical example per pattern]
-> **Decision:** (YYYY-MM-DD, D-n) [inline where they apply]
+(No decision markers — decisions live only as `### D-n` in `decisions.md`.)
 
 ## Conventions
 [All GUIDE content consolidated]
@@ -142,24 +142,24 @@ For each area doc, write the new version:
 | backend, frontend | STANDARD | Compact index + 1 canonical example + patterns |
 | infrastructure | STANDARD | Topology diagram + deploy flow |
 
-## Step 5 — Build decisions.md (the store)
+## Step 5 — Build decisions.md (the store, and ONE home)
 
-`decisions.md` is the **store** of decision reasoning, not an index. Scan all new
-area docs for `> **Decision:**` blocks. For each, assign the next sequential `D-n`,
-**move the reasoning into a `### D-n` section** in `decisions.md`, and leave only a
-one-line marker `> **Decision:** (date, D-n) claim` in the area doc.
+`decisions.md` is the **store** and the only home of every decision. Scan the old
+docs for any decision content (old `> **Decision:**` markers, "we chose X because Y"
+prose, ADR entries). For each that passes the three-part test, assign the next
+sequential `D-n` and write a `### D-n` section in `decisions.md`. **Drop the old
+marker — do not carry it into the new area doc.** The area doc keeps the decision's
+*consequence* (a convention, a gotcha), never the decision or its ID.
 
-Classify each while migrating:
-- **Major** — the block has a trade-off, rejected alternatives, or measurements →
-  keep the full block under `### D-n`.
-- **Minor** — a one-line claim with no alternatives → a single line under `### D-n`.
-- When in doubt, **major** — never drop reasoning the old doc had.
+Each entry is as long as its reasoning needs — a line if the *why* is a line, a block
+with trade-off and rejected alternatives if that's what the *why* contains. No
+major/minor grade.
 
 ```markdown
 ## Decisions
 
 ### D1 — <claim>
-<full block if major, one line if minor>
+<a line, or a block with trade-off + rejected alternatives>
 ```
 
 All migrated decisions start in force (no status line): a migration cannot tell

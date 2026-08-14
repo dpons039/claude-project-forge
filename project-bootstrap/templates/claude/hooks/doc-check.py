@@ -18,6 +18,7 @@ from __future__ import annotations
 import fnmatch
 import json
 import os
+import re
 import subprocess
 import sys
 from pathlib import Path
@@ -181,33 +182,12 @@ SIZE_CAPS = {
 AREA_DOC_SUBDIVIDE = 500
 AREA_DOC_HARD = 1000
 
-# decisions.md is the store of decision reasoning (### D-n per decision), so it grows
-# with the project — a fixed cap would choke a large project or let a small one bloat.
-# The soft threshold scales with the number of area docs; the hook only WARNS past it
-# (the fix is rotating superseded entries to _archive, not splitting the file). A high
-# fixed hard cap is the backstop so it can't balloon forever unnoticed.
-DECISIONS_SOFT_BASE = 200      # baseline lines allowed
-DECISIONS_SOFT_PER_AREA = 40   # + this many per area doc in docs/*.md
-DECISIONS_HARD = 1500          # absolute backstop (block)
-
-
-def _count_area_docs(root: Path) -> int:
-    """Number of top-level area docs in docs/*.md, excluding the progress docs that
-    carry their own SIZE_CAPS and decisions.md itself. Used to scale the decisions cap."""
-    docs = root / "docs"
-    if not docs.is_dir():
-        return 0
-    n = 0
-    for p in docs.glob("*.md"):
-        rel = f"docs/{p.name}"
-        if rel in SIZE_CAPS or p.name == "decisions.md":
-            continue
-        n += 1
-    return n
-
-
-def _decisions_soft_cap(root: Path) -> int:
-    return DECISIONS_SOFT_BASE + DECISIONS_SOFT_PER_AREA * _count_area_docs(root)
+# decisions.md is the store of decision reasoning (### D-n per decision). It is now
+# self-limiting: the moment a decision is superseded its ### D-n LEAVES for
+# _archive/decisions.md, so the store only ever holds in-force decisions and grows only
+# with genuine live complexity. No scaling formula — just a single high hard-cap WARN as
+# a runaway backstop (never blocks; the fix is real single-source, see check_decisions).
+DECISIONS_HARD = 1500          # absolute backstop (warn only)
 
 
 def check_doc_sizes(root: Path, changed_files: list[str]) -> tuple[list[str], list[str], list[str]]:
@@ -235,13 +215,11 @@ def check_doc_sizes(root: Path, changed_files: list[str]) -> tuple[list[str], li
             elif n > warn:
                 warnings.append(f"{norm}: {n} lines (cap {warn})")
         elif norm == "docs/decisions.md":
-            # dynamic soft cap (scales with area-doc count), fixed hard backstop
-            soft = _decisions_soft_cap(root)
-            if n >= DECISIONS_HARD:
-                blockers.append(f"{norm}: {n} lines (hard cap {DECISIONS_HARD})")
-            elif n > soft:
-                warnings.append(f"{norm}: {n} lines (dynamic cap {soft}) — "
-                                f"rotate superseded ### D-n to _archive/, keep minors one line")
+            # self-limiting store (superseded ### D-n leave for _archive) — only a high
+            # fixed backstop WARN, never a blocker. Semantic checks live in check_decisions.
+            if n > DECISIONS_HARD:
+                warnings.append(f"{norm}: {n} lines (backstop {DECISIONS_HARD}) — "
+                                f"superseded ### D-n should have left for _archive/decisions.md")
         elif norm.count("/") == 1:
             # area doc: split-suggestion at soft, hard block only at 1000
             if n >= AREA_DOC_HARD:
@@ -250,6 +228,92 @@ def check_doc_sizes(root: Path, changed_files: list[str]) -> tuple[list[str], li
                 subdivide.append(f"{norm}: {n} lines — consider splitting into docs/"
                                  f"{norm[len('docs/'):-len('.md')]}/")
     return warnings, blockers, subdivide
+
+
+# ── Decisions single-source validator (warn-only) ─────────────────────────────
+#
+# One decision lives in exactly ONE place: a `### D-n` block in docs/decisions.md.
+# When a decision is superseded, its block MOVES whole to docs/_archive/decisions.md
+# and a `**Superseded by D-m**` line is added there. Nothing superseded stays in the
+# store. This validator WARNS (never blocks) when that single-source invariant breaks.
+# It reads _archive/decisions.md as the one explicit exception to the _archive scan-skip.
+
+_D_HEADING = re.compile(r"^### (D\d+)\b", re.MULTILINE)
+_SUPERSEDED_BY = re.compile(r"\bSuperseded by (D\d+)\b")
+_SUPERSEDES = re.compile(r"\bSupersedes (D\d+)\b")
+
+
+def _read_ids(path: Path) -> tuple[list[str], str]:
+    """Return (list of ### D-n ids in file order, full text). Missing file → ([], '')."""
+    try:
+        text = path.read_text(encoding="utf-8", errors="replace")
+    except OSError:
+        return [], ""
+    return _D_HEADING.findall(text), text
+
+
+def _blocks_with_superseded_by(text: str) -> set[str]:
+    """IDs of `### D-n` blocks whose body carries a `Superseded by` line.
+    A block runs from its heading to the next `### ` (or EOF)."""
+    out: set[str] = set()
+    parts = re.split(r"(?m)^### (D\d+)\b", text)
+    # parts = [preamble, id1, body1, id2, body2, ...]
+    for i in range(1, len(parts) - 1, 2):
+        did, body = parts[i], parts[i + 1]
+        if _SUPERSEDED_BY.search(body):
+            out.add(did)
+    return out
+
+
+def check_decisions(root: Path) -> list[str]:
+    """Warn-only single-source checks on the decision store + its archive.
+    Returns a list of warning strings (empty when the store looks consistent)."""
+    store_path = root / "docs" / "decisions.md"
+    archive_path = root / "docs" / "_archive" / "decisions.md"
+    if not store_path.exists():
+        return []
+
+    store_ids, store_text = _read_ids(store_path)
+    archive_ids, archive_text = _read_ids(archive_path)
+    warnings: list[str] = []
+
+    # 1. Unique IDs across store + archive (an ID is never reused, not even archived)
+    seen: dict[str, int] = {}
+    for did in store_ids + archive_ids:
+        seen[did] = seen.get(did, 0) + 1
+    dupes = sorted(d for d, c in seen.items() if c > 1)
+    if dupes:
+        warnings.append("duplicate decision id(s) across decisions.md + _archive: "
+                        + ", ".join(dupes))
+
+    # 2. No `Superseded by` line survives in the store — that block should have left
+    stale = sorted(set(_SUPERSEDED_BY.findall(store_text)))
+    store_id_set = set(store_ids)
+    for tgt in stale:
+        warnings.append(f"decisions.md still carries a 'Superseded by {tgt}' line — "
+                        f"the superseded ### D-n must move to _archive/decisions.md")
+
+    # 3. A superseded target must NOT still have a live heading in the store
+    archive_supersedes = set(_SUPERSEDES.findall(archive_text))
+    store_supersedes = set(_SUPERSEDES.findall(store_text))
+    for tgt in sorted(archive_supersedes | store_supersedes):
+        if tgt in store_id_set:
+            warnings.append(f"{tgt} is named as superseded but still has a live ### {tgt} "
+                            f"in decisions.md — it should be in _archive/decisions.md")
+
+    # 4. Mirror check: each `Supersedes D-n` (new block) needs the archived ### D-n
+    #    to exist AND carry its own `Superseded by` line (bidirectional link).
+    archive_id_set = set(archive_ids)
+    archive_marked = _blocks_with_superseded_by(archive_text)
+    for tgt in sorted(store_supersedes | archive_supersedes):
+        if tgt not in archive_id_set:
+            warnings.append(f"a 'Supersedes {tgt}' line has no matching ### {tgt} in "
+                            f"_archive/decisions.md (broken supersede link)")
+        elif tgt not in archive_marked:
+            warnings.append(f"### {tgt} in _archive/decisions.md lacks its "
+                            f"'**Superseded by ...**' mirror line")
+
+    return warnings
 
 
 def run_stop_mode(root: Path) -> None:
@@ -295,6 +359,16 @@ def run_stop_mode(root: Path) -> None:
         print("   then stop again. Rules: docs/doc-system.md\n", file=sys.stderr)
         sys.exit(2)
 
+    # Decisions single-source (warn-only) — run when the store or its archive was touched
+    if any(f.replace("\\", "/") in ("docs/decisions.md", "docs/_archive/decisions.md")
+           for f in changed_files):
+        decision_warnings = check_decisions(root)
+        if decision_warnings:
+            print("\n[DECISIONS] single-source check — a decision must live in ONE place\n", file=sys.stderr)
+            for w in decision_warnings:
+                print(f"   -> {w}", file=sys.stderr)
+            print("\n   Fix: one ### D-n per decision; superseded ones move whole to", file=sys.stderr)
+            print("   docs/_archive/decisions.md. Delegate to doc-updater. Rules: docs/doc-system.md\n", file=sys.stderr)
 
     # Check unindexed docs
     unindexed = check_doc_index(root, changed_files)
@@ -428,6 +502,15 @@ def run_precommit_mode(root: Path) -> None:
                     print(f"   → {doc}", file=sys.stderr)
                     printed.add(doc)
         print("", file=sys.stderr)
+
+    # Decisions single-source (NOTICE — non-blocking) when the store/archive is staged
+    if any(f in ("docs/decisions.md", "docs/_archive/decisions.md") for f in staged):
+        decision_warnings = check_decisions(root)
+        if decision_warnings:
+            print("\n💡 DECISIONS: single-source check (not blocking)\n", file=sys.stderr)
+            for w in decision_warnings:
+                print(f"   → {w}", file=sys.stderr)
+            print("\n   One ### D-n per decision; superseded ones move to _archive/decisions.md\n", file=sys.stderr)
 
     sys.exit(0)
 

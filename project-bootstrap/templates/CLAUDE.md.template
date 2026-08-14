@@ -26,14 +26,13 @@
 - SSOT: `docs/` — read before working, update after architectural changes
 - Index: `docs/README.md` — read the area doc BEFORE touching code
 - System: `docs/doc-system.md` — principles and rules
-- Decisions: a one-line marker `> **Decision:** (date, D-n) claim` in the area doc;
-  the reasoning as a `### D-n` in `docs/decisions.md` (major = full block, minor =
-  one line). Recorded only if it passes the three-part test (see
-  `docs/doc-system.md` § Decisions); a calibrated value that fails it stays as prose,
-  no `### D-n`. Never rewrite one: if it changes, new `### D-m` + `Superseded by`
-  (old claim false → move the old `### D-n`, heading and all, to
-  `docs/_archive/decisions.md`) or `Refined by` (old claim still holds → it stays in
-  decisions.md). Live-on-a-surface (BrandKit) → the `### D-n` points at the surface
+- Decisions: a decision lives in ONE place — a `### D-n` block in `docs/decisions.md`.
+  No marker in the area doc, no `D-n` in code (its consequences are documented where
+  they land; the decision and its ID stay in decisions.md). Recorded only if it passes
+  the three-part test (see `docs/doc-system.md` § Decisions); a calibrated value that
+  fails it stays as prose, no `### D-n`. Never rewrite one — the only relation is
+  **supersede**: new `### D-m` (`Supersedes D-n`) + move the old `### D-n` (heading and
+  all) to `docs/_archive/decisions.md` with a `Superseded by` line
 - Agent: `doc-updater` — invoke before multi-area commits
 [MIGRATIONS_RESTRICTION]
 
