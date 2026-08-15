@@ -15,7 +15,7 @@ These skills apply to **any code change** in the project, regardless of the area
 ## When writing or refactoring code
 
 - **`clean-code`** — naming, short functions, SOLID principles, separation of concerns. Apply when introducing new code and when refactoring existing code.
-- **`test-driven-development`** — write the test before the implementation when adding new behavior (does NOT apply to trivial fixes or config changes).
+- **`test-driven-development`** — write the test before the implementation when adding new behavior (does NOT apply to trivial fixes or config changes). **Presentation-layer UI is a named exception:** for a screen/page or a purely visual component, drive it with a behaviour/integration test written against what the user observes (renders, submits, shows an error), not a unit test written before the markup exists. Test-first still governs the logic underneath — stores, hooks, services, pure functions. The point is to stop deferring screens because unit-first fits them badly, not to skip testing them.
 
 ## When executing a plan
 
