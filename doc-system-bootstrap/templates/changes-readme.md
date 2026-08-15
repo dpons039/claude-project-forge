@@ -38,6 +38,14 @@ There are two flow levels depending on change complexity:
 
 > **Criterion:** if you already know what to build → standard. If you need to explore alternatives or scope is unclear → complex.
 
+> **Vertical slice:** a Complex change scoped to one user-facing surface —
+> the minimum backend it needs plus its real frontend, together — shipped ahead
+> of completing the rest of that area's backend. Same cycle, no new level or
+> template; its `proposal.md` declares the "minimal backend + real frontend" cut
+> and what defers to the later full-backend phase. Use it when breadth-first
+> backend work would otherwise leave a headline screen an empty placeholder;
+> breadth-first stays the default everywhere else.
+
 ## Approval gate — re-verify before implementing
 
 A proposal/plan is edited many times before it is approved. Each edit can leave a
