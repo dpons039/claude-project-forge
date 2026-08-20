@@ -47,11 +47,29 @@ These skills apply to **any code change** in the project, regardless of the area
 - Significant work (≥3 files, new feature, refactor, migration) → follow the SDD cycle: proposal in `docs/changes/`, plan, implement, close. See `docs/changes/README.md`.
 - Reuse before creating: `Glob`/`Grep` to find existing utilities before writing new ones.
 - No "boy scout" cleanup in fix commits (a fix is a fix; refactors go separately).
+- Minimum sufficient complexity: write the simplest code that correctly solves it; don't abstract before you need to. Clever loses to obvious.
+- Explain a decision in one line with the real trade-off, not just what — never verbose.
 - Comments only when the "why" is not obvious from the name/structure.
 - Never cite a decision ID (`D-n`) in code or comments. A decision lives only as a
   `### D-n` in `docs/decisions.md`; code carries its *consequence*, not a back-reference
   to the decision. (The `why` belongs in the decision, discoverable by `grep`, not
   pinned to a line that will drift.)
+
+## Delegation — how to act when delegating
+
+The `When executing a plan` section decides *whether* to delegate (inline vs
+subagent-driven). This is *how*, once you do:
+
+- **Threshold:** delegate only when the task spans **≥3 independent files**, or a broad
+  search whose result fits in a summary. Otherwise inline — a subagent that reads code to
+  hand it back compressed loses more signal than it saves.
+- **Context restrictions in the prompt:** `.claudeignore` does NOT block a subagent's
+  direct Read — state restrictions in its prompt. Minimum: "Use `docs/` as source of
+  truth. DO NOT read files excluded in `.claudeignore`." Name the skills it must load.
+- **Never delegate the commit.** Main context proposes the message and runs `git add` +
+  `git commit`. `git-ops` is read-only.
+- **Model per task:** Explore/read-only → haiku. Scoped implementation → sonnet.
+  Design/ambiguous → the session model or Plan.
 
 ## If you touch...
 

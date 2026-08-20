@@ -186,28 +186,38 @@ the hooks won't execute). Create or merge into the existing file:
 If `.claude/settings.local.json` already exists, **merge** the hooks entries — don't overwrite
 existing hooks. Add `.claude/settings.local.json` to `.gitignore` if it contains user-specific config.
 
-### Step 7 — Update CLAUDE.md
+### Step 7 — Generate the SDD rule + templates (NOT a CLAUDE.md block)
 
-This skill is the **owner of the SDD section in CLAUDE.md**. Both the
-documentation block and the change workflow block are authored here;
-`project-bootstrap` only leaves a short stub.
+This skill **owns the SDD**, but as of the LAWS redesign it lives in a **rule**
+(`.claude/rules/sdd.md`), not as a block inside CLAUDE.md. The current
+`CLAUDE.md.template` (from `project-bootstrap`) already carries the pointers to it under
+`# PROJECT CONTEXT > ## Documentation` — there is NO `## Change Workflow` stub to detect
+or replace anymore. If you find an old stub (a project generated before this redesign),
+delete it; the pointer lines in `## Documentation` replace it.
 
-**Stub detection.** Before writing, look for a stub left by
-`project-bootstrap`. It looks like this:
+Do this:
 
-```markdown
-## Change Workflow
+1. **Copy the SDD rule:** `templates/sdd-rule.md` → `.claude/rules/sdd.md`. It holds the
+   full change workflow (Standard/Complex levels, approval gate, greenfield, Superpowers
+   routing, SKIP_DOC_CHECK, the idea→proposal cycle, and session.md↔chunks). It is lazy
+   (path-scoped to `docs/changes/**`) — the one rule allowed to exceed the token cap
+   (system-health notes the exception).
+2. **Copy the idea template:** `templates/idea-template.md` → `docs/changes/_template/idea.md`
+   (alongside `proposal.md`). It is the proposal template trimmed, with premise sections
+   marked "TBD until promoted".
+3. **Confirm the CLAUDE.md pointers exist** (they come from `project-bootstrap`'s template;
+   only add if missing) under `## Documentation`:
+   - `Change workflow / SDD, session.md, idea→proposal, decision mechanics → .claude/rules/sdd.md`
+   - `Pre-commit doc-check can be bypassed (owner authorization only ...); exact mechanism → .claude/rules/sdd.md § SKIP_DOC_CHECK`
+   Do NOT re-insert the workflow prose into CLAUDE.md — the LAWS block + PROJECT CONTEXT
+   are owned by `project-bootstrap`; this skill only touches the two pointer lines and the
+   rule/templates under `docs/` and `.claude/rules/`.
+4. Ensure `docs/changes/README.md` (from `templates/changes-readme.md`) documents the four
+   artifacts (idea/proposal/plan/session), the idea→proposal promotion, and chunk↔session.md.
 
-For significant changes (new feature, refactor >3 files, schema
-change, architecture change): if `docs/changes/README.md` exists,
-follow its workflow. Otherwise commit directly with clear messages.
-```
-
-If the stub is present → **replace it** with the full block below.
-If not → insert the full block after the § Documentation section (or
-at a sensible location near the top of CLAUDE.md).
-
-Adapt language to match the project's. Use this content:
+<!-- LEGACY reference — the old inline block content, kept for projects being migrated by
+     hand. New installs do NOT paste this into CLAUDE.md; it lives in sdd.md now. -->
+<details><summary>Legacy inline block (pre-redesign, do not use for new installs)</summary>
 
 ```markdown
 ## Documentation
@@ -260,6 +270,8 @@ project overrides that via the Instruction Priority (CLAUDE.md wins):
 - Create the `{slug}` folder if missing before writing
 - Ephemeral brainstorm server state: `.superpowers/brainstorm/` (gitignored)
 ```
+
+</details>
 
 ### Step 8 — Summary
 
@@ -343,6 +355,8 @@ All templates are in the `templates/` directory:
 | `research-needed.md` | `docs/` | Template with rules |
 | `changes-readme.md` | `docs/changes/README.md` | SDD workflow |
 | `proposal-template.md` | `docs/changes/_template/proposal.md` | SDD template |
+| `idea-template.md` | `docs/changes/_template/idea.md` | SDD template (future phase; proposal trimmed) |
+| `sdd-rule.md` | `.claude/rules/sdd.md` | Rule (lazy, docs/changes/**) — full SDD workflow |
 | `doc-coverage.template.json` | `.claude/` (adapted) | Config |
 | `doc-check.py` | `.claude/hooks/` | Hook |
 | `doc-track.py` | `.claude/hooks/` | Hook |

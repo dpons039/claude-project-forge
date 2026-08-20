@@ -1,6 +1,34 @@
 # Change Workflow (SDD)
 
 Every significant change follows the cycle: **propose → plan → implement → close**.
+LAW8 is the trigger (notable change → verified proposal+plan first; threshold by impact,
+not file count). Full operating detail is in `.claude/rules/sdd.md`; this README is the
+long reference.
+
+## Artifacts per change — `docs/changes/{slug}/`
+
+One folder per change holds up to four files:
+
+| File | Persists | Role |
+|---|---|---|
+| `idea.md` | git-tracked | intention (WHAT/WHY) for a FUTURE phase — no verified premises |
+| `proposal.md` | git-tracked | spec + `file:line` premises verified, scoped BEFORE starting |
+| `plan.md` | git-tracked | step list (complex flow only) |
+| `session.md` | **gitignored** | live state DURING execution (decisions/discarded/status) |
+
+**idea → proposal.** A future phase is born `idea.md` (Status: `idea`) — WHAT/WHY, which
+does not go stale (it does not depend on the code). Writing a full proposal far ahead is
+the mistake: a proposal fixes premises against the code NOW. When the phase's turn comes,
+**promote in place**: copy `_template/proposal.md`, port WHAT/WHY, verify every premise
+against the code now (approval gate), fill the "TBD until promoted" sections. Never
+implement from an `idea.md`. `roadmap.md` lists ideas; only the active phase has a proposal.
+
+**session.md** bridges compactions (the conversation compacts and drops the "why" of past
+decisions; the file is re-read from disk — LAW5). Create it from `_template/session.md`
+when you open the `{slug}/`, alongside the proposal. Work the plan in **chunks**: each
+chunk closed → `[x]` in its Status; next → `[ ]`. Keep it short (~40 lines); durable
+outcomes graduate to `decisions.md`/area docs at close. `planning.md` stays project-level
+`[ ]` pending only.
 
 ## Flow
 

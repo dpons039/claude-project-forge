@@ -1,0 +1,26 @@
+# Session log — {slug}
+
+> Ephemeral, gitignored. THIS change's live state, re-read after any compaction (LAW5).
+> Durable outcomes graduate to decisions.md / area docs / the proposal at close.
+> Telegraphic, not prose. Keep under ~40 lines.
+
+## Goal
+
+<what this change drives to — 1-2 lines; points at proposal.md>
+
+## Decisions (with why)
+
+- <decision made during implementation> — because <why> — <date or turn>
+
+## Discarded (with why)
+
+- <approach considered and rejected> — because <why>
+
+## Files in scope
+
+- <path> — <role>
+
+## Status
+
+- [ ] <next chunk>
+- [ ] <blocked: ...>

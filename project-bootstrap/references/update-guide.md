@@ -11,7 +11,7 @@ the project fills in. Safe to overwrite from templates:
 
 | Category | Files |
 |----------|-------|
-| Rules (fixed) | `system-health.md`, `debugging.md`, `code-search.md`, `code-quality.md` |
+| Rules (fixed) | `system-health.md`, `debugging.md`, `code-search.md`, `code-quality.md`, `engineering.md` |
 | Agents | `doc-updater.md`, `git-ops.md`, `migration-checker.md` |
 | Hooks | `secret-scanner.py`, `doc-track.py`, `doc-check.py`, `count-context-tokens.py` |
 | Skills | none template-copied — `session-close`, `doc-system-bootstrap`, `brandkit-manager` are lock-managed; update each via `npx skills add https://github.com/dpons039/claude-project-forge --skill <name> -y` |
@@ -28,6 +28,7 @@ version. Offer a **diff only** and let the user merge by hand — never bulk-cop
 | `env-windows.md` (from `.md.template`) | `[PROJECT_PATH]` resolved at install |
 | `.githooks/pre-commit` (from `.template`) | project-specific test/lint/audit commands |
 | `TOKEN-BUDGET.md` | the `Current` column is measured per project |
+| `session-reinject.py` wiring (Variant B) | lives in `settings.local.json` (gitignored) — wired locally per project, not propagated |
 
 ### Project files (DO NOT touch)
 
@@ -159,3 +160,32 @@ For files not in this mapping → ask user if they should be added to the skill 
 skill ships its own copy because they install independently. When Mode 3 updates one
 of these, apply the same change to its twin, or the two skills drift apart. (The
 repo's `.gitattributes` keeps them from drifting on line endings alone.)
+
+---
+
+## Migrating an existing project to the LAWS / session.md / sdd-rule layout
+
+Mode 2 never rewrites a project's `CLAUDE.md` (it's a project file), so the LAWS redesign
+is applied to existing projects **by hand**, once, per project. `system-health.md` and
+`code-quality.md` DO ride Mode 2 (system files), so their new guardrails/sections arrive
+automatically — but the CLAUDE.md restructure and the new SDD rule do not. Steps:
+
+1. **Back up** the current `CLAUDE.md`. Measure the baseline: `python .claude/count-context-tokens.py`.
+2. **Insert the `# LAWS — BINDING` block** at the top of CLAUDE.md from the current
+   `CLAUDE.md.template` (LAW1..LAW9). Fill LAW6 (branch) and LAW7 (language) from the
+   project's existing Conventions. Verify DEV≠PROTECTED branch (the old bug).
+3. **Restructure the body** under `# PROJECT CONTEXT` (Stack, Environment, Conventions,
+   Documentation, Session + state, Model & agents, End of session). Move the old inline
+   SDD / Superpowers / SKIP_DOC_CHECK prose OUT.
+4. **Generate the SDD rule:** create `.claude/rules/sdd.md` from the project's existing
+   SDD block + `doc-system-bootstrap/templates/sdd-rule.md`. Add `docs/changes/_template/idea.md`.
+   Leave only the pointer lines in CLAUDE.md `## Documentation`.
+5. **Add** `.claude/rules/engineering.md` (fixed rule) and the `session.md` template; add
+   `docs/changes/**/session.md` to `.gitignore`. Optionally wire the `SessionStart`
+   matcher=compact hook (Variant B) in `settings.local.json`.
+6. **Cut sections one at a time**, re-running `count-context-tokens.py` after each, until
+   CLAUDE.md is at/under the target (~1.800 tok eager). Each cut must have a net (a rule or
+   doc that still catches its directive) — see the redesign's simulation protocol.
+7. **Convert stale far-ahead proposals to `idea.md`** (Status: idea) — a proposal written
+   long before its phase is born stale; demote it to an idea or promote it by re-verifying
+   its premises against the code now.

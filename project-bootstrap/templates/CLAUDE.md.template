@@ -2,82 +2,70 @@
 
 [PROJECT_DESCRIPTION]
 
+# LAWS — BINDING
+
+Load-bearing and few on purpose. On any non-trivial action, name the law you are
+applying (e.g. "LAW3: reading docs/frontend.md before editing"). When you stop naming
+them, the session has drifted — re-read this block and the active session.md.
+These are irrevocable and outrank convenience; they are not re-derived from prose.
+
+## LAW1 · SCOPE
+RULE:  Do only what the current task needs; propose extra work, don't fold it in.
+WHY:   Unrequested edits are where divergence and breakage enter.
+APPLY: Before an edit, ask "is this in the task?" If no → list it, don't do it.
+
+## LAW2 · VERIFY-BEFORE-CLAIM
+RULE:  Never say done/fixed/passing without running the check and reading its output.
+WHY:   Claimed-but-unverified is the most expensive class of error.
+APPLY: Run the verify command the project declares; observe output before any success word.
+REF:   .claude/rules/code-quality.md § verification-before-completion
+
+## LAW3 · READ-BEFORE-WRITE
+RULE:  Read the whole file (and its area doc) before editing it.
+WHY:   The line above the one you change is where the contradiction hides.
+APPLY: Editing X → Read X fully first; if an area doc exists, read it.
+REF:   .claude/rules/code-search.md § Read vs search
+
+## LAW4 · ASK-DON'T-GUESS
+RULE:  On ambiguity or a missing premise, ASK THE USER; never invent or assume.
+WHY:   A guessed premise silently poisons everything built on it.
+APPLY: Missing datum/decision → ask before proceeding. (A question needing web
+       research is different → docs/research-needed.md, a Conventions line, not this law.)
+
+## LAW5 · STATE-IS-ON-DISK
+RULE:  Re-read the active session.md at task start and after any compaction; update it at task close.
+WHY:   The conversation compacts and takes the "why" of past decisions with it; the file survives.
+APPLY: Open task → read session.md. Decision made / chunk done → write it there, telegraphic.
+REF:   .claude/rules/sdd.md (session.md ↔ work chunks)
+
+## LAW6 · BRANCH
+RULE:  Work on `[DEV_BRANCH]`; never commit to `[PROTECTED_BRANCH]`.
+WHY:   [PROTECTED_BRANCH] is the protected line; direct commits bypass review.
+APPLY: Check branch before commit; if on [PROTECTED_BRANCH], switch or stop.
+
+## LAW7 · LANGUAGE
+RULE:  Everything written is [CODE_LANG] — code, docs, comments, commits, plans, proposals, names. The ONLY exception is chat replies to the user ([RESPONSE_LANG]).
+WHY:   Mixed-language artifacts fracture search, docs, and history.
+APPLY: NEVER mix languages inside one artifact (no "mixed words"). A foreign term quoted in a doc keeps the literal + a [CODE_LANG] gloss. The app UI ([UI_LANG]) is product content, governed by its locale files, not by this law.
+
+## LAW8 · SIGNIFICANT-CHANGE
+RULE:  A notable change is NOT implemented without a verified proposal+plan first (an unpromoted idea.md is not enough).
+WHY:   proposal+plan are the durable artifacts that scope the work BEFORE it starts and enable multi-session (return days later, reconstruct what/why).
+APPLY: Before editing, ask "can this break something OUTSIDE what I touch (other callers, schema, a contract/observable behaviour others consume, a new area)?" → YES = notable → open/use docs/changes/{slug}/ with a verified proposal (if only idea.md exists, promote it first) before implementing. NO = self-contained (move a field in place, local rename, copy, typo, internal refactor with no consumers) → direct, same session. Threshold is by IMPACT/ramification, NEVER by file count (one file can break half the app; N trivial renames don't).
+REF:   .claude/rules/sdd.md
+
+## LAW9 · FOCUS
+RULE:  One active front at a time, to completion, in the defined order.
+WHY:   Open fronts multiply the state you must hold in context — the direct cause of divergence in long sessions (3 fronts open = 3 lost).
+APPLY: A "front" is work that carries state (a {slug}/ with a session.md, or a multi-step task in progress) — a trivial self-contained edit (typo, one-line copy fix) is NOT a front and doesn't queue (LAW1 governs it). Don't open a new {slug}/ or switch area with one active until it's closed; run plan chunks and roadmap phases IN SEQUENCE (no jumping to chunk 5 with 3 open). ONLY exception to switch fronts: the user explicitly says PAUSE the active work (or a real external block). A request to ALSO start / add other front-level work is NOT a pause, and urgency is not either — ask before switching; the new work queues until the active front closes. On a real pause, the paused front's state stays in its session.md; resume it before opening anything new.
+
+---
+
+# PROJECT CONTEXT
+
 ## Stack
 
 [STACK]
-
-## Conventions (non-negotiable)
-
-- Language: everything written is [CODE_LANG] — code, docs, comments, commit
-  messages, proposals, plans. Two exceptions: the app interface ([UI_LANG])
-  and chat replies to the user ([RESPONSE_LANG])
-- Branch: `[DEV_BRANCH]` — never `[PROTECTED_BRANCH]`
-[CONVENTIONS]
-- "Pending definition" in docs → flag it, don't invent
-- Questions requiring web research → `docs/research-needed.md`, don't guess
-- Multi-step: plan commit points BEFORE starting; commit after each logical group
-- Tool or action failure (Edit failed, Read error, Bash error, script crash, etc.): report to user what failed and why before retrying or continuing
-- Before planning, implementing, or debugging: check the active rule for the area and **invoke** (Skill tool) the skills it lists when they match — while writing the code, not only when planning; skip them for trivial steps. When delegating, name the needed skills in the subagent's prompt
-- Pre-commit with complex changes (multi-area, e.g.: migration + router, frontend + backend): invoke `doc-updater` subagent to verify cross-area docs
-[UI_CONTROLS_CONVENTION]
-
-## Documentation
-
-- SSOT: `docs/` — read before working, update after architectural changes
-- Index: `docs/README.md` — read the area doc BEFORE touching code
-- System: `docs/doc-system.md` — principles and rules
-- Decisions: a decision lives in ONE place — a `### D-n` block in `docs/decisions.md`.
-  No marker in the area doc, no `D-n` in code (its consequences are documented where
-  they land; the decision and its ID stay in decisions.md). Recorded only if it passes
-  the three-part test (see `docs/doc-system.md` § Decisions); a calibrated value that
-  fails it stays as prose, no `### D-n`. Never rewrite one — the only relation is
-  **supersede**: new `### D-m` (`Supersedes D-n`) + move the old `### D-n` (heading and
-  all) to `docs/_archive/decisions.md` with a `Superseded by` line
-- Agent: `doc-updater` — invoke before multi-area commits
-[MIGRATIONS_RESTRICTION]
-
-When creating new file in `docs/`: update `docs/README.md`.
-When modifying [TRACKED_DIRS]:
-update `docs/planning.md` in the same commit.
-
-**Doc size limits (hard):** `planning.md` <100 lines, current phase only
-(full phase plan → `docs/roadmap.md`); entries 1–2 lines + pointer, no inline
-diagnoses. `decisions.md` has a **dynamic** cap (scales with area-doc count; the
-hook warns) — rotate superseded `### D-n` to `_archive`, keep minors one line.
-`changelog.md` entries ≤5 bullets of one line each. Over the cap → compress or
-archive before adding.
-Docs describe **present state**; unbuilt work = "Not implemented yet" +
-proposal pointer, never specified as if it existed.
-
-**SKIP_DOC_CHECK:** the pre-commit hook has two independent bypasses, either of
-which skips the check: the env var `SKIP_DOC_CHECK=1`, or a `.claude/skip-doc-authorized`
-file (a one-shot token, consumed on use). Both require explicit owner authorization —
-Claude NEVER sets the env var or creates the file on its own. **If the owner gives
-authorization in the conversation, that condition is met** — bypass and commit in one
-step, without asking again; the owner's word in chat is the authorization the file/var
-stands in for.
-
-## Model
-
-Delegate to a subagent only when: the task spans **≥3 independent files**, or it's a
-broad search whose result fits in a summary. Otherwise do it inline — a subagent that
-reads code to hand it back compressed loses more signal than it saves. Specify the
-model in the Agent tool:
-
-- Explore (model="haiku"): find files, understand code, read without editing
-- Plan: design before implementing on complex tasks
-- general-purpose (model="sonnet"): scoped implementation across several files
-
-**Dedicated agents** (`.claude/agents/`):
-
-- `doc-updater` (sonnet, green): verify and update docs pre-commit
-- `git-ops` (haiku, yellow): get git status/diff/log — read-only
-- `migration-checker` (haiku, orange): validate SQL conventions pre-commit
-[UI_REVIEWER_AGENT]
-
-When delegating: include relevant context restrictions in the subagent prompt.
-.claudeignore does NOT block direct Read — restrictions must be explicit in the prompt.
-Minimum include: "Use `docs/` as source of truth. DO NOT read files excluded in `.claudeignore`."
 
 ## Environment
 
@@ -85,68 +73,45 @@ Minimum include: "Use `docs/` as source of truth. DO NOT read files excluded in 
 Repo: [REPO_URL] · [RUNTIME] · [PACKAGE_MANAGER] · Git
 Known paths and errors: `.claude/rules/[ENV_RULE_FILE]`
 
-## Session start
+## Conventions (non-negotiable)
 
-1. `[model: X]` in the first response
-2. Read `docs/planning.md` — know what's in progress and pending
-3. Ask the user what we'll work on (don't assume)
+Language and branch are laws (LAW7, LAW6). The rest:
+[CONVENTIONS]
+- No emojis anywhere — code, docs, comments, commits, UI copy, chat. Plain text only
+- "Pending definition" in docs → flag it, don't invent
+- Questions requiring web research → `docs/research-needed.md`, don't guess
+- Multi-step: plan commit points BEFORE starting; commit after each logical group
+- Tool or action failure (Edit failed, Read error, Bash error, script crash): report to the user what failed and why before retrying or continuing
+- Before planning/implementing/debugging: check the area's active rule and **invoke** (Skill tool) the skills it lists when they match — while writing the code, not only when planning; skip them for trivial steps
+[UI_CONTROLS_CONVENTION]
 
-## Workflow — autonomy rules
+## Documentation
 
-- **Git:** delegate `git-ops` for status/diff/log. Main context proposes message and executes `git add` + `git commit`. Never delegate the commit to the subagent.
-- **Docs:** delegate `doc-updater` to update docs (multi-area only). Docs updated BEFORE committing, but updating doesn't mean committing.
-- **Commits:** never automatic — wait for the user to say "commit". Single exception: `/session-close`, which the user invoked to close out; its Step 8 commits without asking **if and only if** `git status` shows no files foreign to the session and no conflicts, and otherwise proposes the message and waits.
-- **Area change:** ask before moving to another work area.
-- **High-impact changes:** ask before modifying core files (CLAUDE.md, .gitignore, doc-coverage.json) outside the task scope.
+- SSOT: `docs/` — read the area doc BEFORE touching code, update after architectural changes
+- Index: `docs/README.md` · System: `docs/doc-system.md`
+- Decisions: single-source `### D-n` in `docs/decisions.md` (supersede-only). See `docs/doc-system.md` § Decisions.
+- Change workflow / SDD, session.md, idea→proposal, decision mechanics → `.claude/rules/sdd.md`
+- Pre-commit doc-check can be bypassed (owner authorization only — Claude never does it unprompted); exact mechanism → `.claude/rules/sdd.md § SKIP_DOC_CHECK`
+- When modifying [TRACKED_DIRS]: update `docs/planning.md` in the same commit
+[MIGRATIONS_RESTRICTION]
 
-## Change Workflow
+## Session + state
 
-For significant changes (new feature, refactor >3 files, schema
-change, architecture change): if `docs/changes/README.md` exists,
-follow its workflow. Otherwise commit directly with clear messages.
+1. First response: `[model: X]`.
+2. Read `docs/planning.md` (what's in progress) AND the active `docs/changes/{slug}/session.md` (what THIS effort decided/discarded and where it stands).
+3. Ask what we work on — don't assume.
+4. LAW5 all session: after a compaction, or resuming after a long gap, RE-READ session.md before continuing. Update it at every task/chunk close (goal reached, decision made, approach discarded) — telegraphic, not prose.
 
-**Greenfield mode:** while the codebase is young (no stable base to break —
-roughly, before the first deployed release), every task is "significant" and
-the full SDD cycle over-fires. Use the light cycle instead: short proposal
-(≤1 page) → implement → close. Save `brainstorming` + full plans for genuinely
-ambiguous scope. The full cycle earns its cost once changes land on a stable
-base. Light cycle still means a proposal — greenfield never means none.
+## Model & agents
 
-Enforced by process, not a hook: before implementing a significant change, open
-its proposal (see `docs/changes/README.md`). Config paths (anything starting with
-`.`) are outside the SDD entirely — those changes go through `/project-bootstrap`
-mode 3.
+Available agents (`.claude/agents/`):
+- `doc-updater` (sonnet): verify/update docs pre multi-area commit
+- `git-ops` (haiku): git status/diff/log — read-only
+- `migration-checker` (haiku): validate SQL conventions pre-commit
+[UI_REVIEWER_AGENT]
 
-<!-- This is a stub. If doc-system-bootstrap is installed, it will
-     replace this block with the full SDD workflow (levels, mandatory
-     superpowers per phase, output routing). Keep the greenfield-mode
-     paragraph when it does. -->
-
-<!-- Model-era note (2026-08): mandates in this template were originally
-     tuned for Claude 4.x, which under-followed process instructions.
-     5.x models follow them literally — prefer fewer unconditional mandates
-     and hard numeric limits over exhortations. -->
-
-## Session cost discipline
-
-Written prose compounds: every line added to planning/changelog/decisions is
-read by every future session. Telegraphic entries, pointers over copies,
-archive over narrative.
-
-
-## Engineering principles
-
-- **Modular decomposition:** split tasks into atomic, testable, committable steps — propose modules, not monoliths
-- **Security first:** no change introduces hardcoded secrets, SQL/XSS/command injection, or bypasses; review attack surfaces before proposing
-- **Deterministic outputs:** prefer idempotent scripts, explicit configs and pinned versions — document any non-deterministic behavior
-- **Operational hygiene:** avoid fragile hacks and undocumented configs; before updating deps or infra, identify breaking changes and rollback plan
-- **Minimum cognitive load:** concise, actionable responses; code with minimum sufficient complexity — don't abstract before needing to
-- **Stack-awareness:** adapt the solution to the real environment (Docker, cloud, IDE, OS) before introducing new technology
-- **Guided validation:** suggest tests, validations and automated checks for pipelines, scripts and data
-- **Explainability without verbosity:** justify technical decisions with real trade-offs, in one line
-- **Dependency governance:** pin versions, avoid unnecessary dependencies, justify each library
-- **Fail-safe by default:** when ambiguous, ask for clarification or assume the most conservative option
+How/when to delegate (thresholds, context restrictions in the subagent prompt, never delegate the commit, model per task) → `.claude/rules/code-quality.md § delegation`.
 
 ## End of session
 
-Invoke `/session-close` — runs the full checklist (git status, docs, planning, changelog, memory, summary).
+Invoke `/session-close` — full checklist (git status, docs, planning, changelog, memory, summary).
