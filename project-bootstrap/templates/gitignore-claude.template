@@ -4,5 +4,6 @@ CLAUDE.local.md
 .session-changes.json
 .claude/skip-doc-authorized
 docs/changes/**/session.md
+!docs/changes/_template/session.md
 .mcp.json
 .superpowers/

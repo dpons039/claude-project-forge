@@ -102,6 +102,12 @@ Language and branch are laws (LAW7, LAW6). The rest:
 3. Ask what we work on — don't assume.
 4. LAW5 all session: after a compaction, or resuming after a long gap, RE-READ session.md before continuing. Update it at every task/chunk close (goal reached, decision made, approach discarded) — telegraphic, not prose.
 
+## Autonomy
+
+- **Commits:** never automatic — wait for the user to say "commit". Single exception: `/session-close` may commit at its final step **only if** `git status` shows no files foreign to the session and no conflicts; otherwise it proposes the message and waits.
+- **Area / high-impact:** ask before switching to another work area, and before modifying core config outside the task (CLAUDE.md, .gitignore, doc-coverage.json).
+- **Docs vs commit:** updating docs (e.g. via `doc-updater`) is not the same as committing — update first, commit only on the user's word.
+
 ## Model & agents
 
 Available agents (`.claude/agents/`):
