@@ -31,7 +31,14 @@ paths:
 
 **[SKILL_FRONTEND]** — always active for frontend work.
 
-## Conditional skills (activate by trigger)
+## Skills — invoke BEFORE the edit, not after it bounces (LAW10)
+
+Each skill below has a concrete trigger. When your work matches it, invoke the skill
+(Skill tool) BEFORE the first hand-edit — not after a hand-patch fails. **Hand-editing
+an area a skill covers twice without loading it = you already skipped it (LAW10): stop
+and load it now.** "It's just a quick fix" is the rationalization that skips the skill —
+if you're reasoning about the area (layout, types, a store, UI copy), that IS the skill's
+work.
 
 [FRONTEND_SKILLS_LIST]
 

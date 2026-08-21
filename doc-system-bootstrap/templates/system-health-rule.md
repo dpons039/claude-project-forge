@@ -20,9 +20,10 @@ Documentation system principles: `docs/doc-system.md`. When modifying Claude Cod
   (`sdd.md`) may exceed it — it is lazy and path-scoped to `docs/changes/**` (where its
   content is exactly what's relevant) and replaces content that used to be eager in
   CLAUDE.md. Do NOT fragment it artificially.
-- CLAUDE.md `# LAWS`: still ≤9 laws, each ~4-5 lines, each testable (a sim could detect
-  its violation)? A new law → is an old one now redundant? NEVER grow the block past ~9
-  without displacing one.
+- CLAUDE.md `# LAWS`: still ≤10 laws, each ~4-5 lines, each testable (a sim could detect
+  its violation)? A new law → is an old one now redundant? NEVER grow the block past ~10
+  without displacing one (the compliance cliff is ~15; 10 is the working ceiling). LAW10
+  (USE-THE-PROCESS) is the momentum/process-skip anchor — do not merge it away.
 - CLAUDE.md core over ~1.800 tok (run `count-context-tokens.py`)? → move a section to a
   rule/doc. The target is TOKENS, not lines — the LAWS block is many short lines but few
   tokens; don't cut it for a line count.
@@ -31,9 +32,12 @@ Documentation system principles: `docs/doc-system.md`. When modifying Claude Cod
 **Verify quarterly (or when degradation detected):**
 
 - Review rules: any without clear trigger? → candidate for removal
-- Review skills: any unused in 3+ months? → candidate for removal
+- Review skills: any unused in 3+ months? → candidate for removal. Also: any skill named in
+  a rule with a VAGUE trigger (a topic list, "activate by trigger") rather than a concrete
+  "when you do X → invoke"? → sharpen it. A vague trigger is skipped under momentum (LAW10).
 - Review MEMORY.md: stale info? → correct or remove
-- `docs/changes/{slug}/session.md` is EPHEMERAL (gitignored, live state of one change) — a docs audit must NOT migrate it into `docs/`; it is discarded with its folder
+- `docs/changes/{slug}/session.md` and `.attempt-counter.json` are EPHEMERAL (gitignored,
+  live state) — a docs/config audit must NOT migrate them into `docs/`; they are discarded, not curated
 - Audit docs vs code: invoke doc-updater subagent across the repo
 - Check doc sizes: `find docs/ -maxdepth 1 -name "*.md" -exec wc -l {} + | sort -rn | head -10`
 

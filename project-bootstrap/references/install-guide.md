@@ -96,6 +96,13 @@ Copy from `templates/claude/hooks/`:
   Claude sees post-compaction (verified vs code.claude.com/docs/en/hooks.md; `PreCompact`
   cannot inject, it only blocks). Empirically, LAW5 alone recovers state; this hook is the
   net for when the agent doesn't re-read on its own.
+- `attempt-counter.py` → `.claude/hooks/attempt-counter.py` — warn-only counter backing
+  LAW10 / debugging.md. On `PostToolUse` it accumulates code edits (Write|Edit) into a
+  symptom window and warns after several with NO verify-run between; a `PostToolUse` Bash
+  matching a test/build/lint command RESETS the window. NEVER blocks (the read-side net for
+  silent repeat-patching; the debugging.md ritual is the primary discipline). Path-agnostic
+  within the window on purpose — a cross-file bug (child+parent+stacking-context) still
+  accumulates. State in `.attempt-counter.json` (gitignored, ephemeral).
 
 Also copy the budget measurer (not a hook, but shipped under `templates/claude/`
 so Mode 2 keeps it current):
@@ -111,8 +118,12 @@ Create `.claude/settings.local.json` with hooks config (or merge if exists):
         "command": "python \"$CLAUDE_PROJECT_DIR/.claude/hooks/secret-scanner.py\"" }] }
     ],
     "PostToolUse": [
-      { "matcher": "Write|Edit", "hooks": [{ "type": "command",
-        "command": "python \"$CLAUDE_PROJECT_DIR/.claude/hooks/doc-track.py\"" }] }
+      { "matcher": "Write|Edit", "hooks": [
+        { "type": "command", "command": "python \"$CLAUDE_PROJECT_DIR/.claude/hooks/doc-track.py\"" },
+        { "type": "command", "command": "python \"$CLAUDE_PROJECT_DIR/.claude/hooks/attempt-counter.py\"" }
+      ] },
+      { "matcher": "Bash", "hooks": [{ "type": "command",
+        "command": "python \"$CLAUDE_PROJECT_DIR/.claude/hooks/attempt-counter.py\"" }] }
     ],
     "Stop": [
       { "hooks": [{ "type": "command",
@@ -127,11 +138,13 @@ Create `.claude/settings.local.json` with hooks config (or merge if exists):
 ```
 
 `settings.local.json` is gitignored → NOT propagated by Mode 3; each project wires the
-`SessionStart` block locally. Add `session-reinject.py` to the "NOT auto-updatable" list.
+`SessionStart` and the `attempt-counter` blocks locally. Add `session-reinject.py` and
+`attempt-counter.py` to the "NOT auto-updatable" list.
 
-These three hooks answer mechanical questions: `secret-scanner.py` (regex over Bash
+These hooks answer mechanical questions: `secret-scanner.py` (regex over Bash
 commands), `doc-track.py` (records edited files), `doc-check.py` (doc-coverage and size
-checks at Stop, blocking commit checks with `--pre-commit`). The SDD change workflow is
+checks at Stop, blocking commit checks with `--pre-commit`), `attempt-counter.py`
+(warn-only edit-count backing LAW10, reset by a verify-run). The SDD change workflow is
 enforced by process, not a hook — see the change workflow in CLAUDE.md and
 `docs/changes/README.md`. Phase state lives in one place (`docs/roadmap.md § Phase
 order`), so there is nothing to cross-check.
@@ -155,6 +168,25 @@ Generate stack rules from templates (only those that apply):
 - `cross-domain.md.template` → if has both frontend AND backend
 
 For each template rule, replace `[SKILL_*]` placeholders with the actual skills the user approved.
+
+**Skill-list placeholders (`[FRONTEND_SKILLS_LIST]`, `[BACKEND_SKILLS_LIST]`) — write SHARP
+triggers, not catalog descriptions.** The catalog gives topic labels ("Grid, flexbox
+patterns", "Generics, mapped, conditional") — those are what got skipped under momentum in
+the field (a topic label doesn't self-classify as "my current activity"). For each approved
+skill, write a one-line **self-classifying condition** the agent can match against what it is
+doing right now, ending in "→ invoke `<skill>`". Shape: `- **skill** — <when you are doing X,
+concretely> → invoke before the first hand-edit.` Examples:
+- `tailwindcss-advanced-layouts` — editing `grid`/`flexbox`/`sticky`/`position`/`overflow` for layout → invoke before the first hand-edit.
+- `tailwind-responsive-ui` — adding breakpoints, mobile-first, or touch targets → invoke.
+- `typescript-advanced-types` — writing a generic, mapped, or conditional type by hand → invoke before the 2nd attempt.
+- `zustand-patterns` — touching a store slice, middleware, or Immer draft → invoke before editing store logic.
+- `writing-for-interfaces` — writing/editing any user-facing string (label, error, empty state) → invoke before hand-wording it.
+- `frontend-design` — creating or restyling a page/component → invoke for the visual pass before calling it done.
+- `heroui-ref` — reaching for a UI primitive → check the HeroUI equivalent FIRST (hand-rolled a styled primitive = skipped it).
+- `vite` — editing `vite.config.*` or debugging a build/dev-server error → invoke before the 2nd config guess.
+Name the property/artifact under the cursor, never a topic. The block heading in the template
+already carries the LAW10 count-tripwire ("twice without loading = skipped it") — the per-skill
+line supplies the concrete condition it fires on.
 
 In `frontend.md`, replace `[BRANDKIT_LINE]` — if `brandkit-manager` was approved — with an
 **invocation** line (not just "consult the page"):

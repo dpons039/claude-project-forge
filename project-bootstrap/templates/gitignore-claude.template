@@ -2,6 +2,7 @@
 CLAUDE.local.md
 .claude/settings.local.json
 .session-changes.json
+.attempt-counter.json
 .claude/skip-doc-authorized
 docs/changes/**/session.md
 !docs/changes/_template/session.md

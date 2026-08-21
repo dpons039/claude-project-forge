@@ -59,6 +59,12 @@ RULE:  One active front at a time, to completion, in the defined order.
 WHY:   Open fronts multiply the state you must hold in context — the direct cause of divergence in long sessions (3 fronts open = 3 lost).
 APPLY: A "front" is work that carries state (a {slug}/ with a session.md, or a multi-step task in progress) — a trivial self-contained edit (typo, one-line copy fix) is NOT a front and doesn't queue (LAW1 governs it). Don't open a new {slug}/ or switch area with one active until it's closed; run plan chunks and roadmap phases IN SEQUENCE (no jumping to chunk 5 with 3 open). ONLY exception to switch fronts: the user explicitly says PAUSE the active work (or a real external block). A request to ALSO start / add other front-level work is NOT a pause, and urgency is not either — ask before switching; the new work queues until the active front closes. On a real pause, the paused front's state stays in its session.md; resume it before opening anything new.
 
+## LAW10 · USE-THE-PROCESS
+RULE:  A 2nd hand-attempt at the same problem without the tool/protocol a rule already names for it = you already skipped it. Stop and use it.
+WHY:   Under momentum a hand-patch feels like progress, so a rule you can quote loses to the next edit. The count is the fact momentum can't argue with — "I already cited the rule" is not "I used it".
+APPLY: Repeat fix on one symptom (named by its effect, not your hypothesis) → 2nd attempt = STOP, invoke systematic-debugging, don't patch again. Reasoning/hand-editing an area a rule names a skill for (layout CSS, auth, migrations, a store) → invoke that skill BEFORE the next edit, not after it bounces. Hand-rolled the same kind of thing twice without the named skill = you skipped it.
+REF:   .claude/rules/debugging.md (attempt count) · the area's stack rule (skill triggers)
+
 ---
 
 # PROJECT CONTEXT
@@ -82,7 +88,7 @@ Language and branch are laws (LAW7, LAW6). The rest:
 - Questions requiring web research → `docs/research-needed.md`, don't guess
 - Multi-step: plan commit points BEFORE starting; commit after each logical group
 - Tool or action failure (Edit failed, Read error, Bash error, script crash): report to the user what failed and why before retrying or continuing
-- Before planning/implementing/debugging: check the area's active rule and **invoke** (Skill tool) the skills it lists when they match — while writing the code, not only when planning; skip them for trivial steps
+- Skill invocation is LAW10: before the FIRST hand-edit in an area, check its stack rule and **invoke** (Skill tool) the skill it names for that work — not after a patch bounces; skip only for trivial steps
 [UI_CONTROLS_CONVENTION]
 
 ## Documentation

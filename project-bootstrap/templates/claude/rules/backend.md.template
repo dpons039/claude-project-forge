@@ -15,7 +15,12 @@ paths:
 
 **[SKILL_BACKEND]** — always active for backend work (middleware, routing, error handling).
 
-## Conditional skills (activate by trigger)
+## Skills — invoke BEFORE the edit, not after it bounces (LAW10)
+
+Each skill below has a concrete trigger. When your work matches it, invoke the skill
+(Skill tool) BEFORE the first hand-edit — not after a hand-patch fails. **Hand-editing
+an area a skill covers twice without loading it = you already skipped it (LAW10): stop
+and load it now.**
 
 [BACKEND_SKILLS_LIST]
 
