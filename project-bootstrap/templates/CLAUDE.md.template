@@ -21,16 +21,15 @@ APPLY: Run the verify command the project declares; observe output before any su
 REF:   .claude/rules/code-quality.md § verification-before-completion
 
 ## LAW3 · READ-BEFORE-WRITE
-RULE:  Read the whole file (and its area doc) before editing it.
-WHY:   The line above the one you change is where the contradiction hides.
-APPLY: Editing X → Read X fully first; if an area doc exists, read it.
+RULE:  Read the whole file (and its area doc) before editing it. Writing a NEW member of an existing family (another control, row, cell, variant, endpoint), first read a live sibling.
+WHY:   The line above the one you change is where the contradiction hides — and a family's real contract often lives in a comment on the sibling, not in a doc.
+APPLY: Editing X → Read X fully first; if an area doc exists, read it. Creating a new X-like thing → Read an existing X first and copy its contract; don't invent a general rule (a WCAG floor, a default) over the pattern the neighbour already sets.
 REF:   .claude/rules/code-search.md § Read vs search
 
 ## LAW4 · ASK-DON'T-GUESS
-RULE:  On ambiguity or a missing premise, ASK THE USER; never invent or assume.
-WHY:   A guessed premise silently poisons everything built on it.
-APPLY: Missing datum/decision → ask before proceeding. (A question needing web
-       research is different → docs/research-needed.md, a Conventions line, not this law.)
+RULE:  On ambiguity or a missing premise, ASK THE USER; never invent or assume. An unverified interpretation is a guess too.
+WHY:   A guessed premise silently poisons everything built on it — and "I thought I knew what this was" burns more cycles than "I knew I was missing a fact".
+APPLY: Missing datum/decision → ask before proceeding. AND before building: is my reading of the surface (which screen/component), the layout, a domain term, or the target actually confirmed against the code / your intent — or just assumed? If assumed → confirm or ask FIRST, not after the 2nd-3rd misunderstanding. (A question needing web research is different → docs/research-needed.md, a Conventions line, not this law.)
 
 ## LAW5 · STATE-IS-ON-DISK
 RULE:  Re-read the active session.md at task start and after any compaction; update it at task close.
@@ -62,7 +61,7 @@ APPLY: A "front" is work that carries state (a {slug}/ with a session.md, or a m
 ## LAW10 · USE-THE-PROCESS
 RULE:  A 2nd hand-attempt at the same problem without the tool/protocol a rule already names for it = you already skipped it. Stop and use it.
 WHY:   Under momentum a hand-patch feels like progress, so a rule you can quote loses to the next edit. The count is the fact momentum can't argue with — "I already cited the rule" is not "I used it".
-APPLY: Repeat fix on one symptom (named by its effect, not your hypothesis) → 2nd attempt = STOP, invoke systematic-debugging, don't patch again. Reasoning/hand-editing an area a rule names a skill for (layout CSS, auth, migrations, a store) → invoke that skill BEFORE the next edit, not after it bounces. Hand-rolled the same kind of thing twice without the named skill = you skipped it.
+APPLY: Repeat fix on one symptom (named by its effect, not your hypothesis) → 2nd attempt = STOP, invoke systematic-debugging, don't patch again. Reasoning/hand-editing an area a rule names a skill for (layout CSS, auth, migrations, a store) → invoke that skill BEFORE the next edit, not after it bounces. Hand-rolled the same kind of thing twice without the named skill = you skipped it. A skill that returns empty or errors is NOT licence to hand-roll — re-invoke it with the explicit brief (task + context); a hand-edit after a skill failure is still skipping the skill.
 REF:   .claude/rules/debugging.md (attempt count) · the area's stack rule (skill triggers)
 
 ---

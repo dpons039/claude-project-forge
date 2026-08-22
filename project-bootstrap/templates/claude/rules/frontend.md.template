@@ -42,6 +42,17 @@ work.
 
 [FRONTEND_SKILLS_LIST]
 
+## Layout described in text → confirm before coding (LAW10, visual form)
+
+When the work is positioning elements relative to each other (X left of Y, row 1 vs
+row 2, this spans 2 columns) and the description is textual, coding straight from prose
+is fragile — arrows like `<--->` and left/right invert easily. Sketch the layout back as
+ASCII (or a quick render) and confirm it BEFORE coding if there is any ambiguity. **A 2nd
+misunderstanding of the same layout = STOP and sketch**, don't guess a 3rd arrangement.
+This is the layout counterpart of the attempt-counter: a repeated miss is the trip.
+(Distinct from open design decisions, where you show visual options and let the user
+choose — here the user already described the layout; you are confirming your reading of it.)
+
 ## Order for new pages/components
 
 1. Short proposal (what + why — not the full layout).
