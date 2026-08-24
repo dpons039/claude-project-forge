@@ -15,9 +15,9 @@ WHY:   Unrequested edits are where divergence and breakage enter.
 APPLY: Before an edit, ask "is this in the task?" If no → list it, don't do it.
 
 ## LAW2 · VERIFY-BEFORE-CLAIM
-RULE:  Never say done/fixed/passing without running the check and reading its output.
-WHY:   Claimed-but-unverified is the most expensive class of error.
-APPLY: Run the verify command the project declares; observe output before any success word.
+RULE:  Never say done/fixed/passing without running the check and reading its output. For a UI change, the check is the OWNER seeing it rendered — green tests are not the check.
+WHY:   Claimed-but-unverified is the most expensive class of error — and tests don't see the screen, so "tests pass" never proves a visual change looks right.
+APPLY: Run the verify command the project declares; observe output before any success word. A change that could alter what the user sees (layout, style, visible copy, a component) is NOT verified by tests — its only valid check is the owner reviewing the render. Don't mark it done, and don't fold it into a commit, until the owner has seen it rendered and approved. ui-reviewer is a pre-step, never a substitute for the owner's review.
 REF:   .claude/rules/code-quality.md § verification-before-completion
 
 ## LAW3 · READ-BEFORE-WRITE
@@ -110,6 +110,7 @@ Language and branch are laws (LAW7, LAW6). The rest:
 ## Autonomy
 
 - **Commits:** never automatic — wait for the user to say "commit". Single exception: `/session-close` may commit at its final step **only if** `git status` shows no files foreign to the session and no conflicts; otherwise it proposes the message and waits.
+- **UI never ships unreviewed:** a change that alters what the user sees NEVER enters a commit until the owner has reviewed the render and approved it (LAW2). A green test suite is not that approval.
 - **Area / high-impact:** ask before switching to another work area, and before modifying core config outside the task (CLAUDE.md, .gitignore, doc-coverage.json).
 - **Docs vs commit:** updating docs (e.g. via `doc-updater`) is not the same as committing — update first, commit only on the user's word.
 
