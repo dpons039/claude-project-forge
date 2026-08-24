@@ -11,17 +11,17 @@ One folder per change holds up to four files:
 
 | File | Persists | Role |
 |---|---|---|
-| `idea.md` | git-tracked | intention (WHAT/WHY) for a FUTURE phase — no verified premises |
+| `concept.md` | git-tracked | intention (WHAT/WHY) for a FUTURE phase — no verified premises (Status: `idea`) |
 | `proposal.md` | git-tracked | spec + `file:line` premises verified, scoped BEFORE starting |
-| `plan.md` | git-tracked | step list (complex flow only) |
+| `plan.md` | git-tracked | durable step list (complex flow only), seeded from `_template/plan.md` — `writing-plans` output, Spec→proposal, `verified` gate, commits owner-gated; NOT session.md's live state |
 | `session.md` | **gitignored** | LIVE state during execution, ordered by reading urgency (awaiting/now/live decisions); pruned on the event, not a history log |
 
-**idea → proposal.** A future phase is born `idea.md` (Status: `idea`) — WHAT/WHY, which
+**concept → proposal.** A future phase is born `concept.md` (Status: `idea`) — WHAT/WHY, which
 does not go stale (it does not depend on the code). Writing a full proposal far ahead is
 the mistake: a proposal fixes premises against the code NOW. When the phase's turn comes,
 **promote in place**: copy `_template/proposal.md`, port WHAT/WHY, verify every premise
 against the code now (approval gate), fill the "TBD until promoted" sections. Never
-implement from an `idea.md`. `roadmap.md` lists ideas; only the active phase has a proposal.
+implement from a `concept.md`. `roadmap.md` lists future phases; only the active phase has a proposal.
 
 **session.md** bridges compactions (the conversation compacts and drops the "why" of past
 decisions; the file is re-read from disk — LAW5). Create it from `_template/session.md`

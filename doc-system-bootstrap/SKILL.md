@@ -104,6 +104,7 @@ Create these files (adapt to the project — only create area docs for areas tha
 - `docs/research-needed.md` — Copy from `templates/research-needed.md`
 - `docs/changes/README.md` — Copy from `templates/changes-readme.md`
 - `docs/changes/_template/proposal.md` — Copy from `templates/proposal-template.md`
+- `docs/changes/_template/plan.md` — Copy from `templates/plan-template.md`
 - Area doc skeletons (from `templates/docs-structure.md` § Area doc skeleton)
   - Exception: do NOT create `docs/BrandKit.md` here — it is owned by the
     `brandkit-manager` skill (its `init-docs` operation creates and fills it)
@@ -199,21 +200,25 @@ Do this:
 
 1. **Copy the SDD rule:** `templates/sdd-rule.md` → `.claude/rules/sdd.md`. It holds the
    full change workflow (Standard/Complex levels, approval gate, greenfield, Superpowers
-   routing, SKIP_DOC_CHECK, the idea→proposal cycle, and session.md↔chunks). It is lazy
+   routing, SKIP_DOC_CHECK, the concept→proposal cycle, and session.md↔chunks). It is lazy
    (path-scoped to `docs/changes/**`) — the one rule allowed to exceed the token cap
    (system-health notes the exception).
-2. **Copy the idea template:** `templates/idea-template.md` → `docs/changes/_template/idea.md`
-   (alongside `proposal.md`). It is the proposal template trimmed, with premise sections
-   marked "TBD until promoted".
+2. **Copy the concept + plan templates:** `templates/concept-template.md` → `docs/changes/_template/concept.md`
+   (the proposal template trimmed, premise sections marked "TBD until promoted", Status `idea`); and
+   `templates/plan-template.md` → `docs/changes/_template/plan.md` (the durable step-list
+   seed for the complex flow — a minimal bridge that reorders the `writing-plans` header so
+   the binding block leads, points its Spec at this slug's `proposal.md`, gates on LAW8
+   `verified`, and marks per-task commits as owner-gated; `writing-plans` fills the File
+   map / Tasks / Verification below its `---`).
 3. **Confirm the CLAUDE.md pointers exist** (they come from `project-bootstrap`'s template;
    only add if missing) under `## Documentation`:
-   - `Change workflow / SDD, session.md, idea→proposal, decision mechanics → .claude/rules/sdd.md`
+   - `Change workflow / SDD, session.md, concept→proposal, decision mechanics → .claude/rules/sdd.md`
    - `Pre-commit doc-check can be bypassed (owner authorization only ...); exact mechanism → .claude/rules/sdd.md § SKIP_DOC_CHECK`
    Do NOT re-insert the workflow prose into CLAUDE.md — the LAWS block + PROJECT CONTEXT
    are owned by `project-bootstrap`; this skill only touches the two pointer lines and the
    rule/templates under `docs/` and `.claude/rules/`.
 4. Ensure `docs/changes/README.md` (from `templates/changes-readme.md`) documents the four
-   artifacts (idea/proposal/plan/session), the idea→proposal promotion, and chunk↔session.md.
+   artifacts (concept/proposal/plan/session), the concept→proposal promotion, and chunk↔session.md.
 
 <!-- LEGACY reference — the old inline block content, kept for projects being migrated by
      hand. New installs do NOT paste this into CLAUDE.md; it lives in sdd.md now. -->
@@ -355,7 +360,8 @@ All templates are in the `templates/` directory:
 | `research-needed.md` | `docs/` | Template with rules |
 | `changes-readme.md` | `docs/changes/README.md` | SDD workflow |
 | `proposal-template.md` | `docs/changes/_template/proposal.md` | SDD template |
-| `idea-template.md` | `docs/changes/_template/idea.md` | SDD template (future phase; proposal trimmed) |
+| `concept-template.md` | `docs/changes/_template/concept.md` | SDD template (future phase; proposal trimmed, Status `idea`) |
+| `plan-template.md` | `docs/changes/_template/plan.md` | SDD template (complex flow; bridges writing-plans to the LAWS) |
 | `sdd-rule.md` | `.claude/rules/sdd.md` | Rule (lazy, docs/changes/**) — full SDD workflow |
 | `doc-coverage.template.json` | `.claude/` (adapted) | Config |
 | `doc-check.py` | `.claude/hooks/` | Hook |

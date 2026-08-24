@@ -9,7 +9,7 @@ These skills apply to **any code change** in the project, regardless of the area
 
 ## Before starting to write
 
-- **`writing-plans`** — for multi-step tasks (≥3 files or logic with several decisions). Output to `docs/changes/{slug}/plan.md` for complex flow, or inline in the proposal for standard flow. See `docs/changes/README.md`.
+- **`writing-plans`** — for multi-step tasks (≥3 files or logic with several decisions). Output to `docs/changes/{slug}/plan.md` for complex flow (seed it from `_template/plan.md` — a bridge that points Spec at the proposal, gates on LAW8 `verified`, and keeps per-task commits owner-gated; the skill fills the rest below the `---`), or inline in the proposal for standard flow. See `docs/changes/README.md`.
 - **`brainstorming`** — before complex proposals (multi-area, ambiguous scope).
 
 ## When writing or refactoring code

@@ -178,7 +178,7 @@ automatically — but the CLAUDE.md restructure and the new SDD rule do not. Ste
    Documentation, Session + state, Model & agents, End of session). Move the old inline
    SDD / Superpowers / SKIP_DOC_CHECK prose OUT.
 4. **Generate the SDD rule:** create `.claude/rules/sdd.md` from the project's existing
-   SDD block + `doc-system-bootstrap/templates/sdd-rule.md`. Add `docs/changes/_template/idea.md`.
+   SDD block + `doc-system-bootstrap/templates/sdd-rule.md`. Add `docs/changes/_template/concept.md`.
    Leave only the pointer lines in CLAUDE.md `## Documentation`.
 5. **Add** `.claude/rules/engineering.md` (fixed rule) and the `session.md` template; add
    `docs/changes/**/session.md` to `.gitignore`. Optionally wire the `SessionStart`
@@ -186,6 +186,6 @@ automatically — but the CLAUDE.md restructure and the new SDD rule do not. Ste
 6. **Cut sections one at a time**, re-running `count-context-tokens.py` after each, until
    CLAUDE.md is at/under the target (~1.800 tok eager). Each cut must have a net (a rule or
    doc that still catches its directive) — see the redesign's simulation protocol.
-7. **Convert stale far-ahead proposals to `idea.md`** (Status: idea) — a proposal written
-   long before its phase is born stale; demote it to an idea or promote it by re-verifying
+7. **Convert stale far-ahead proposals to `concept.md`** (Status: idea) — a proposal written
+   long before its phase is born stale; demote it to a concept or promote it by re-verifying
    its premises against the code now.

@@ -48,9 +48,9 @@ WHY:   Mixed-language artifacts fracture search, docs, and history.
 APPLY: NEVER mix languages inside one artifact (no "mixed words"). A foreign term quoted in a doc keeps the literal + a [CODE_LANG] gloss. The app UI ([UI_LANG]) is product content, governed by its locale files, not by this law.
 
 ## LAW8 · SIGNIFICANT-CHANGE
-RULE:  A notable change is NOT implemented without a verified proposal+plan first (an unpromoted idea.md is not enough).
+RULE:  A notable change is NOT implemented without a verified proposal+plan first (an unpromoted concept.md is not enough).
 WHY:   proposal+plan are the durable artifacts that scope the work BEFORE it starts and enable multi-session (return days later, reconstruct what/why).
-APPLY: Before editing, ask "can this break something OUTSIDE what I touch (other callers, schema, a contract/observable behaviour others consume, a new area)?" → YES = notable → open/use docs/changes/{slug}/ with a verified proposal (if only idea.md exists, promote it first) before implementing. NO = self-contained (move a field in place, local rename, copy, typo, internal refactor with no consumers) → direct, same session. Threshold is by IMPACT/ramification, NEVER by file count (one file can break half the app; N trivial renames don't).
+APPLY: Before editing, ask "can this break something OUTSIDE what I touch (other callers, schema, a contract/observable behaviour others consume, a new area)?" → YES = notable → open/use docs/changes/{slug}/ with a verified proposal (if only concept.md exists, promote it first) before implementing. NO = self-contained (move a field in place, local rename, copy, typo, internal refactor with no consumers) → direct, same session. Threshold is by IMPACT/ramification, NEVER by file count (one file can break half the app; N trivial renames don't).
 REF:   .claude/rules/sdd.md
 
 ## LAW9 · FOCUS
@@ -95,7 +95,7 @@ Language and branch are laws (LAW7, LAW6). The rest:
 - SSOT: `docs/` — read the area doc BEFORE touching code, update after architectural changes
 - Index: `docs/README.md` · System: `docs/doc-system.md`
 - Decisions: single-source `### D-n` in `docs/decisions.md` (supersede-only). See `docs/doc-system.md` § Decisions.
-- Change workflow / SDD, session.md, idea→proposal, decision mechanics → `.claude/rules/sdd.md`
+- Change workflow / SDD, session.md, concept→proposal, decision mechanics → `.claude/rules/sdd.md`
 - Pre-commit doc-check can be bypassed (owner authorization only — Claude never does it unprompted); exact mechanism → `.claude/rules/sdd.md § SKIP_DOC_CHECK`
 - When modifying [TRACKED_DIRS]: update `docs/planning.md` in the same commit
 [MIGRATIONS_RESTRICTION]
