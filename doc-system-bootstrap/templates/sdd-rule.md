@@ -23,7 +23,7 @@ One folder per change. It holds up to four files:
 | `idea.md` | git-tracked | intention: WHAT/WHY, no verified premises (a future phase) |
 | `proposal.md` | git-tracked | spec + `file:line` premises verified, scoped BEFORE starting |
 | `plan.md` | git-tracked | step list (complex flow only) |
-| `session.md` | **gitignored** | live state DURING execution (decisions/discarded/status) |
+| `session.md` | **gitignored** | LIVE state during execution, ordered by reading urgency (awaiting/now/live decisions); pruned on the event, not a history log |
 
 `{slug}` = `{YYYY-MM-DD}-{short-slug}`. Several folders can coexist, but LAW9 says
 work them one at a time; parallel folders exist only for a user-ordered pause.
@@ -61,15 +61,30 @@ Create it from `_template/session.md` when you open the `{slug}/`. It is the bri
 across compactions: the conversation compacts and takes the "why" of past decisions
 with it, but this file is re-read from disk.
 
-- **Sections:** Goal (points at the proposal), Decisions (with why), Discarded (with
-  why), Files in scope, Status (chunk checkboxes).
-- **Work in chunks:** the plan is split into small chunks. Each chunk closed →
-  `[x]` in Status; the next → `[ ]`. This makes "how far we are" literal and
-  compaction-proof.
-- **Keep it short** (~40 lines cap) — a long log re-inflates the context budget the
-  thin CLAUDE.md freed. Telegraphic entries, not prose.
-- **Graduation at close:** durable outcomes move to `decisions.md` / area docs /
-  the proposal; `session.md` is discarded with the folder (it is gitignored).
+- **Ordered by reading urgency.** The sections run AWAITING OWNER → NOW → Live
+  decisions → Discarded → Goal → Chunks → Files. What blocks or is next is at the TOP,
+  because after a compaction LAW5 re-reads top-down — the blocking gate and the next
+  step must land first, not be buried. Each section carries its own one-line legend
+  (a jump straight to a section still explains what belongs there).
+- **A line earns its place only if it is LIVE** — something you need for the next step.
+  The criterion is nature, NOT size: a genuinely complex change may need many live
+  lines, a simple one very few. Size is a consequence, never a target (there is no
+  line cap — a cap was the old rule and it failed; a front that never closed only grew).
+- **Prune on the event, not "at close".** The moment something stops being live —
+  a chunk closes, a decision is superseded, a render is approved — it LEAVES the file
+  right then (don't wait for the front to close; a long front never closes and the file
+  only grows):
+  - **durable** (a decision that still rules, a why that matters beyond this front) →
+    **graduate** to `decisions.md` / the proposal / an area doc.
+  - **scaffolding** (a done chunk, an approved render, an attempt already superseded by
+    one that stuck) → **delete** it. session.md is not the history log.
+- **Discarded stays, but compressed:** an approach rejected in THIS front lives as ONE
+  line (what + why) so it isn't retried — never the narrative of how it was discovered.
+- **Chunks are an index:** `[x]` done / `[ ]` pending, checkboxes only. The chunk's
+  detail already graduated or was deleted; the checkbox is all that remains here.
+- **AWAITING OWNER is the blocking-gate section.** A UI change waits there until the
+  owner has seen the render (LAW2) — cleared when approved; that gate is what keeps
+  unreviewed work out of a commit.
 - `planning.md` stays project-level `[ ]` pending only; the fine progress of the
   active change lives in its `session.md`, not in planning.md.
 

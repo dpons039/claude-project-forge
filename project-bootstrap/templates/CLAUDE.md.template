@@ -32,10 +32,10 @@ WHY:   A guessed premise silently poisons everything built on it — and "I thou
 APPLY: Missing datum/decision → ask before proceeding. AND before building: is my reading of the surface (which screen/component), the layout, a domain term, or the target actually confirmed against the code / your intent — or just assumed? If assumed → confirm or ask FIRST, not after the 2nd-3rd misunderstanding. (A question needing web research is different → docs/research-needed.md, a Conventions line, not this law.)
 
 ## LAW5 · STATE-IS-ON-DISK
-RULE:  Re-read the active session.md at task start and after any compaction; update it at task close.
-WHY:   The conversation compacts and takes the "why" of past decisions with it; the file survives.
-APPLY: Open task → read session.md. Decision made / chunk done → write it there, telegraphic.
-REF:   .claude/rules/sdd.md (session.md ↔ work chunks)
+RULE:  Re-read the active session.md at task start and after any compaction; keep it LIVE — prune what stops being live.
+WHY:   The conversation compacts and takes the "why" of past decisions with it; the file survives — but only if it stays live state, not a history log that buries the next step.
+APPLY: Open task / post-compaction → read session.md top-down (AWAITING OWNER + NOW first). Chunk closes / decision superseded / render approved → it LEAVES: durable graduates to decisions.md/proposal, scaffolding is deleted. Write telegraphic; no line cap — keep it live, not long.
+REF:   .claude/rules/sdd.md (session.md — live state)
 
 ## LAW6 · BRANCH
 RULE:  Work on `[DEV_BRANCH]`; never commit to `[PROTECTED_BRANCH]`.
@@ -105,7 +105,7 @@ Language and branch are laws (LAW7, LAW6). The rest:
 1. First response: `[model: X]`.
 2. Read `docs/planning.md` (what's in progress) AND the active `docs/changes/{slug}/session.md` (what THIS effort decided/discarded and where it stands).
 3. Ask what we work on — don't assume.
-4. LAW5 all session: after a compaction, or resuming after a long gap, RE-READ session.md before continuing. Update it at every task/chunk close (goal reached, decision made, approach discarded) — telegraphic, not prose.
+4. LAW5 all session: after a compaction, or resuming after a long gap, RE-READ session.md top-down before continuing (AWAITING OWNER + NOW are first). At every chunk close, prune what stopped being live — durable graduates out, scaffolding is deleted — telegraphic, not a history log.
 
 ## Autonomy
 

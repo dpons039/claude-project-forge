@@ -14,7 +14,7 @@ One folder per change holds up to four files:
 | `idea.md` | git-tracked | intention (WHAT/WHY) for a FUTURE phase — no verified premises |
 | `proposal.md` | git-tracked | spec + `file:line` premises verified, scoped BEFORE starting |
 | `plan.md` | git-tracked | step list (complex flow only) |
-| `session.md` | **gitignored** | live state DURING execution (decisions/discarded/status) |
+| `session.md` | **gitignored** | LIVE state during execution, ordered by reading urgency (awaiting/now/live decisions); pruned on the event, not a history log |
 
 **idea → proposal.** A future phase is born `idea.md` (Status: `idea`) — WHAT/WHY, which
 does not go stale (it does not depend on the code). Writing a full proposal far ahead is
@@ -25,9 +25,14 @@ implement from an `idea.md`. `roadmap.md` lists ideas; only the active phase has
 
 **session.md** bridges compactions (the conversation compacts and drops the "why" of past
 decisions; the file is re-read from disk — LAW5). Create it from `_template/session.md`
-when you open the `{slug}/`, alongside the proposal. Work the plan in **chunks**: each
-chunk closed → `[x]` in its Status; next → `[ ]`. Keep it short (~40 lines); durable
-outcomes graduate to `decisions.md`/area docs at close. `planning.md` stays project-level
+when you open the `{slug}/`, alongside the proposal. It is ordered by reading urgency
+(AWAITING OWNER → NOW → live decisions first, so a post-compaction re-read hits the
+blocking gate and the next step, not buried history). A line stays only while it is LIVE:
+the moment a chunk closes, a decision is superseded, or a render is approved, it LEAVES —
+durable outcomes **graduate** to `decisions.md`/proposal/area docs, scaffolding is
+**deleted**. Prune on that event, NOT "at close" (a long front never closes and the file
+only grows). There is no line cap — size is a consequence of what is still live.
+`planning.md` stays project-level
 `[ ]` pending only.
 
 ## Flow

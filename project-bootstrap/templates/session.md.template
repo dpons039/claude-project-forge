@@ -1,26 +1,49 @@
 # Session log — {slug}
 
-> Ephemeral, gitignored. THIS change's live state, re-read after any compaction (LAW5).
-> Durable outcomes graduate to decisions.md / area docs / the proposal at close.
-> Telegraphic, not prose. Keep under ~40 lines.
+> Ephemeral, gitignored. LIVE state of THIS change, re-read after any compaction (LAW5).
+> Ordered by reading urgency: what blocks / what's next is at the TOP (read first).
+> A line earns its place only if it is LIVE. The moment something stops being live
+> (a chunk closes, a decision is superseded, a render is approved) it LEAVES this file:
+> durable outcome -> graduate to decisions.md / proposal / area doc; scaffolding -> delete.
+> This is NOT a history log. Size is a consequence, never a target.
+>
+> Sections, in read order:
+>   1. AWAITING OWNER — blocking gates: what needs the owner's approval before done/commit
+>   2. NOW            — the one open chunk / immediate next step
+>   3. Live decisions — decisions currently in force (superseded ones have left)
+>   4. Discarded      — approaches rejected in this front, one line each (don't retry)
+>   5. Goal           — 1-2 lines pointing at proposal.md (context, not action)
+>   6. Chunks         — index only: [x] done / [ ] pending, no narrative
+>   7. Files in scope — paths this change touches and their role
+
+## AWAITING OWNER
+> Blocking gates: what needs the owner's approval before it can be called done or committed.
+> A UI change waits here until the owner has seen the render (LAW2). Cleared when approved.
+- [ ] <what is awaiting the owner, and why it blocks>
+
+## NOW
+> The one open chunk / the immediate next step. One front at a time (LAW9).
+- <the active step>
+
+## Live decisions
+> Decisions currently IN FORCE (with the why). A superseded one LEAVES (it is not live) —
+> if it still rules, graduate it to decisions.md; if it was scaffolding, delete it.
+- <decision> — because <why>
+
+## Discarded
+> Approaches rejected in THIS front, one line each (what + why), so they aren't retried.
+> The one-line verdict only, NOT the narrative of how it was discovered.
+- <approach> — rejected because <why>
 
 ## Goal
+> 1-2 lines; points at proposal.md. Context, not action.
 
-<what this change drives to — 1-2 lines; points at proposal.md>
+<what this change drives to>
 
-## Decisions (with why)
-
-- <decision made during implementation> — because <why> — <date or turn>
-
-## Discarded (with why)
-
-- <approach considered and rejected> — because <why>
+## Chunks
+> Index only: [x] done / [ ] pending. No narrative — the detail already graduated or was deleted.
+- [ ] <next chunk>
 
 ## Files in scope
-
+> Reference: paths this change touches and their role.
 - <path> — <role>
-
-## Status
-
-- [ ] <next chunk>
-- [ ] <blocked: ...>
