@@ -1,23 +1,5 @@
 {
-  "_instructions": "ADAPT: Replace [PLACEHOLDER] values with your project's actual paths. Remove sections that don't apply.",
-
-  "exempt": [
-    "docs/_template/",
-    "docs/_archive/",
-    "docs/changes/",
-    "docs/",
-    "*.md",
-    ".claude/",
-    ".githooks/",
-    "package*.json",
-    ".gitignore",
-    ".env*",
-    "*.lock",
-    "node_modules/",
-    "dist/",
-    "build/",
-    "coverage/"
-  ],
+  "_instructions": "ADAPT: Replace [PLACEHOLDER] values with your project's actual paths. Remove sections that don't apply. Exemption is by is_doc() in doc-check.py (anything under docs/, CLAUDE.md, .claude/rules/, memory/), NOT by a list here — there is no 'exempt' key. Triggers below are matched by str.startswith on the repo-relative path.",
 
   "planning_triggers": [
     "[TRACKED_DIR_1]",
@@ -51,10 +33,6 @@
     {
       "pattern": "Dockerfile",
       "docs": ["docs/infrastructure.md"]
-    },
-    {
-      "pattern": "docs/changes/",
-      "docs": ["docs/planning.md", "docs/changelog.md"]
     }
   ],
 

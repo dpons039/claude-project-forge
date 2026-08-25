@@ -200,7 +200,7 @@ Do this:
 
 1. **Copy the SDD rule:** `templates/sdd-rule.md` → `.claude/rules/sdd.md`. It holds the
    full change workflow (Standard/Complex levels, approval gate, greenfield, Superpowers
-   routing, SKIP_DOC_CHECK, the concept→proposal cycle, and session.md↔chunks). It is lazy
+   routing, SKIP_CHECKS, the concept→proposal cycle, and session.md↔chunks). It is lazy
    (path-scoped to `docs/changes/**`) — the one rule allowed to exceed the token cap
    (system-health notes the exception).
 2. **Copy the concept + plan templates:** `templates/concept-template.md` → `docs/changes/_template/concept.md`
@@ -213,7 +213,7 @@ Do this:
 3. **Confirm the CLAUDE.md pointers exist** (they come from `project-bootstrap`'s template;
    only add if missing) under `## Documentation`:
    - `Change workflow / SDD, session.md, concept→proposal, decision mechanics → .claude/rules/sdd.md`
-   - `Pre-commit doc-check can be bypassed (owner authorization only ...); exact mechanism → .claude/rules/sdd.md § SKIP_DOC_CHECK`
+   - `Pre-commit checks can be relaxed for a work-in-progress commit (SKIP_CHECKS=1; owner authorization only; secrets always block); exact mechanism → .claude/rules/sdd.md § SKIP_CHECKS`
    Do NOT re-insert the workflow prose into CLAUDE.md — the LAWS block + PROJECT CONTEXT
    are owned by `project-bootstrap`; this skill only touches the two pointer lines and the
    rule/templates under `docs/` and `.claude/rules/`.
@@ -241,9 +241,11 @@ Do this:
 
 When creating new file in `docs/`: update `docs/README.md`.
 
-**SKIP_DOC_CHECK:** the pre-commit hook skips on either bypass — the env var
-`SKIP_DOC_CHECK=1` or a one-shot `.claude/skip-doc-authorized` file. Claude NEVER
-sets the env var or creates the file without explicit authorization from the owner.
+**SKIP_CHECKS:** `SKIP_CHECKS=1 git commit` is the work-in-progress commit switch — it
+relaxes the completeness gates (doc-check, planning/CLAUDE.md-size gates, tests skipped;
+type-check/lint/audit warn-only) but secrets always block. The narrower one-shot
+`.claude/skip-doc-authorized` file skips only the doc-check. Claude NEVER sets the env var
+or creates the file without explicit authorization from the owner.
 
 ## Change Workflow (SDD)
 

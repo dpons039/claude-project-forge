@@ -10,12 +10,13 @@ Usage modes:
   • Stop hook (Claude Code):  invoked from settings.local.json with no arguments
   • Pre-commit (git hook):    invoked with --pre-commit from .githooks/pre-commit
 
-Bypass: SKIP_DOC_CHECK=1 git commit -m "..."
+This script only checks DOCUMENTATION. The full commit gate (this + tsc/eslint/audit/
+tests) is the .githooks/pre-commit wrapper. The wrapper's SKIP_CHECKS=1 relaxes the
+completeness gates for a work-in-progress commit; here it means: skip the doc-check.
 """
 
 from __future__ import annotations
 
-import fnmatch
 import json
 import os
 import re
@@ -38,25 +39,26 @@ def repo_root() -> Path:
 
 
 def load_coverage(root: Path) -> dict:
+    """Load doc-coverage.json. A MISSING file is legitimate (a project may have none) —
+    return empty triggers with a one-line notice. A CORRUPT file is a stop condition: it
+    silently disables every gate, so we surface it loudly and (in pre-commit) refuse to
+    pass the commit. Exemption is by is_doc() below, not by a config list — there is no
+    'exempt' key here anymore."""
     config_path = root / ".claude" / "doc-coverage.json"
+    empty = {"blocking_triggers": [], "warning_triggers": []}
     try:
         with open(config_path, "r", encoding="utf-8") as f:
             return json.load(f)
-    except (FileNotFoundError, json.JSONDecodeError):
-        return {"exempt": [], "blocking_triggers": [], "warning_triggers": []}
-
-
-def is_exempt(path: str, exempt_patterns: list[str]) -> bool:
-    for pattern in exempt_patterns:
-        if pattern.endswith("/") and path.startswith(pattern):
-            return True
-        if pattern == path:
-            return True
-        if fnmatch.fnmatch(path, pattern) or fnmatch.fnmatch(os.path.basename(path), pattern):
-            return True
-        if pattern.endswith("*") and path.startswith(pattern[:-1]):
-            return True
-    return False
+    except FileNotFoundError:
+        print(f"\n[doc-check] no {config_path.name} — doc triggers are OFF\n", file=sys.stderr)
+        return empty
+    except json.JSONDecodeError as e:
+        print(f"\n[doc-check] CANNOT PARSE {config_path} — doc gates disabled: {e}\n",
+              file=sys.stderr)
+        if "--pre-commit" in sys.argv:
+            # A corrupt governance file must not silently pass commits.
+            sys.exit(1)
+        return empty
 
 
 def is_doc(path: str) -> bool:
@@ -113,6 +115,13 @@ def check_progress_docs(changed_files: list[str], config: dict) -> tuple[list[st
 
     triggered = []
     for f in changed_files:
+        if is_doc(f):
+            # A file under docs/ is documentation, never a progress trigger. Without this
+            # guard, editing a proposal/plan/concept/README/template under docs/changes/
+            # would demand planning.md + changelog.md in the same commit (the SDD artifacts
+            # the laws compel would block themselves). check_triggers already skips docs;
+            # this makes check_progress_docs consistent with it.
+            continue
         for pattern in triggers:
             if f.startswith(pattern):
                 triggered.append(f)
@@ -424,15 +433,20 @@ def run_stop_mode(root: Path) -> None:
 def run_precommit_mode(root: Path) -> None:
     # Two independent bypasses, OR'd. The file is a one-shot token: try to
     # consume it unconditionally so it never survives a commit. The env var is
-    # a transient flag. Either one skips the doc-check.
+    # a transient flag. Either one skips the doc-check. (SKIP_CHECKS is the wrapper's
+    # WIP-commit switch; when the wrapper guards this call it isn't even reached under
+    # skip — this read matters only if doc-check.py is invoked directly.)
     file_authorized = consume_skip_authorization(root)
-    env_skip = os.environ.get("SKIP_DOC_CHECK", "0") == "1"
+    env_skip = os.environ.get("SKIP_CHECKS", "0") == "1"
     if file_authorized or env_skip:
         sys.exit(0)
 
     try:
         result = subprocess.run(
-            ["git", "diff", "--cached", "--name-only", "--diff-filter=ACM"],
+            # ACMRD (not ACM): include Renamed and Deleted. Deleting a migration or a whole
+            # source area is exactly when a doc goes stale, and it must not pass unchecked.
+            # A rename reports the new path under --name-only, which still matches triggers.
+            ["git", "diff", "--cached", "--name-only", "--diff-filter=ACMRD"],
             capture_output=True, text=True, check=True,
         )
         staged = [f.strip() for f in result.stdout.split("\n") if f.strip()]
@@ -452,7 +466,7 @@ def run_precommit_mode(root: Path) -> None:
         for path in unindexed:
             print(f"   → {path}", file=sys.stderr)
         print("\n   Add them to docs/README.md before committing\n", file=sys.stderr)
-        print('   To skip: SKIP_DOC_CHECK=1 git commit -m "..."\n', file=sys.stderr)
+        print('   To skip: SKIP_CHECKS=1 git commit -m "..."\n', file=sys.stderr)
         sys.exit(1)
 
     # Check planning and changelog (BLOCKING)
@@ -469,7 +483,7 @@ def run_precommit_mode(root: Path) -> None:
         for path in triggered[:5]:
             print(f"   → {path}", file=sys.stderr)
         print('', file=sys.stderr)
-        print('   To skip: SKIP_DOC_CHECK=1 git commit -m "..."\n', file=sys.stderr)
+        print('   To skip: SKIP_CHECKS=1 git commit -m "..."\n', file=sys.stderr)
         sys.exit(1)
 
     # Check blocking triggers (BLOCKING — migrations, infra)
@@ -486,7 +500,7 @@ def run_precommit_mode(root: Path) -> None:
                 if doc not in printed:
                     print(f"   → {doc}", file=sys.stderr)
                     printed.add(doc)
-        print('\n   To skip: SKIP_DOC_CHECK=1 git commit -m "..."\n', file=sys.stderr)
+        print('\n   To skip: SKIP_CHECKS=1 git commit -m "..."\n', file=sys.stderr)
         sys.exit(1)
 
     # Check warning triggers (WARNING — general code, non-blocking)

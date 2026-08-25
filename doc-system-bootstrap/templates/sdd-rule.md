@@ -126,18 +126,47 @@ that (CLAUDE.md/rules win):
 - Create the `{slug}` folder if missing before writing
 - Ephemeral brainstorm server state: `.superpowers/brainstorm/` (gitignored)
 
-## SKIP_DOC_CHECK — the doc-check bypass (must stay unambiguous)
+## SKIP_CHECKS — the work-in-progress commit switch (must stay unambiguous)
 
-The pre-commit hook skips on EITHER of two independent bypasses (OR). Both require
-explicit owner authorization — Claude NEVER sets the var or creates the file on its
-own. **If the owner authorizes it in the conversation, that condition is met** — apply
-it and commit in one step, without asking again:
+A per-block commit in a long session is a CHECKPOINT, not a deliverable — an intermediate
+state of a multi-task plan is legitimately type-incomplete or carries unused scaffolds
+(writing-plans / TDD produce exactly that). `SKIP_CHECKS=1 git commit` relaxes the
+COMPLETENESS gates for that checkpoint:
 
-- **File `.claude/skip-doc-authorized`** — a one-shot token, created only with owner
-  authorization. The pre-commit hook consumes it (auto-deletes on the next commit), so
-  it never survives to bypass a later one.
-- **Env var `SKIP_DOC_CHECK=1`** — transient, works on its own:
-  `SKIP_DOC_CHECK=1 git commit -m "..."`. Nothing persists.
+- **Skipped outright:** the doc-check, the `planning.md [x]` gate, the CLAUDE.md-size gate,
+  and the test suite (a checkpoint doesn't pay for tests).
+- **Run but do NOT block (warn only):** the language checks (type-check, lint, dependency
+  audit) — the pre-commit verdict still shows the checkpoint's real state, it just doesn't
+  stop the commit.
+- **ALWAYS enforced (outside this flag's scope):** the secret-scanner. A leaked secret is
+  irreversible in git history, so it is an invariant, never relaxed by any flag.
+
+The point: `SKIP_CHECKS` skips *completeness*, never *safety*. A later commit WITHOUT the
+flag must be clean — the checkpoint's warn-only type/lint output is the signal of what is
+still unfinished.
+
+Two ways to trigger it, both requiring explicit owner authorization — Claude NEVER sets the
+var or creates the file on its own. **If the owner authorizes it in the conversation, that
+condition is met** — apply it and commit in one step, without asking again:
+
+- **Env var `SKIP_CHECKS=1`** — transient: `SKIP_CHECKS=1 git commit -m "..."`. Nothing
+  persists. This is the full WIP-commit switch (relaxes all the completeness gates above).
+- **File `.claude/skip-doc-authorized`** — a one-shot token for the narrower case of
+  skipping the DOC-CHECK only, without the env var. The doc-check consumes it (auto-deletes
+  on the next commit), so it never survives to bypass a later one.
+
+There is NO standing permission for either — every WIP commit gets an explicit owner OK.
+
+## Known limits (accepted)
+
+The doc-check trades precision for cost; two gaps are known and accepted, not bugs to fix:
+
+- **Coverage = the expected doc is STAGED, not that it was meaningfully updated.** Staging
+  any change to the required doc (even one character) satisfies its trigger; the hook does
+  not validate the doc's content against the code change. The author is trusted here.
+- **The index check is SUBSTRING-based.** A doc counts as indexed if its path or basename
+  appears anywhere in `docs/README.md`'s text. Loose by design — a real index entry is
+  expected regardless; a coincidental substring can pass, an unusual path can miss.
 
 ## Enforcement
 

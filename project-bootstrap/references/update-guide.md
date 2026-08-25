@@ -176,7 +176,7 @@ automatically — but the CLAUDE.md restructure and the new SDD rule do not. Ste
    project's existing Conventions. Verify DEV≠PROTECTED branch (the old bug).
 3. **Restructure the body** under `# PROJECT CONTEXT` (Stack, Environment, Conventions,
    Documentation, Session + state, Model & agents, End of session). Move the old inline
-   SDD / Superpowers / SKIP_DOC_CHECK prose OUT.
+   SDD / Superpowers / SKIP_CHECKS prose OUT.
 4. **Generate the SDD rule:** create `.claude/rules/sdd.md` from the project's existing
    SDD block + `doc-system-bootstrap/templates/sdd-rule.md`. Add `docs/changes/_template/concept.md`.
    Leave only the pointer lines in CLAUDE.md `## Documentation`.

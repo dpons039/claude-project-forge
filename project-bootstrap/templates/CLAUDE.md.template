@@ -96,7 +96,7 @@ Language and branch are laws (LAW7, LAW6). The rest:
 - Index: `docs/README.md` · System: `docs/doc-system.md`
 - Decisions: single-source `### D-n` in `docs/decisions.md` (supersede-only). See `docs/doc-system.md` § Decisions.
 - Change workflow / SDD, session.md, concept→proposal, decision mechanics → `.claude/rules/sdd.md`
-- Pre-commit doc-check can be bypassed (owner authorization only — Claude never does it unprompted); exact mechanism → `.claude/rules/sdd.md § SKIP_DOC_CHECK`
+- Pre-commit checks can be relaxed for a work-in-progress commit (`SKIP_CHECKS=1`; owner authorization only — Claude never does it unprompted; secrets always block); exact mechanism → `.claude/rules/sdd.md § SKIP_CHECKS`
 - When modifying [TRACKED_DIRS]: update `docs/planning.md` in the same commit
 [MIGRATIONS_RESTRICTION]
 
