@@ -338,7 +338,7 @@ Read `templates/doc-system.md` for the full principles document. Key rules:
   self-limiting (a single high fixed backstop, no scaling cap).
 - **Conventions in area docs**: `## Conventions`, 1-in-1-out rule.
 - **Cross-file deps**: `## If you touch...` in each area doc.
-- **Split threshold**: >350 lines + independent subtopics → subdirectory.
+- **Split threshold**: >500 lines (where `doc-check.py`'s Stop mode suggests a split; 1000 blocks the stop — no size check at commit time) + independent subtopics → `{area}.md` keeps its path, the pieces move to `docs/{area}/`.
 - **Two-level hooks**: blocking (migrations, infra) + warning (general code).
 - **Size audit**: every session close checks `wc -l` on area docs.
 - **SDD workflow**: significant changes require a proposal BEFORE implementation.

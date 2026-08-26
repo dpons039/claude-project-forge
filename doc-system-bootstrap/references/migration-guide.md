@@ -52,7 +52,9 @@ For each file: read old → show user what was found → transform → write new
 2. Classify each entry:
    - Entries with >5 bullets → **COMPRESS** to ≤5 bullets + pointers
    - Entries with implementation detail → **TRIM** to summary level
-   - Entries older than current quarter → **ROTATE** to `docs/_archive/changelog/YYYY-QN.md`
+   - Oldest entries, once the file is over 500 lines → **ROTATE** by size to
+     `docs/_archive/changelog/YYYY-MM.md` until it is back under (no quarter
+     condition — a young project's entries are all current-quarter)
 3. Show what will be rotated and what will be compressed
 4. Write `docs/changelog.md` using template header + transformed entries
 
@@ -187,7 +189,7 @@ done
 # Size check
 for f in docs/*.md; do
   lines=$(wc -l < "$f" 2>/dev/null)
-  [ "$lines" -gt 350 ] && echo "⚠️  $f: $lines lines (>350 threshold)"
+  [ "$lines" -gt 500 ] && echo "⚠️  $f: $lines lines (>500 threshold)"
 done
 ```
 

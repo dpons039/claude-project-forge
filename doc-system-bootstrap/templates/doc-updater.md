@@ -119,8 +119,10 @@ stays here. There is no refine, no live-surface, no marker.
 delegates here when a step is missing; the steps are written down only in this file.
 
 ### Step 4 — Changelog rotation
-If `changelog.md` exceeds 500 lines:
-1. Move previous quarter entries to `docs/_archive/changelog/YYYY-QN.md`
+If `changelog.md` exceeds 500 lines, rotate **by size**: move the **oldest entries** to
+`docs/_archive/changelog/YYYY-MM.md` until the file is back under 500. No quarter
+condition — a young project's entries are all current-quarter, a quarter rule would
+never fire, and the doc would sail untouched into the Stop hook's 600-line hard block.
 
 ### Step 5 — Consistency
 1. New file in `docs/` → update `docs/README.md`
@@ -129,7 +131,10 @@ If `changelog.md` exceeds 500 lines:
 
 ### Step 6 — Size check
 After editing, check `wc -l` of each modified doc.
-If an area doc exceeds 350 lines → report in output as ⚠️.
+If an area doc exceeds 500 lines → report in output as ⚠️ (the cap in
+`docs/doc-system.md` § Split rule; `doc-check.py`'s Stop mode suggests a split there
+and blocks at 1000 — nothing checks size at commit time, so don't wait for a commit
+to fail).
 Before suggesting split, verify: does it have code-derivable content that can be removed?
 
 `decisions.md` is self-limiting — superseded `### D-n` leave for `_archive`
@@ -160,5 +165,5 @@ DO NOT read files excluded in `.claudeignore`.
 - New decision added → verify: a `### D-n` in decisions.md and nowhere else (no area-doc marker, no `D-n` in code)
 - Decision superseded → verify: the old `### D-n` moved to `_archive` (heading and all) with its `Superseded by` line; none left in decisions.md
 - Change routed to prose (failed the three-part test) → verify: NO `### D-n` was added
-- SIZE: `docs/X.md` has N lines (>350) — consider compression or split
+- SIZE: `docs/X.md` has N lines (>500) — consider compression or split
 ```

@@ -8,9 +8,9 @@ Adapt this structure to your project. Only create docs for areas that exist.
 docs/
 ├── README.md              ← Project map (index + structure, same section order everywhere)
 ├── doc-system.md          ← Documentation system principles and rules
-├── changelog.md           ← Recent changes; rotation by size (>500 lines)
-├── planning.md            ← Current phase only, hard cap 100 lines, entries 1-2 lines
-├── roadmap.md             ← Full phase plan + deferred future scope, read on demand
+├── changelog.md           ← Recent changes; rotation by size (warn 500, block 600)
+├── planning.md            ← Current phase only (warn 100, block 130), entries 1-2 lines
+├── roadmap.md             ← Full phase plan + deferred future scope (warn 150, block 200)
 ├── decisions.md           ← Store + ONE home of decisions (### D-n each); superseded → _archive
 ├── research-needed.md     ← Open questions
 │

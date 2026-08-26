@@ -35,6 +35,34 @@ specified in the area doc as if it existed. Specs for future phases live in
 their proposals. Post-mortems and incident write-ups get their own linked file
 (or the changelog entry); the area doc keeps the resulting rule, in 1–3 lines.
 
+## Countable claims carry how to recount them
+
+A claim of **count** ("twenty-one tables", "nine columns, in order") or of
+**exclusivity** ("the only X", "both copies", "nothing reads this yet") carries,
+in parentheses, the command that recomputes it:
+
+> `{path/to/helper}` is the only place currency is formatted
+> (`grep -rn "Intl.NumberFormat" {src}`).
+
+**Why this class specifically.** Most prose goes stale only when someone
+deliberately changes what it describes, and that person is in the file. These
+two go stale as a SIDE EFFECT of unrelated work: whoever adds the second
+formatter is not reading this sentence, so nothing prompts the edit. They are
+also the only claims a reader cannot check by reading — a count is a claim about
+everything the doc does not show.
+
+The command does not stop the claim going stale. It makes the check cost seconds
+instead of an audit, which is what was missing: an unverifiable claim gets
+believed, and a believed stale claim is how a doc starts lying.
+
+**Where it cannot be computed**, do not fake a command — reword so the sentence
+stops presenting as countable ("the tables are listed in § Domains" rather than
+"the twenty-one tables"). An uncounted phrasing that stays true beats a number
+that decays.
+
+This is not retrospective bookkeeping: it is written WITH the claim, by whoever
+makes it.
+
 ## Content types and rules
 
 ### Architecture + Patterns → REWRITE when changed
@@ -104,6 +132,9 @@ Supersedes D7 (see `_archive/decisions.md`). <trade-off, rejected alternatives>
 <original block, unchanged>
 **Superseded by D14 (2026-09-02)**
 ```
+
+The `doc-updater` agent owns this process; `session-close` verifies the result
+and delegates there when a step is missing.
 
 ### Cross-file dependencies → `## If you touch...`
 "If you change X, also update Y." Each area doc has this section at the end.
@@ -192,19 +223,47 @@ middleware, middleware depends on services.
 ### Split rule
 
 ```
-IF an area doc exceeds 350 lines post-compression
+IF an area doc exceeds 500 lines post-compression
 AND has 2+ genuinely independent subtopics
    (you don't need to read A to understand B)
 THEN:
   1. Verify no code-derivable content remains (compress first)
-  2. If still >350 → split into docs/{area}/
-  3. index.md has: overview + links + conventions + if-you-touch
-  4. Each subtopic.md is self-contained
+  2. If still >500 → move the independent subtopic to docs/{area}/{subtopic}.md
+  3. {area}.md stays where it is, keeps the live constraints, and leaves a
+     pointer under the heading the subtopic used to occupy
+  4. Each subtopic.md is self-contained: own intro, own "If you touch"
+  5. Repoint every inbound reference in the same commit — decisions.md
+     addresses sections by name, so a move breaks pointers silently
 IF NOT → keep flat
 ```
 
-350, not 250, because 1 file of 350 lines read once beats 4 files of 80
-requiring navigation decisions.
+**500, because that is the number something enforces.** `doc-check.py`'s
+`AREA_DOC_SUBDIVIDE` is 500 (suggest a split) and `AREA_DOC_HARD` is 1000
+(a blocker). A cap that nothing satisfies, and that its own enforcement
+contradicts, is not a cap — it is noise: every doc sits permanently in
+violation, so being over it stops meaning anything. One file of 500 lines read
+once also beats four of 125 requiring navigation decisions.
+
+The hard block at 1000 is the safety net, not the target. A doc that reaches it
+has already had 500 lines of warning.
+
+**Know which hook this is.** The size check runs in `doc-check.py`'s **Stop
+mode** — end of turn, over the files that session touched — where past 1000 it
+exits 2 and the agent cannot stop until the doc is split. The `--pre-commit`
+path never calls `check_doc_sizes`: **no doc size is gated at commit time.**
+
+**And Stop mode only sees `docs/*.md`.** `check_doc_sizes` scopes the area-doc
+branch to `norm.count("/") == 1`, so a subtopic under `docs/{area}/` is governed
+by this written rule alone — no hook of either kind will ever flag it. Check it
+by hand: `find docs -maxdepth 2 -name "*.md" -exec wc -l {} + | sort -rn | head`.
+
+**`{area}.md` beside `{area}/`, never `{area}/index.md`.** That is what `db.md`
++ `docs/db/` already does: the area doc keeps its path, so every existing
+reference to it stays valid, and the folder holds the pieces that came out.
+
+**Split the closed subject, not the live one.** What leaves is the part that is
+settled and referenced rather than re-decided; what stays is what every change
+in the area is measured against and a reviewer needs in one place.
 
 ### `decisions.md` size — self-limiting, one fixed backstop
 

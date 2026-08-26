@@ -23,7 +23,7 @@ the checks are canonical, the paths are not.
 | 9 | Transcribed numbers match the live test | Grep each prose figure (ratios, ranges) in the theme test file | HIGH |
 | 10 | Components shown are real imports, or documented recreations | Per `<Block>` (in the `.mdx` and its `.examples.tsx`), check import provenance; an undocumented local recreation is a flag | MEDIUM |
 | 11 | design.md ↔ BrandKit.md ↔ page coherence | Values stated in `### D-n` blocks in `docs/decisions.md` vs token CSS vs what the page reads | MEDIUM |
-| 12 | BrandKit.md size | `wc -l` — warn ≥ 350 (area-doc cap) | LOW |
+| 12 | BrandKit.md size | `wc -l` — warn ≥ 500 (area-doc cap: where `doc-check.py`'s Stop mode suggests a split; it blocks at 1000) | LOW |
 | 13 | design.md / voice.md size | `wc -l` — context only, not this system's own defect | LOW |
 | 14 | Missed cross-update | With git history: page content changed without its table-mates in the same range; without git: mtime (weak fallback). Also verify the doc-coverage warning trigger (page dir → BrandKit.md) exists | LOW |
 | 15 | Canonical tab + heading coverage | `templates/page/page-structure.md` (the eight-tab list and its headings) vs the real `.mdx` tabs and blocks; absence without a "skipped: <reason>" note in BrandKit.md is a flag | MEDIUM |

@@ -106,10 +106,16 @@ already covers.
 
 Run:
 ```bash
-find docs/ -maxdepth 1 -name "*.md" -exec wc -l {} + | sort -rn | head -10
+find docs/ -maxdepth 2 -name "*.md" -exec wc -l {} + | sort -rn | head -10
 ```
 
-If any area doc exceeds 350 lines → report in summary as ⚠️.
+`maxdepth 2`, not 1: `doc-check.py`'s area-doc check is scoped to `docs/*.md`, so a
+subtopic under `docs/{area}/` is size-checked by nothing at all — this step is the only
+thing that looks at it.
+
+If any area doc exceeds 500 lines → report in summary as ⚠️. That is where
+`doc-check.py`'s Stop mode suggests a split; it hard-blocks at 1000. Neither figure is
+checked at commit time — the `--pre-commit` path does no size check.
 If any doc exceeds 300 lines → verify it has no REF derivable from code.
 If `planning.md` exceeds 100 lines → **fix it now, not just report**: move
 roadmap/future content to `roadmap.md`, compress entries to 1–2 lines +
