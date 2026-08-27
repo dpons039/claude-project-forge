@@ -697,9 +697,12 @@ def main():
                     f"    (lazy) and keeping only metadata + core instructions in agent."
                 )
 
-    # CLAUDE.md too big
+    # CLAUDE.md too big. 3000, not 2000: 2000 predates the 10-LAW block, which is ~1900
+    # tok on its own in the reference template — so 2000 flagged every project including
+    # a freshly bootstrapped one, and a warning nothing can satisfy stops being read.
+    # The pre-commit's 20,000-char (~5,000 tok) gate is the hard stop; this is the nudge.
     for item in cat_claude.items:
-        if item.tokens > 2000:
+        if item.tokens > 3000:
             recs.append(
                 f"  • {item.label} ({item.tokens} tok): consider moving sections\n"
                 f"    that only apply to specific areas to rules with restricted paths."

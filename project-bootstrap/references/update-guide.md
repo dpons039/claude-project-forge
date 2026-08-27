@@ -184,7 +184,7 @@ automatically — but the CLAUDE.md restructure and the new SDD rule do not. Ste
    `docs/changes/**/session.md` to `.gitignore`. Optionally wire the `SessionStart`
    matcher=compact hook (Variant B) in `settings.local.json`.
 6. **Cut sections one at a time**, re-running `count-context-tokens.py` after each, until
-   CLAUDE.md is at/under the target (~1.800 tok eager). Each cut must have a net (a rule or
+   CLAUDE.md is at/under the target (3.000 tok — what the tool flags). Each cut must have a net (a rule or
    doc that still catches its directive) — see the redesign's simulation protocol.
 7. **Convert stale far-ahead proposals to `concept.md`** (Status: idea) — a proposal written
    long before its phase is born stale; demote it to a concept or promote it by re-verifying

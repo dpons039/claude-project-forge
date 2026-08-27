@@ -24,9 +24,11 @@ Documentation system principles: `docs/doc-system.md`. When modifying Claude Cod
   its violation)? A new law → is an old one now redundant? NEVER grow the block past ~10
   without displacing one (the compliance cliff is ~15; 10 is the working ceiling). LAW10
   (USE-THE-PROCESS) is the momentum/process-skip anchor — do not merge it away.
-- CLAUDE.md core over ~1.800 tok (run `count-context-tokens.py`)? → move a section to a
-  rule/doc. The target is TOKENS, not lines — the LAWS block is many short lines but few
-  tokens; don't cut it for a line count.
+- CLAUDE.md over **3.000 tok** (run `count-context-tokens.py` — it is the figure that
+  tool flags, and it measures the WHOLE file: there is no "core" it can see)? → move a
+  section to a rule/doc. The pre-commit's hard block is 20.000 chars (~5.000 tok); 3.000
+  is where you act, 5.000 is where you are stopped. The target is TOKENS, not lines —
+  the LAWS block is many short lines but few tokens; don't cut it for a line count.
 - MEMORY.md growing? → project knowledge goes to docs, only personal preferences stay in memory
 
 **Verify quarterly (or when degradation detected):**
