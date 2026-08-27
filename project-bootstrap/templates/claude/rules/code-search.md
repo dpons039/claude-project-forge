@@ -29,6 +29,31 @@ Search finds *where*; reading tells you *what it says*. Don't confuse them:
 - A `grep`/`sed` of one isolated line **never** settles a claim. "Line N says X"
   requires having read its surroundings.
 
+## Which file — by PLACE, not by mechanism
+
+`Read vs search` picks the tool. This picks the **target**, and it is the one that goes
+wrong silently: you find a file, it does something like what you need, and you never
+learn it was the wrong one.
+
+- **By mechanism** — "how is a picker mounted inside a modal?", "where else is this hook
+  used?" — every lookalike qualifies. The candidate set is large and each member looks
+  right, so the first hit wins on nothing but search order.
+- **By place** — "what does the surface the user NAMED use?" — leaves exactly one file,
+  and it admits no substitute.
+
+When the user names a surface (a screen, a dialog, a view), search by place:
+
+1. Resolve the UI name to a path — the area doc's pointer for that surface, or grep the
+   user-visible string in the locale/copy files to reach the key, then its component.
+2. **Say which path you resolved it to** (LAW4) before reading or searching anything else.
+3. Read THAT file. Then work.
+
+**A file that uses the pattern is not the file that owns it.** The one that mounts a
+shared component is a consumer; the one that defines the family is the contract. Copying
+the consumer reproduces its approximations, not the pattern — and the difference is
+invisible to a type-check and to a behaviour test, so it only surfaces as the owner
+saying "it's still not the same".
+
 ## When to activate `ast-grep`
 
 The search depends on **syntactic structure**, not text:

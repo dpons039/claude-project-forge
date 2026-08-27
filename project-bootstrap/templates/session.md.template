@@ -45,5 +45,9 @@
 - [ ] <next chunk>
 
 ## Files in scope
-> Reference: paths this change touches and their role.
+> Reference: paths this change touches and their role. Also name the file that OWNS
+> each pattern this change reuses, even when you never edit it — that is the one a
+> rebuild has to read, and the one a later front gets wrong. If it was learned the
+> hard way (the owner had to correct which file you were copying), it is durable:
+> graduate it to the area doc, because THIS file is deleted at close.
 - <path> — <role>

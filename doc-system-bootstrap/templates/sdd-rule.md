@@ -95,7 +95,11 @@ with it, but this file is re-read from disk.
   right then (don't wait for the front to close; a long front never closes and the file
   only grows):
   - **durable** (a decision that still rules, a why that matters beyond this front) →
-    **graduate** to `decisions.md` / the proposal / an area doc.
+    **graduate** to `decisions.md` / the proposal / an area doc. **A correction counts
+    as durable** — when the owner had to tell you twice which file owns a pattern, or
+    that a rebuild is not the same as the original, the lesson is exactly what the next
+    front needs and exactly what this file will not carry to it. It reads as a note to
+    self, so it gets left behind; graduate it as a rule in the area doc instead.
   - **scaffolding** (a done chunk, an approved render, an attempt already superseded by
     one that stuck) → **delete** it. session.md is not the history log.
 - **Discarded stays, but compressed:** an approach rejected in THIS front lives as ONE

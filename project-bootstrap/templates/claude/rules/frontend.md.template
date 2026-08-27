@@ -53,6 +53,23 @@ This is the layout counterpart of the attempt-counter: a repeated miss is the tr
 (Distinct from open design decisions, where you show visual options and let the user
 choose — here the user already described the layout; you are confirming your reading of it.)
 
+## Reusing a pattern → import its pieces; if you can't, EXTRACT them
+
+"Make this look like <existing surface>" means the same COMPONENTS, not a lookalike.
+Read the file that owns the pattern (`code-search.md` § by PLACE) and import what it
+uses.
+
+**When the piece is a local, unexported function inside that file, extracting it IS the
+task** — move it to the shared components directory and import it from both. Standing a
+bare primitive in for it (a plain button where the family has a labelled trigger) is the
+bug, not a shortcut: the correct shape was unavailable, so it got imitated.
+
+An imitation is invisible to everything that could catch it. It type-checks, and a
+behaviour test passes because it renders and submits — so it only surfaces as the owner
+saying "it's still not the same", which is the expensive loop this rule exists to cut.
+If a shared pattern has classes or structure a rebuild silently drops, pin them with a
+test that asserts them.
+
 ## Order for new pages/components
 
 1. Short proposal (what + why — not the full layout).
