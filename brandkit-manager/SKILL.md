@@ -71,9 +71,12 @@ from its template, and write one `.mdx` per tab. The chrome is copy-paste-
 identical across projects; a project varies only `config.ts`, the tabs, and
 the mark component config points at.
 
-The tab set is `templates/page/page-structure.md` (8 tabs: Brand · Foundations ·
-Colour · Components · Formatting · Layouts · Voice · Accessibility). Skipping a
-canonical tab or block requires a "skipped: <reason>" note in `BrandKit.md`.
+The canonical tab baseline is `templates/page/page-structure.md` (Brand ·
+Foundations · Colour · Components · Formatting · Layouts · Voice ·
+Accessibility). A project drops what it has no subject for and adds its own where
+it has one these do not cover, so the real list is always `config.tabs` — never a
+fixed count. Skipping a canonical tab or block requires a "skipped: <reason>" note
+in `BrandKit.md`; adding a project tab requires nothing beyond `config.tabs`.
 
 Read `references/init-page-guide.md`.
 

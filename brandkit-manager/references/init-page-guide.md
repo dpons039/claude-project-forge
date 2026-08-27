@@ -24,10 +24,14 @@ the tabs**. No chrome code is authored per project.
 
 ## Step 2 — Ask what cannot be inferred
 
-- **Tabs**: the eight in `page-structure.md` are the default. Confirm which apply
-  (a project with no money-like data still has Formatting for dates/numbers; a
-  project with no wireframes may thin Layouts). Removing a canonical tab needs a
-  "skipped: <reason>" note in `docs/BrandKit.md`.
+- **Tabs**: the canonical set in `page-structure.md` is the baseline, not the
+  ceiling. Confirm which apply (a project with no money-like data still has
+  Formatting for dates/numbers; a project with no wireframes may thin Layouts),
+  and **ask what it has that they do not cover** — a charting system, maps, email
+  templates, print. Those become their own tabs. Removing a canonical tab needs a
+  "skipped: <reason>" note in `docs/BrandKit.md`; adding one needs nothing beyond
+  `config.tabs`. Whatever the final list is, it is what Step 8c's table must
+  mirror.
 - **Global controls / appearance dimensions**: the chrome exposes theme · width ·
   accent · density. The token CSS reveals the real dimensions (`[data-theme]`,
   `[data-accent]`, density classes) — `config.ts` lists the values; confirm them
@@ -151,6 +155,36 @@ alone).
 If `.claude/doc-coverage.json` exists, add a trigger:
 `{"pattern": "<page dir>", "docs": ["docs/BrandKit.md"]}` — the hooks then nag
 when the page changes without its doc.
+
+## Step 8c — point the frontend rule at the tabs (or nobody opens them)
+
+`8b` makes the hooks nag when the page goes stale. This makes something tell an
+agent to READ it. Without it the page is installed and no always-loaded rule
+names it: the instruction to consult it survives only wherever someone happened
+to write it down, and a rule that says "consult the BrandKit" without naming a
+file does not fire.
+
+In `.claude/rules/frontend.md`, under the BrandKit block, append a table of THIS
+project's tabs — what am I touching → which tab. Generate it, never copy one:
+
+- **the list** — `config.tabs` from Step 6 (id + label, each id mapping to
+  `tabs/<id>.mdx`). A project that dropped a canonical tab must not see it here,
+  and one that added its own must.
+- **what each covers** — `templates/page/page-structure.md`, which describes the
+  canonical tabs one by one. Phrase each row as the work that sends you there
+  ("spacing, type scale, radii, icons, elevation, motion"), not as the tab's own
+  title — the reader knows what they are about to edit, not which tab owns it.
+
+Call out `layouts` explicitly: it is indexed **by screen name**, so when the
+owner names a screen that is the first place to look, before any grep.
+
+If the rule does not exist (no frontend rule in this project), say so rather than
+creating one — that is `project-bootstrap`'s file, not this skill's.
+
+**On `update`:** regenerate this table whenever a tab is added or removed, in the
+same act that touches `config.tabs`. The table's row count is whatever
+`config.tabs` holds — never a fixed number. A table missing a tab that exists
+teaches that the tab does not matter.
 
 ## Step 9 — Verify
 

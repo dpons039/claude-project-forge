@@ -14,7 +14,14 @@ Rules: every heading below either exists on the page or is annotated in
 apply when the project has the thing. `[DOMAIN]`/`[PLACEHOLDER]` items are named
 by the project.
 
-## The eight tabs, in order
+## The canonical tabs, in order
+
+> These are the **baseline**, not the whole set. A project drops the ones it has
+> no subject for (note it as "skipped: <reason>" in `docs/BrandKit.md`) and adds
+> its own where it has a subject these do not cover — a data-visualisation tab, a
+> map/geo tab, an email-template tab, a print tab. `config.tabs` is the real list;
+> everything downstream reads it rather than a fixed number, so nothing here says
+> how many a project ends up with.
 
 **Brand → Foundations → Colour → Components → Formatting → Layouts → Voice →
 Accessibility.** Tokens before the things built from them; the one per-project

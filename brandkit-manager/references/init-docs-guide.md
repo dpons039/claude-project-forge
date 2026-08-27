@@ -21,7 +21,8 @@ Read, in this order, whatever exists:
 
 ## Step 2 — Ask only what cannot be inferred
 
-- **Which tabs apply** — the eight in `page-structure.md` are the default
+- **Which tabs apply** — the canonical set in `page-structure.md` is the baseline
+  (drop what has no subject, add what it does not cover)
   (Brand · Foundations · Colour · Components · Formatting · Layouts · Voice ·
   Accessibility). Confirm which the project has; dropping one needs a
   "skipped: <reason>" note. No file states this; ask.

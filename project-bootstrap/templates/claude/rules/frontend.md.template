@@ -18,13 +18,31 @@ paths:
    design skills work from the prompt, they do not load these files themselves.
 [BRANDKIT_LINE]
 
-<!-- [BRANDKIT_LINE] is replaced at install with, when the brandkit-manager skill is
-     approved: "4. **BrandKit**: when building or changing UI, invoke the
-     `brandkit-manager` skill (Skill tool) to keep the dev BrandKit page and its docs in
-     sync — it is the living component/token reference. Consult the page too, but
-     invoking the skill is what updates it." Removed otherwise. This lives here
-     (loaded on frontend paths), not in system-health.md (loaded only on config),
-     so the trigger is reachable while building UI. -->
+<!-- [BRANDKIT_LINE] is replaced at install, when the brandkit-manager skill is approved,
+     with the block below. Removed otherwise. It lives here (loaded on frontend paths),
+     not in system-health.md (loaded only on config), so it is reachable while building
+     UI.
+
+     TWO obligations, and only the second used to be written down — which is how a
+     project ends up with a BrandKit nobody opens:
+
+     "4. **BrandKit — read it before you write; invoke the skill after.**
+        - **Before writing**, open the tab covering what you are about to touch, under
+          `src/brandkit/tabs/`. It is the whole visual specification, not a component
+          catalogue: spacing, type scale, radii, icons, elevation, motion, amount and
+          date formatting, breakpoints, density and a per-screen layout entry are all
+          there. When the owner names a SCREEN, the layouts tab is the first place —
+          it is indexed by screen name.
+        - **A similar specimen is not the specimen.** A trigger is not a field, a chip
+          is not a badge; a trigger's label may be deliberately smaller. When a size
+          'looks wrong', the first question is whether the component is the right one,
+          not which token to change (LAW3 § the sibling that defines the family).
+        - **After changing UI**, invoke the `brandkit-manager` skill (Skill tool) to
+          keep the page and its docs in sync."
+
+     Then `init-page` appends THIS PROJECT'S tab table underneath (Step 9 of
+     init-page-guide.md) — which tabs exist and what each covers is per-project, so it
+     is generated from config.tabs + page-structure.md, never fixed in this template. -->
 
 
 ## Core skill

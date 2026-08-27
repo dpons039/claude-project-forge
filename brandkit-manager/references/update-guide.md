@@ -15,7 +15,7 @@ new accent/theme/identity · new UI language · removal.
 |---|---|
 | A colour/type/spacing token value | `design.md` FIRST — docs are upstream; the page reads tokens, it does not define them |
 | A new component block | Add the `<Block>` to the tab's `.mdx`; if the specimen has state/hooks/types put it in the tab's `.examples.tsx` and import it (MDX inline expressions are plain JS — no `as const`/types). Update the block count/list in `BrandKit.md` — written prose, not derived, so it goes stale silently |
-| A new tab | Create `<id>.mdx` (+ `<id>.examples.tsx` if needed), register it in `tabs/index.ts`, add `{id,label}` to `config.tabs`. Update the tab list in `BrandKit.md` |
+| A new tab (or one removed) | Create `<id>.mdx` (+ `<id>.examples.tsx` if needed), register it in `tabs/index.ts`, add `{id,label}` to `config.tabs`. Update the tab list in `BrandKit.md` **and the tab table in `.claude/rules/frontend.md`** (init-page § Step 8c) — that table is what sends an agent to the right tab, and one that omits a tab teaches that the tab does not matter |
 | Copy in a specimen | `voice.md`, wording copied back verbatim — the two never diverge in either direction |
 | A string that also exists in the locale catalog | Copy verbatim, punctuation included. Wording licence exists; a *different rule* does not (canonical case: "un correo válido" vs shipped "un correo completo") |
 | A wireframe/mockup source | Re-copy into the page's embedded copy (never symlink). **Diff before overwriting** — the embedded copies carry corrections as inline comments a blind re-copy would drop |

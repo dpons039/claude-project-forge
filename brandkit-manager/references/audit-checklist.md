@@ -24,9 +24,10 @@ the checks are canonical, the paths are not.
 | 10 | Components shown are real imports, or documented recreations | Per `<Block>` (in the `.mdx` and its `.examples.tsx`), check import provenance; an undocumented local recreation is a flag | MEDIUM |
 | 11 | design.md ↔ BrandKit.md ↔ page coherence | Values stated in `### D-n` blocks in `docs/decisions.md` vs token CSS vs what the page reads | MEDIUM |
 | 12 | BrandKit.md size | `wc -l` — warn ≥ 500 (area-doc cap: where `doc-check.py`'s Stop mode suggests a split; it blocks at 1000) | LOW |
+| 12b | Something tells an agent to READ the page | `.claude/rules/frontend.md` names `brandkit/tabs/`, and its table's rows are exactly the ids in `config.tabs` — set equality both ways, no count involved (init-page § 8c). A page in perfect sync that no always-loaded rule points at is still debt: the instruction to open it then survives only in memory, which is recalled by relevance and may not surface | MEDIUM |
 | 13 | design.md / voice.md size | `wc -l` — context only, not this system's own defect | LOW |
 | 14 | Missed cross-update | With git history: page content changed without its table-mates in the same range; without git: mtime (weak fallback). Also verify the doc-coverage warning trigger (page dir → BrandKit.md) exists | LOW |
-| 15 | Canonical tab + heading coverage | `templates/page/page-structure.md` (the eight-tab list and its headings) vs the real `.mdx` tabs and blocks; absence without a "skipped: <reason>" note in BrandKit.md is a flag | MEDIUM |
+| 15 | Canonical tab + heading coverage | `templates/page/page-structure.md` (the canonical tab list and its headings) vs the real `.mdx` tabs and blocks; a canonical tab absent without a "skipped: <reason>" note in BrandKit.md is a flag. A project-specific tab beyond the canonical set is NOT a flag — the baseline is a floor, not a ceiling | MEDIUM |
 | 16 | Encapsulation — the app never imports from the page | Grep imports of the page dir across `src/` outside it. One import pulls brandkit code into the prod bundle **without check #2 seeing it** (chunks are not named "brandkit") | BLOCKER |
 
 ## Process notes

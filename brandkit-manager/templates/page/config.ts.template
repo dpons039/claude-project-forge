@@ -112,10 +112,12 @@ export const config: BrandkitConfig = {
 
   defaults: { theme: "[THEME_LIGHT]", accent: "blue", density: "dens-cozy" },
 
-  // The canonical eight (see page-structure.md). Tokens/foundations before the
+  // The canonical baseline (see page-structure.md). Tokens/foundations before the
   // things built from them; the identity tab (Brand) first; cross-cutting Voice
   // and Accessibility last. Each id maps to `tabs/<id>.mdx`. Drop any your
-  // project does not have (note it as "skipped" in docs/BrandKit.md).
+  // project does not have (note it as "skipped" in docs/BrandKit.md), and ADD your
+  // own where this project has a subject these do not cover (charts, maps, email
+  // templates, print). This list is the source of truth for how many tabs exist.
   tabs: [
     { id: "brand", label: "Brand" },
     { id: "foundations", label: "Foundations" },
